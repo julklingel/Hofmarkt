@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "prisma": {
+    "schema": "./database/schema.prisma"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -72,4 +75,5 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
+  
 }
