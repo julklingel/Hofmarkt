@@ -2,5 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly authService: AuthService) {}
+    signup(){
+        return 'Hi there from signup';
+    }
+    login(){
+        return 'Hello there from login';
+    }
+
+    
+ 
 }
