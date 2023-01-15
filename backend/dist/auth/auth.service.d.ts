@@ -1,4 +1,9 @@
+import { AuthDto } from './dto/auth.dto';
 export declare class AuthService {
-    signup(): string;
-    login(): string;
+    signup(dto: AuthDto): {
+        msg: string;
+    };
+    login(dto: AuthDto): {
+        msg: string;
+    };
 }
