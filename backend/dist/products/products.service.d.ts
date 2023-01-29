@@ -1,4 +1,6 @@
-import { Product } from "./product.model";
+import { PrismaService } from "src/db-module/prisma.service";
 export declare class ProductsService {
-    retrieveProducts(): Product;
+    private readonly prismaService;
+    constructor(prismaService: PrismaService);
+    getProduct(id: any): any;
 }
