@@ -11,47 +11,107 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  firstName String
-  lastName  String
-  email     String
-  password  String
-  cart      Cart[]
-  order     Order[]
+  id         String      @id @unique @default(uuid())
+  firstName  String
+  lastName   String
+  email      String      @unique
+  hash       String
+  role       enumRole    @default(BUYER)
+  supplier   Supplier?   @relation(fields: [supplierId], references: [id])
+  supplierId String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  watchlist  Watchlist[]
+  cart       Cart[]
+  order      Order[]
+
+  @@map("users")
+}
+
+model Supplier {
+  id             String      @id @unique @default(uuid())
+  companyName    String
+  companyLogo    String
+  companyEmail   String
+  companyPhone   Int
+  companyAddress String
+  role           enumRole @default(SUPPLIER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User[]
+  offer          Offer[]
+
+  @@map("suppliers")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  category    String
-  title       String
-  description String
-  price       Int
-  image       String
-  cart        Cart[]
-  order       Order[]
+  id       String      @id @unique @default(uuid())
+  title    String
+  category String
+  img      String
+  offers   Offer[]
+
+  @@map("products")
+}
+
+model Offer {
+  id         String      @id @unique @default(uuid())
+  product    Product     @relation(fields: [productId], references: [id])
+  productId  String
+  supplier   Supplier    @relation(fields: [supplierId], references: [id])
+  supplierId String
+  price      Int
+  unit       String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  watchlist  Watchlist[]
+  cart       Cart[]
+  order      Order[]
+
+  @@map("offers")
+}
+
+model Watchlist {
+  id        String   @id @unique @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  offer     Offer    @relation(fields: [offerId], references: [id])
+  offerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("watchlists")
 }
 
 model Cart {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @unique @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  offer     Offer    @relation(fields: [offerId], references: [id])
+  offerId   String
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  quantity  Int
-  userId    Int
-  productId Int
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("carts")
 }
 
 model Order {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @unique @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  offer     Offer    @relation(fields: [offerId], references: [id])
+  offerId   String
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId    Int
-  productId Int
-  user      User     @relation(fields: [userId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
+
+  @@map("orders")
+}
+
+enum enumRole {
+  BUYER
+  SUPPLIER
+  ADMIN
+  EMPLOYEE
 }

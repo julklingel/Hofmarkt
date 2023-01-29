@@ -11,13 +11,16 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
+const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
+const strategy_1 = require("./strategy");
 let AuthModule = AuthModule_1 = class AuthModule {
 };
 AuthModule = AuthModule_1 = __decorate([
     (0, common_1.Module)({
-        imports: [AuthModule_1],
+        imports: [AuthModule_1, jwt_1.JwtModule.register({}), config_1.ConfigModule],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService],
+        providers: [auth_service_1.AuthService, strategy_1.JwtStrategy],
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;

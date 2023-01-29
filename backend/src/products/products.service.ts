@@ -1,18 +1,23 @@
 import { Injectable } from "@nestjs/common";
-import { Product } from "./product.model";
+import { PrismaService } from "src/db-module/prisma.service";
+
+
 
 @Injectable()
 export class ProductsService {
-    retrieveProducts(): Product {
-        return {
-            id: '1',
-            categorie: 'Fruits',
-            title: 'Apple',
-            description: 'A red apple',
-            image: 'https://images.unsplash.com/photo-1589989369979-8e1b0e1b2e1c?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8YXBwbGUlMjBjb2xvfGVufDB8fDB8&ixlib=rb-1.2.1&w=1000&q=80',
-            price: 1.99,
-            
-        }
+    constructor(
+        private readonly prismaService: PrismaService,
+    ) {}
+    getProduct(id): any {
+        const product = this.prismaService.product.findUnique({
+            where: {
+                id: id,
+            },
+        });
+    return {
+        product,
     }
 }
  
+}
+
