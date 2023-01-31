@@ -1,1 +1,1 @@
-export {};
+export declare function seedUsers(): Promise<void>;
