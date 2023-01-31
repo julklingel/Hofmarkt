@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"file":"offers.module.js","sourceRoot":"","sources":["../../../src/offers/offers.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AACxC,2DAAmD;AACnD,qDAAiD;AAQ1C,IAAM,WAAW,GAAjB,MAAM,WAAW;CAAG,CAAA;AAAd,WAAW;IANvB,IAAA,eAAM,EAAC;QACJ,OAAO,EAAE,EAAE;QACX,WAAW,EAAE,CAAC,mCAAe,CAAC;QAC9B,SAAS,EAAE,CAAC,8BAAa,CAAC;KAE7B,CAAC;GACW,WAAW,CAAG;AAAd,kCAAW"}
+=======
+{"version":3,"file":"offers.module.js","sourceRoot":"","sources":["../../../src/offers/offers.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AACxC,2DAAmD;AACnD,qDAAgD;AAQzC,IAAM,WAAW,GAAjB,MAAM,WAAW;CAAG,CAAA;AAAd,WAAW;IANvB,IAAA,eAAM,EAAC;QACJ,OAAO,EAAE,EAAE;QACX,WAAW,EAAE,CAAC,mCAAe,CAAC;QAC9B,SAAS,EAAE,CAAC,6BAAY,CAAC;KAE5B,CAAC;GACW,WAAW,CAAG;AAAd,kCAAW"}
+>>>>>>> 02e68d1 (b: replace product by offer)

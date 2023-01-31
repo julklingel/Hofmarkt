@@ -6,18 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OfferModule = void 0;
+exports.WatchlistService = void 0;
 const common_1 = require("@nestjs/common");
-const offers_controller_1 = require("./offers.controller");
-const offers_service_1 = require("./offers.service");
-let OfferModule = class OfferModule {
+let WatchlistService = class WatchlistService {
 };
-OfferModule = __decorate([
-    (0, common_1.Module)({
-        imports: [],
-        controllers: [offers_controller_1.OfferController],
-        providers: [offers_service_1.OfferService],
-    })
-], OfferModule);
-exports.OfferModule = OfferModule;
-//# sourceMappingURL=offers.module.js.map
+WatchlistService = __decorate([
+    (0, common_1.Injectable)()
+], WatchlistService);
+exports.WatchlistService = WatchlistService;
+//# sourceMappingURL=watchlist.service.js.map

@@ -17,7 +17,21 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
+<<<<<<< HEAD
 ], offerDto.prototype, "productId", void 0);
+=======
+], offerDto.prototype, "title", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], offerDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], offerDto.prototype, "img", void 0);
+>>>>>>> 02e68d1 (b: replace product by offer)
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
@@ -25,12 +39,25 @@ __decorate([
 ], offerDto.prototype, "supplierId", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+<<<<<<< HEAD
     __metadata("design:type", Number)
+=======
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+>>>>>>> 02e68d1 (b: replace product by offer)
 ], offerDto.prototype, "price", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], offerDto.prototype, "unit", void 0);
+<<<<<<< HEAD
+=======
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], offerDto.prototype, "amount", void 0);
+>>>>>>> 02e68d1 (b: replace product by offer)
 exports.offerDto = offerDto;
 //# sourceMappingURL=offer.dto.js.map

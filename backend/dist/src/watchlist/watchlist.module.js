@@ -5,19 +5,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var WatchlistModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OfferModule = void 0;
+exports.WatchlistModule = void 0;
 const common_1 = require("@nestjs/common");
-const offers_controller_1 = require("./offers.controller");
-const offers_service_1 = require("./offers.service");
-let OfferModule = class OfferModule {
+const watchlist_controller_1 = require("./watchlist.controller");
+const watchlist_service_1 = require("./watchlist.service");
+let WatchlistModule = WatchlistModule_1 = class WatchlistModule {
 };
-OfferModule = __decorate([
+WatchlistModule = WatchlistModule_1 = __decorate([
     (0, common_1.Module)({
-        imports: [],
-        controllers: [offers_controller_1.OfferController],
-        providers: [offers_service_1.OfferService],
+        imports: [WatchlistModule_1],
+        controllers: [watchlist_controller_1.WatchlistController],
+        providers: [watchlist_service_1.WatchlistService],
     })
-], OfferModule);
-exports.OfferModule = OfferModule;
-//# sourceMappingURL=offers.module.js.map
+], WatchlistModule);
+exports.WatchlistModule = WatchlistModule;
+//# sourceMappingURL=watchlist.module.js.map

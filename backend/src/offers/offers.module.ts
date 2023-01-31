@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import {OfferController} from './offers.controller'
-import { OffersService } from './offers.service';
+import { OfferService } from './offers.service';
 
 @Module({
     imports: [],
     controllers: [OfferController],
-    providers: [OffersService],
+    providers: [OfferService],
 
 })
 export class OfferModule {}

@@ -29,10 +29,10 @@ model User {
 }
 
 model Supplier {
-  id             String      @id @unique @default(uuid())
+  id             String   @id @unique @default(uuid())
   companyName    String
   companyLogo    String
-  companyEmail   String
+  companyEmail   String  @unique
   companyPhone   Int
   companyAddress String
   role           enumRole @default(SUPPLIER)
@@ -44,24 +44,16 @@ model Supplier {
   @@map("suppliers")
 }
 
-model Product {
-  id       String      @id @unique @default(uuid())
-  title    String
-  category String
-  img      String
-  offers   Offer[]
-
-  @@map("products")
-}
-
 model Offer {
   id         String      @id @unique @default(uuid())
-  product    Product     @relation(fields: [productId], references: [id])
-  productId  String
+  title      String
+  category   String
+  img        String
   supplier   Supplier    @relation(fields: [supplierId], references: [id])
   supplierId String
-  price      Int
+  price      Float
   unit       String
+  amount     Int
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   watchlist  Watchlist[]
