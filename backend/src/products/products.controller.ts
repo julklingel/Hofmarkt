@@ -1,18 +1,22 @@
-import { Controller, Get, Param } from "@nestjs/common";
-import { ProductsService } from "./products.service";
+import { Controller, Get, Param} from '@nestjs/common';
+import { ProductService } from './products.service';
+
+
 
 @Controller('products')
-export class ProductsController {
-    constructor (private productsService: ProductsService) {}
-
-    @Get(':id')
-    getProduct(@Param(':id') id): string {
-        return this.productsService.getProduct(id);
-    }
-
-    @Get()
-    getProducts(@Param() dto): string {
-        return this.productsService.getProduct(dto);
-    }
-}
+export class ProductController {
+  constructor(private productService: ProductService) {}
  
+  // Display User Information
+  @Get()
+  getAllProducts() {
+    return this.productService.getAllProducts();
+  }
+
+  @Get(':id')
+  getOneProduct(@Param('id') id: string) {
+    return this.productService.getOneProduct(id);
+  }
+}
+
+
