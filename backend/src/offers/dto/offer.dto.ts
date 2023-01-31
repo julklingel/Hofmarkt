@@ -12,6 +12,7 @@ export class offerDto {
     supplierId: string;
 
     @IsNotEmpty()
+    @IsInt()
     price: number;
 
     @IsNotEmpty()

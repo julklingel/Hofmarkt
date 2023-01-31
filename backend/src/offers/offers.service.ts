@@ -2,23 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/db-module/prisma.service';
 import { offerDto } from './dto';
 
-
-
 @Injectable()
 export class OffersService {
   constructor(private readonly prisma: PrismaService) {}
-
-
-  getAllOffers() {
-    const offers = this.prisma.offer.findMany();
-    return offers;
-  }
-
-
-  getOneOffer(id): any {
+  getOffer(dto): any {
     const offer = this.prisma.offer.findUnique({
       where: {
-        id: id,
+        id: dto.id,
       },
     });
     return {
@@ -26,10 +16,17 @@ export class OffersService {
     };
   }
 
-createOffer(dto: offerDto) {
-
-  const createOffer = this.prisma.offer.create({ data: dto })
-  return createOffer
-}
-
+  createOffer(dto: offerDto) {
+    const offer = this.prisma.offer.create({
+      data: {
+        productId: dto.productId,
+        supplierId: dto.supplierId,
+        price: dto.price,
+        unit: dto.unit,
+      },
+    });
+    return {
+      offer,
+    };
+  }
 }
