@@ -7,6 +7,7 @@
                 <li>Home</li>
                 <li>Products</li>
                 <li>Cart</li>
+                <li>Account</li>
             </ul>
         </div>
     )
