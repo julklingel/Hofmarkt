@@ -1,17 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.seedUsers = void 0;
 const client_1 = require("@prisma/client");
-const argon2 = require("argon2");
 const prisma = new client_1.PrismaClient();
-async function seedUsers() {
-    const hash = await argon2.hash('123');
+async function main() {
     const alice = await prisma.user.upsert({
         where: { email: 'alice@prisma.io' },
         update: {},
         create: {
             email: 'alice@prisma.io',
-            hash: hash,
+            hash: '123',
             firstName: 'Alice',
             lastName: 'Smith',
         },
@@ -21,11 +18,19 @@ async function seedUsers() {
         update: {},
         create: {
             email: 'bob@prisma.io',
-            hash: hash,
+            hash: '123',
             firstName: 'Bob',
             lastName: 'Johnson',
         },
     });
 }
-exports.seedUsers = seedUsers;
+main()
+    .then(async () => {
+    await prisma.$disconnect();
+})
+    .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+});
 //# sourceMappingURL=seed.user.js.map

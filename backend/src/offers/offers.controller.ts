@@ -6,20 +6,13 @@ import { OffersService } from './offers.service';
 export class OfferController {
   constructor(private productsService: OffersService) {}
 
-  @Get()
-  getAllOffers() {
-    return this.productsService.getAllOffers();
-  }
-
   @Get(':id')
-  getOffer(@Param('id') id: string) {
-    return this.productsService.getOneOffer(id);
+  getOffer(@Param('id') dto: offerDto) {
+    return this.productsService.getOffer(dto);
   }
 
   @Post()
   createOffer(@Body() dto: offerDto) {
-    
-    
     return this.productsService.createOffer(dto);
   }
 

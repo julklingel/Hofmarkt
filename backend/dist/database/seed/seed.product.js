@@ -1,9 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.seedProducts = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-async function seedProducts() {
+async function main() {
     const apple = await prisma.product.upsert({
         where: { id: 'Apple100' },
         update: {},
@@ -95,5 +94,13 @@ async function seedProducts() {
         },
     });
 }
-exports.seedProducts = seedProducts;
+main()
+    .then(async () => {
+    await prisma.$disconnect();
+})
+    .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+});
 //# sourceMappingURL=seed.product.js.map
