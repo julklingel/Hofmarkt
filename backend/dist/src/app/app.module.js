@@ -12,15 +12,15 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const products_module_1 = require("../products/products.module");
 const auth_module_1 = require("../auth/auth.module");
 const user_module_1 = require("../user/user.module");
 const prisma_module_1 = require("../db-module/prisma.module");
+const offer_module_1 = require("../offer/offer.module");
 let AppModule = AppModule_1 = class AppModule {
 };
 AppModule = AppModule_1 = __decorate([
     (0, common_1.Module)({
-        imports: [AppModule_1, products_module_1.ProductsModule, auth_module_1.AuthModule, user_module_1.UserModule, prisma_module_1.PrismaModule, config_1.ConfigModule.forRoot()],
+        imports: [AppModule_1, offer_module_1.OfferModule, auth_module_1.AuthModule, user_module_1.UserModule, prisma_module_1.PrismaModule, config_1.ConfigModule.forRoot()],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
