@@ -1,10 +1,10 @@
-import {seedProducts} from './seed.product';
+import {seedSupplier} from './seed.supplier';
 import {seedUsers} from './seed.user';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const seed = async () => {
-    seedProducts()
+    seedSupplier()
     seedUsers()
 }
 

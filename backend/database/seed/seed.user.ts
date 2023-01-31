@@ -1,12 +1,15 @@
 import { PrismaClient } from '@prisma/client'
+import * as argon2 from 'argon2';
+
 const prisma = new PrismaClient()
 export async function seedUsers() {
+  const hash = await argon2.hash('123')
   const alice = await prisma.user.upsert({
     where: { email: 'alice@prisma.io' },
     update: {},
     create: {
       email: 'alice@prisma.io',
-      hash: '123',
+      hash: hash,
       firstName: 'Alice',
       lastName: 'Smith',
     },
@@ -16,11 +19,12 @@ export async function seedUsers() {
     update: {},
     create: {
         email: 'bob@prisma.io',
-        hash: '123',
+        hash: hash,
         firstName: 'Bob',
         lastName: 'Johnson',
     },
     })
 
+    
 
 }
