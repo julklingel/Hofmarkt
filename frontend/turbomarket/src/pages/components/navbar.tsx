@@ -13,11 +13,11 @@ export default function Navbar() {
     return (
         <div>
             <nav>
-                <div className="grid grid-cols-4 place-items-center  mt-2 h-16 bg-primary text-c.green font-mono" role="navigation">
+                <div className="grid grid-cols-4 place-items-center  mt-2  bg-primary text-c.green font-mono" role="navigation">
 
-                    <div>
-                        <a href="/" className="p-2 pl-8">
-                            <img src={Image} alt="logo" className=" transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"  />
+                    <div className=''>
+                        <a href="/" className="p-2">
+                            <img src={Image} alt="logo" className=" min-h-fit min-w-fit p-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"  />
                         </a>
                     </div>
 
