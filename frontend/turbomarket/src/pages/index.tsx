@@ -1,3 +1,4 @@
+import Hero from "./components/homepage/hero"
 import Navbar from "./components/navbar"
 
 export default function Home() {
@@ -5,7 +6,7 @@ export default function Home() {
 
     <div>
       <Navbar />
-      <h1 className="text-3xl bold underline-offset-2 bg-orange-600">Hello World!</h1>
+      <Hero />  
 
 
     </div>
