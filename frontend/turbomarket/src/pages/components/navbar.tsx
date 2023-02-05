@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import React from 'react';
 import Image from '../../../../turbomarket/public/logo.svg'
- ///Users/julklingel/DevCode/TurboMarket/frontend/turbomarket/public/logo.svg
 
 
 
@@ -22,15 +22,17 @@ export default function Navbar() {
                     </div>
 
                     <div className="p-3 col-start-2 col-end-4 rounded-full  bg-secondary drop-shadow-lg">
+                        
                         <a href="/supplier" className="mx-12">Farmer</a>
                         <a href="/products" className="mx-12">Market</a>
                         <a href="/about" className="mx-12">About Us</a>
                         <a href="/contact" className="mx-12">Contact Us</a>
+                        
                     </div>
 
-                    <div className="p-3">
-                        <a href="/auth/login" className="pl-3 p-3 mr-5 rounded-full bg-secondary drop-shadow-lg "> LogIn</a>
-                        <a href="/auth/signup" className="pl-3 p-3 rounded-full bg-secondary drop-shadow-lg">SignUp</a>
+                    <div className="p-3 m-2">
+                        <a href="/auth/login" className="p-4 mr-5 rounded-full bg-secondary drop-shadow-lg "> LogIn</a>
+                        <a href="/auth/signup" className="p-4 rounded-full bg-secondary drop-shadow-lg">SignUp</a>
                     </div>
 
                 </div>
