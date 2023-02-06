@@ -13,7 +13,7 @@ export default function Navbar() {
     return (
         <div>
             <nav>
-                <div className="grid grid-cols-4 place-items-center  mt-2  bg-primary text-c.green font-mono" role="navigation">
+                <div className="grid grid-cols-4 place-items-center h-1/6  mt-2  bg-primary text-c.green font-mono" role="navigation">
 
                     <div className=''>
                         <a href="/" className="p-2">
