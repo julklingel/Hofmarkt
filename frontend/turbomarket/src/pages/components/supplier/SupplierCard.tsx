@@ -1,10 +1,15 @@
 import Link from "next/link"
 import Image from "next/image"
+import { title } from "process";
 
 
 
 export default function SupplierCard(props: any) {
-    const { name, image, location, date, slug } = props.supplier;
+    
+    const { name, image, category, location, date, slug } = props.supplier;
+    const linkPath = `/supplier/${slug}`
+    const imgPath = `/images/supplier/${slug}/${image}`
+    console.log()
     const formattedDate = new Date(date).toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'long',
@@ -12,22 +17,21 @@ export default function SupplierCard(props: any) {
     })
 
     return (
-        <li>
-            <Link href= '/supplier/${slug}'>
-                <a >
-                    <div>
-                        <Image src={'/images/supplier/farmhouse.jpeg'} alt='Supplier Picture' width={50} height={50} />
+        <li className=' bg-secondary rounded-3xl'>
+            <Link href={linkPath}>
+            
+                
+                <div>
+                    <Image src={imgPath} alt={name} width={300} height={200} layout='responsive' />
+                </div>
 
-                    </div>
+                <div>
+                    <h3>{name}</h3>
+                    <p>{location}</p>
+                    <p>{category}</p>
+                </div>
+                
 
-                    <div>
-                        <h3>Supplier Name</h3>
-                        <p>Location</p>
-                        <Image src={'/svg/meat.svg'} alt='Meat Sign' width={10} height={10} />
-                        <time></time>
-
-                    </div>
-                </a>
             </Link>
         </li>
     )
