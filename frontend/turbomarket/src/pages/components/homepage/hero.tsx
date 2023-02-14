@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export default function Hero() {
     return (
-        <section className='grid grid-cols-3 h-5/6  mx-4 place-items-stretch'>
+        <section className='grid grid-cols-3 h-5/6 px-10 place-items-stretch'>
         
 
                 <div className="place-self-center mb-20 ml-10">
@@ -16,9 +16,11 @@ export default function Hero() {
                     <Image src="/images/beige-hero.png" alt="Hero picture of vegtables on a table" className='rounded-3xl' width={500} height={500} />
                 </div>
 
-
-
-            
+                <div className='col-span-3 place-self-center '>
+                    <button>
+                        <Image src="/svgs/scroll.svg" alt="Hero picture of vegtables on a table" className='animate-bounce' width={40} height={40} />
+                    </button>
+                </div>
 
         </section>
     )
