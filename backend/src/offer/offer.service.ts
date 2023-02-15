@@ -18,13 +18,21 @@ export class OfferService {
     });
   }
 
+  getOffersBySupplier(id): any {
+    return this.prisma.offer.findMany({
+      where: {
+        supplierId: id,
+      },
+    });
+  }
+  
+
   createOffer(dto: offerDto) {
     const price = Number(dto.price);
     const amount = Number(dto.amount);
     return this.prisma.offer.create({
       data: {
         title: dto.title,
-        category: dto.category,
         img: dto.img,
         price,
         unit: dto.unit,

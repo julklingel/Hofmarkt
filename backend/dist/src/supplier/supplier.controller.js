@@ -12,25 +12,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OfferController = void 0;
+exports.SupplierController = void 0;
 const common_1 = require("@nestjs/common");
 const dto_1 = require("./dto");
-const offer_service_1 = require("./offer.service");
-let OfferController = class OfferController {
-    constructor(offerService) {
-        this.offerService = offerService;
+const supplier_service_1 = require("./supplier.service");
+let SupplierController = class SupplierController {
+    constructor(supplierService) {
+        this.supplierService = supplierService;
     }
-    getOffers() {
-        return this.offerService.getOffers();
+    getSuppliers() {
+        return this.supplierService.getSuppliers();
     }
-    getOffer(id) {
-        return this.offerService.getOffer(id);
+    getSupplier(id) {
+        return this.supplierService.getSupplier(id);
     }
-    getOffersBySupplier(id) {
-        return this.offerService.getOffersBySupplier(id);
-    }
-    createOffer(dto) {
-        return this.offerService.createOffer(dto);
+    createSupplier(dto) {
+        return this.supplierService.createSupplier(dto);
     }
 };
 __decorate([
@@ -38,31 +35,24 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], OfferController.prototype, "getOffers", null);
+], SupplierController.prototype, "getSuppliers", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], OfferController.prototype, "getOffer", null);
-__decorate([
-    (0, common_1.Get)('supplier/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], OfferController.prototype, "getOffersBySupplier", null);
+], SupplierController.prototype, "getSupplier", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [dto_1.offerDto]),
+    __metadata("design:paramtypes", [dto_1.supplierDto]),
     __metadata("design:returntype", void 0)
-], OfferController.prototype, "createOffer", null);
-OfferController = __decorate([
-    (0, common_1.Controller)('offer'),
-    __metadata("design:paramtypes", [offer_service_1.OfferService])
-], OfferController);
-exports.OfferController = OfferController;
-//# sourceMappingURL=offer.controller.js.map
+], SupplierController.prototype, "createSupplier", null);
+SupplierController = __decorate([
+    (0, common_1.Controller)('supplier'),
+    __metadata("design:paramtypes", [supplier_service_1.SupplierService])
+], SupplierController);
+exports.SupplierController = SupplierController;
+//# sourceMappingURL=supplier.controller.js.map

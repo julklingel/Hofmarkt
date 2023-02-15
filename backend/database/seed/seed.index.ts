@@ -1,9 +1,12 @@
 import {seedSupplier} from './seed.supplier';
 import {seedUsers} from './seed.user';
+import { seedCategory } from './seed.category';
+
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const seed = async () => {
+    seedCategory()
     seedSupplier()
     seedUsers()
 }

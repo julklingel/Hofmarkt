@@ -5,5 +5,6 @@ export declare class OfferService {
     constructor(prisma: PrismaService);
     getOffers(): any;
     getOffer(id: any): any;
+    getOffersBySupplier(id: any): any;
     createOffer(dto: offerDto): import("@prisma/client").Prisma.Prisma__OfferClient<import("@prisma/client").Offer, never>;
 }

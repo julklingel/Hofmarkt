@@ -16,6 +16,11 @@ export class OfferController {
     return this.offerService.getOffer(id);
   }
 
+  @Get('supplier/:id')
+  getOffersBySupplier(@Param('id') id: string) {
+    return this.offerService.getOffersBySupplier(id);
+  }
+
   @Post()
   createOffer(@Body() dto: offerDto) {
     return this.offerService.createOffer(dto);
