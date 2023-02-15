@@ -29,34 +29,37 @@ model User {
 }
 
 model Supplier {
-  id             String      @id @unique @default(uuid())
+  id             String                 @id @unique @default(uuid())
   companyName    String
-  companyLogo    String
-  companyEmail   String      @unique
+  companyLogo    String                 
+  companyEmail   String                 @unique
   companyPhone   Int
   companyAddress String
-  role           enumRole @default(SUPPLIER)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  companyImage   String
+  companyBio     String            
+  slug           String                 @unique
+  featured       Boolean                @default(false)
+  role           enumRole               @default(SUPPLIER)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
   user           User[]
   offer          Offer[]
 
   @@map("suppliers")
 }
 
-
 model Offer {
-  id         String      @id @unique @default(uuid())
+  id         String              @id @unique @default(uuid())
   title      String
-  category   String
   img        String
-  supplier   Supplier    @relation(fields: [supplierId], references: [id])
+  supplier   Supplier            @relation(fields: [supplierId], references: [id])
   supplierId String
   price      Float
   unit       String
   amount     Int
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  category   Category[]
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
   watchlist  Watchlist[]
   cart       Cart[]
   order      Order[]
@@ -101,6 +104,18 @@ model Order {
 
   @@map("orders")
 }
+
+model Category {
+  id        String                 @id @unique @default(uuid())
+  name      String                 @unique
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  offer     Offer[]
+
+  @@map("categories")
+}
+
+
 
 enum enumRole {
   BUYER

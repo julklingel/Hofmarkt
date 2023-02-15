@@ -15,12 +15,21 @@ const app_service_1 = require("./app.service");
 const auth_module_1 = require("../auth/auth.module");
 const user_module_1 = require("../user/user.module");
 const prisma_module_1 = require("../db-module/prisma.module");
+const supplier_module_1 = require("../supplier/supplier.module");
 const offer_module_1 = require("../offer/offer.module");
 let AppModule = AppModule_1 = class AppModule {
 };
 AppModule = AppModule_1 = __decorate([
     (0, common_1.Module)({
-        imports: [AppModule_1, offer_module_1.OfferModule, auth_module_1.AuthModule, user_module_1.UserModule, prisma_module_1.PrismaModule, config_1.ConfigModule.forRoot()],
+        imports: [
+            AppModule_1,
+            supplier_module_1.SupplierModule,
+            offer_module_1.OfferModule,
+            auth_module_1.AuthModule,
+            user_module_1.UserModule,
+            prisma_module_1.PrismaModule,
+            config_1.ConfigModule.forRoot()
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
