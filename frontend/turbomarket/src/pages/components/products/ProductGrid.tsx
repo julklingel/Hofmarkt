@@ -4,7 +4,7 @@ import ProductCard from './ProductCard';
 
 export default function ProductGrid(props:any) {
     const products = props.products;
-    console.log('hello from product grid', products);
+
     
     
     if (!products) {
