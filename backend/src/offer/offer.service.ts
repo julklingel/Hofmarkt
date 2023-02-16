@@ -7,7 +7,19 @@ export class OfferService {
   constructor(private readonly prisma: PrismaService) {}
 
   getOffers(): any {
-    return this.prisma.offer.findMany();
+    const offers = this.prisma.offer.findMany({
+      include: {
+        supplier: {
+          select: {
+            slug: true,
+            companyName: true,
+            companyAddress: true,
+        },
+      },
+    },
+    });
+ 
+    return offers;
   }
 
   getOffer(id): any {

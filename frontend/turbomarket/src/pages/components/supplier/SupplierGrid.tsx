@@ -7,12 +7,6 @@ import React from "react";
 export default function SupplierGrid(props:any) {
     const suppliers = props.suppliers;
     
-    
-    
-
-    
-
-    
     if (!suppliers) {
         return <div className=" h-screen text-center text-xl p-5 text-c.green ">No supplier found</div>
 }
