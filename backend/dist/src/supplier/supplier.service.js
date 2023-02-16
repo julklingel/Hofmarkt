@@ -16,11 +16,33 @@ let SupplierService = class SupplierService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    getSuppliers() {
-        return this.prisma.supplier.findMany();
+    async getSuppliers() {
+        const supplier = await this.prisma.supplier.findMany({
+            select: {
+                companyName: true,
+                companyAddress: true,
+                companyImage: true,
+                slug: true,
+            },
+        });
+        return supplier;
     }
-    getSupplier(id) {
-        return this.prisma.supplier.findUnique({
+    async getFeaturedSuppliers() {
+        const suppliers = await this.prisma.supplier.findMany({
+            where: {
+                featured: true,
+            },
+            select: {
+                companyName: true,
+                companyAddress: true,
+                companyImage: true,
+                slug: true,
+            },
+        });
+        return suppliers;
+    }
+    async getSupplier(id) {
+        return await this.prisma.supplier.findUnique({
             where: {
                 id: id,
             },

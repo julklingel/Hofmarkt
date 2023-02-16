@@ -11,6 +11,11 @@ export class SupplierController {
     return this.supplierService.getSuppliers();
   }
 
+  @Get('featured')
+  getFeaturedSuppliers() {
+    return this.supplierService.getFeaturedSuppliers();
+  }
+
   @Get(':id')
   getSupplier(@Param('id') id: string) {
     return this.supplierService.getSupplier(id);

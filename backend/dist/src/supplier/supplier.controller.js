@@ -23,6 +23,9 @@ let SupplierController = class SupplierController {
     getSuppliers() {
         return this.supplierService.getSuppliers();
     }
+    getFeaturedSuppliers() {
+        return this.supplierService.getFeaturedSuppliers();
+    }
     getSupplier(id) {
         return this.supplierService.getSupplier(id);
     }
@@ -36,6 +39,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], SupplierController.prototype, "getSuppliers", null);
+__decorate([
+    (0, common_1.Get)('featured'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], SupplierController.prototype, "getFeaturedSuppliers", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

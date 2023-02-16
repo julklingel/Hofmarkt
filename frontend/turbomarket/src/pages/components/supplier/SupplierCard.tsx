@@ -6,29 +6,23 @@ import { title } from "process";
 
 export default function SupplierCard(props: any) {
     
-    const { name, image, category, location, date, slug } = props.supplier;
+    const { companyName, companyImage, companyAddress, slug } = props.supplier;
     const linkPath = `/supplier/${slug}`
-    const imgPath = `/images/supplier/${slug}/${image}`
-    console.log()
-    const formattedDate = new Date(date).toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    })
+    const imgPath = `/images/supplier/${slug}/${companyImage}`
 
     return (
-        <li className=' bg-secondary rounded-3xl'>
+        <li className=' bg-secondary rounded-3xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300'>
             <Link href={linkPath}>
             
                 
                 <div>
-                    <Image src={imgPath} alt={name} width={300} height={200} layout='responsive' />
+                    <Image src={imgPath} alt={companyName} width={300} height={200} layout='responsive' />
                 </div>
 
                 <div>
-                    <h3>{name}</h3>
-                    <p>{location}</p>
-                    <p>{category}</p>
+                    <h3>{companyName}</h3>
+                    <p>{companyAddress}</p>
+                 
                 </div>
                 
 
