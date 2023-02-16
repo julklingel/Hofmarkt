@@ -17,7 +17,18 @@ let OfferService = class OfferService {
         this.prisma = prisma;
     }
     getOffers() {
-        return this.prisma.offer.findMany();
+        const offers = this.prisma.offer.findMany({
+            include: {
+                supplier: {
+                    select: {
+                        slug: true,
+                        companyName: true,
+                        companyAddress: true,
+                    },
+                },
+            },
+        });
+        return offers;
     }
     getOffer(id) {
         return this.prisma.offer.findUnique({

@@ -23,7 +23,7 @@ export default function Navbar() {
                     <div className="p-3 col-start-2 col-end-4 rounded-full  bg-secondary drop-shadow-lg">
                         
                         <Link href="/supplier" className="mx-12 hover:font-semibold ">Supplier</Link>
-                        <Link href="/products" className="mx-12 hover:font-semibold ">Market</Link>
+                        <Link href="/market" className="mx-12 hover:font-semibold ">Market</Link>
                         <Link href="/about" className="mx-12 hover:font-semibold">About Us</Link>
                         <Link href="/contact" className="mx-12 hover:font-semibold ">Contact Us</Link>
                         
