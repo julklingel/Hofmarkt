@@ -12,15 +12,15 @@ export async function seedSupplier() {
     where: { companyEmail: 'klaus-obstler@info.com' },
     update: {},
     create: {
-      companyName: 'klaus-obstler',
+      companyName: 'Klaus Obstler',
       companyEmail: 'klaus-obstler@info.com',
       companyLogo:
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       companyPhone: 123456789,
       companyAddress: '1234 Main St',
-      companyImage: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
-      companyBio: 'Nestle is a food company',
-      slug: 'nestle',
+      companyImage: 'obstler.jpeg',
+      companyBio: 'Klaus hat einen Obstbaum Garten',
+      slug: 'klaus-obstler',
       role: enumRole.SUPPLIER,
       offer: {
         create: [
@@ -70,19 +70,20 @@ export async function seedSupplier() {
 
 
   const alexImker = await prisma.supplier.upsert({
-    where: { companyEmail: 'alex-imker@info.com' },
+    where: { companyEmail: 'ammer-imker@info.com' },
     update: {},
     create: {
-      companyName: 'alex-imker',
+      companyName: 'Ammersee Imkerei GmbH',
       companyEmail: 'alex-imker@info.com',
       companyLogo:
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       companyPhone: 123456789,
       companyAddress: '1234 Main St',
-      companyImage: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
-      companyBio: 'alex-imker is a food company',
-      slug: 'alex-imker',
+      companyImage: 'Imkerei.jpeg',
+      companyBio: 'The best honey in the world comes from Ammersee',
+      slug: 'ammer-imker',
       role: enumRole.SUPPLIER,
+      featured: true,
       offer: {
         create: [
           {
@@ -127,10 +128,11 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       companyPhone: 123456789,
       companyAddress: '1234 Main St',
-      companyImage: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+      companyImage: 'Farmhouse.jpeg',
       companyBio: 'Ilgen special farm products',
       slug: 'manfred-hof',
       role: enumRole.SUPPLIER,
+      featured: true,
       offer: {
         create: [
           {
@@ -174,7 +176,7 @@ export async function seedSupplier() {
       companyLogo: 'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       companyPhone: 123456789,
       companyAddress: '1234 Main St',
-      companyImage: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+      companyImage: 'hunter-4436354_1920.jpg',
       companyBio: 'Ilgen special farm products',
       slug: 'dominik-hunter',
       role: enumRole.SUPPLIER,
@@ -211,6 +213,58 @@ export async function seedSupplier() {
       },
     },
   });
+
+  const mariaBaker = await prisma.supplier.upsert({
+    where: { companyEmail: 'maria-bread@info.com' },
+    update: {},
+    create: {
+      companyName: 'Bäckerei Maria',
+      companyEmail: 'maria-bread@info.com',
+      companyLogo: 'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+      companyPhone: 123456789,
+      companyAddress: '1234 Main St',
+      companyImage: 'Bäckerei_Bayer_1.webp',
+      companyBio: "Bäckerei Maria's bread is the best in the world",
+      slug: 'maria-baker',
+      role: enumRole.SUPPLIER,
+      offer: {
+        create: [
+          {
+            title: 'bread',
+            category: {
+              connectOrCreate: {
+                where: { name: 'grain' },
+                create: { name: 'grain' },
+              },
+            },
+            img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+            price: 1.99,
+            unit: 'lb',
+            amount: 100,
+          },
+          {
+            title: 'buns',
+            category: {
+              connectOrCreate: {
+                where: { name: 'grain' },
+                create: { name: 'grain' },
+              },
+            },
+            img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+            price: 1.99,
+            unit: 'lb',
+            amount: 100,
+          },
+
+        ],
+      },
+    },
+  });
+
+  
+
+
+
 
 
 }

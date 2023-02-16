@@ -6,12 +6,37 @@ import { supplierDto } from './dto';
 export class SupplierService {
   constructor(private readonly prisma: PrismaService) {}
 
-  getSuppliers(): any {
-    return this.prisma.supplier.findMany();
+  async getSuppliers(): Promise<any> {
+    const supplier = await this.prisma.supplier.findMany({
+      select: {
+        companyName: true,
+        companyAddress: true,
+        companyImage: true,
+        slug: true,
+      },
+    });
+    return supplier;
   }
 
-  getSupplier(id): any {
-    return this.prisma.supplier.findUnique({
+  async getFeaturedSuppliers(): Promise<any> {
+    const suppliers = await this.prisma.supplier.findMany({
+      where: {
+        featured: true,
+      },
+      select: {
+        companyName: true,
+        companyAddress: true,
+        companyImage: true,
+        slug: true,
+      },
+    });
+    
+    
+    return suppliers;
+  }
+
+  async getSupplier(id): Promise<any> {
+    return await this.prisma.supplier.findUnique({
       where: {
         id: id,
       },
@@ -32,8 +57,7 @@ export class SupplierService {
         companyBio: dto.companyBio,
         slug: dto.slug,
         featured: featured,
-
-    },
+      },
     });
   }
 }
