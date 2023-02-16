@@ -20,40 +20,40 @@ async function seedSupplier() {
             offer: {
                 create: [
                     {
-                        title: 'orange',
+                        title: 'Orange',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'fruit' },
                                 create: { name: 'fruit' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'orange.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
                     },
                     {
-                        title: 'apple',
+                        title: 'Apple',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'fruit' },
                                 create: { name: 'fruit' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'apple.jpg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
                     },
                     {
-                        title: 'banana',
+                        title: 'Bananen',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'fruit' },
                                 create: { name: 'fruit' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'banana.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
@@ -79,27 +79,27 @@ async function seedSupplier() {
             offer: {
                 create: [
                     {
-                        title: 'flower-honey',
+                        title: 'Feld Honig',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'honey' },
                                 create: { name: 'honey' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'flower-honey.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
                     },
                     {
-                        title: 'wood-honey',
+                        title: 'Wald Honig',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'honey' },
                                 create: { name: 'honey' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'forresthoney.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
@@ -125,27 +125,27 @@ async function seedSupplier() {
             offer: {
                 create: [
                     {
-                        title: 'eggs',
+                        title: 'Eier',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'eggs' },
                                 create: { name: 'eggs' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'eier.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
                     },
                     {
-                        title: 'milk',
+                        title: 'Milk',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'diary' },
                                 create: { name: 'diary' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'milk.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
@@ -177,20 +177,20 @@ async function seedSupplier() {
                                 create: { name: 'meat' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'pork.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
                     },
                     {
-                        title: 'beef',
+                        title: 'Beef',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'meat' },
                                 create: { name: 'meat' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'beef.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
@@ -215,27 +215,72 @@ async function seedSupplier() {
             offer: {
                 create: [
                     {
-                        title: 'bread',
+                        title: 'Kürbiskernbrot',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'grain' },
                                 create: { name: 'grain' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'bread.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
                     },
                     {
-                        title: 'buns',
+                        title: 'Buns',
                         category: {
                             connectOrCreate: {
                                 where: { name: 'grain' },
                                 create: { name: 'grain' },
                             },
                         },
-                        img: 'https://www.nestle.com/sites/default/files/2018-10/nestle_logo.png',
+                        img: 'buns.jpeg',
+                        price: 1.99,
+                        unit: 'lb',
+                        amount: 100,
+                    },
+                ],
+            },
+        },
+    });
+    const markusFisher = await prisma.supplier.upsert({
+        where: { companyEmail: 'markusFischer@info.com' },
+        update: {},
+        create: {
+            companyName: 'Markus Fischer',
+            companyEmail: 'markusFischer@info.com',
+            companyLogo: 'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+            companyPhone: 123456789,
+            companyAddress: '1234 Main St',
+            companyImage: 'fisher.jpg',
+            companyBio: 'Fish from the Ammersee and the Starnberger See',
+            slug: 'markus-fisher',
+            role: client_1.enumRole.SUPPLIER,
+            offer: {
+                create: [
+                    {
+                        title: 'Trout',
+                        category: {
+                            connectOrCreate: {
+                                where: { name: 'fish' },
+                                create: { name: 'fish' },
+                            },
+                        },
+                        img: 'trout.jpeg',
+                        price: 1.99,
+                        unit: 'lb',
+                        amount: 100,
+                    },
+                    {
+                        title: 'Salmon',
+                        category: {
+                            connectOrCreate: {
+                                where: { name: 'fish' },
+                                create: { name: 'fish' },
+                            },
+                        },
+                        img: 'salmon.jpeg',
                         price: 1.99,
                         unit: 'lb',
                         amount: 100,
