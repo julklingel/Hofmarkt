@@ -4,89 +4,105 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Navbar from "../components/navbar";
 
-export default function SignUp () {
+export default function Signup() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+
   const [error, setError] = useState("");
-  const router = useRouter();
-  
 
+  const handleSubmit = async (e: any) => {
+    console.log("submit");
+    
+    e.preventDefault();
 
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        password2,
+      }),
+    });
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const data = await res.json();
 
-      console.log("response", response);
-    } catch (error) {
-      console.log(error);
+    if (data.error) {
+      setError(data.error);
+    } else {
+      router.push("/auth/login");
     }
   };
 
   return (
     <Fragment>
-      <Navbar/>
+        <Navbar />
+      <h1 className="text-3xl tracking-widest mb-10 font-semibold text-center text-c.green ">
+        SIGN UP
+      </h1>
     
-      
-    <h1 className=" text-center w-screen my-16 text-xl tracking-widest font-semibold text-c.green"> Sign  Up  </h1>
-      
-    <div className="grid grid-cols-2 row-span-full justify-items-center">
-      <div className="">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-secondary p-6 rounded-lg shadow-xl w-full max-w-sm self-center justify-center"
-        >
-          <h2 className="text-lg font-medium mb-4">Sign Up</h2>
-          {error && <p className="text-red-500 mb-4">Error: {error}</p>}
-          <div className="mb-4">
-            <label className="block font-medium mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block font-medium mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
-          >
-            Sign Up
-          </button>
-          <Link href="/login">
-            <p className="text-blue-500 hover:underline mt-4">
-              Already have an account? Login
-            </p>
-          </Link>
-        </form>
-      </div>
+      <section className=" grid grid-cols-2 p-20 gap-20 content-center">
+        <div className=" px-10 ">
+          <h2 className=" text-lg font-semibold text-c.green">User Sign Up</h2>
+        <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
+          <form className="">
 
-      <div>
-      <Image src={'/images/signup.png'} alt="logo" width={400} height={400} className=" rounded-3xl min-h-fit min-w-fit p-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"  />
-      </div>
-    </div>
+
+            <div className="mb-4">
+              <label className="block text-c.green text-sm font-bold mb-2">
+                Email
+              </label>
+              <input
+
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-c.green text-sm font-bold mb-2">
+                Password
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-12">
+              <label className="block text-c.green text-sm font-bold mb-2">
+                Re-enter Password
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="password"
+                placeholder="Password"
+                value={password2}
+                onChange={(e) => setPassword2(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+          <Image src="/images/continue-botton.png " alt="Continue Botton" className=" content-end" width={100} height={100} />
+            </div>
+          </form>
+          <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
+          <h2 className=" text-lg font-semibold text-c.green">Supplier Sign Up</h2>
+        </div>
+        <div className="">
+         <button type="submit" onClick={handleSubmit} ><Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} /> </button>
+        </div>
+
+      </section>
     </Fragment>
+
   );
-};
+}
+
