@@ -54,7 +54,6 @@ model Offer {
   img        String
   supplier   Supplier            @relation(fields: [supplierId], references: [id])
   supplierId String
-  supplierName String
   price      Float
   unit       String
   amount     Int
