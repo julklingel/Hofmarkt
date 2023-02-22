@@ -24,8 +24,6 @@ export async function getStaticProps() {
   const res = await fetch('http://localhost:4444/supplier/featured');
   const supplierObj = await res.json();
 
-
-
   return {
     props: {
       supplierObj
