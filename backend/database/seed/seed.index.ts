@@ -6,9 +6,9 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const seed = async () => {
-    seedCategory()
-    seedSupplier()
     seedUsers()
+    seedSupplier()
+    seedCategory()
 }
 
 seed()
