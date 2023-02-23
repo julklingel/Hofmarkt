@@ -9,11 +9,6 @@ export class supplierDto {
   companyLogo: string;
 
   @IsNotEmpty()
-  @IsString()
-  @IsEmail()
-  companyEmail: string;
-
-  @IsNotEmpty()
   companyPhone: any;
 
   @IsNotEmpty()

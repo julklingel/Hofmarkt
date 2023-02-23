@@ -6,9 +6,9 @@ const seed_category_1 = require("./seed.category");
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const seed = async () => {
-    (0, seed_category_1.seedCategory)();
-    (0, seed_supplier_1.seedSupplier)();
     (0, seed_user_1.seedUsers)();
+    (0, seed_supplier_1.seedSupplier)();
+    (0, seed_category_1.seedCategory)();
 };
 seed()
     .then(async () => {

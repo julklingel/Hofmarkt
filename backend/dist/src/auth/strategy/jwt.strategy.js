@@ -25,16 +25,16 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         this.prisma = prisma;
     }
     async validate(payload) {
-        const user = await this.prisma.user.findUnique({
+        const account = await this.prisma.account.findUnique({
             where: {
                 id: payload.sub
             }
         });
-        if (!user) {
+        if (!account) {
             throw new Error('User not found');
         }
-        delete user.hash;
-        return user;
+        delete account.password;
+        return account;
     }
 };
 JwtStrategy = __decorate([

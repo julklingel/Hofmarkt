@@ -50,7 +50,6 @@ export class SupplierService {
       data: {
         companyName: dto.companyName,
         companyLogo: dto.companyLogo,
-        companyEmail: dto.companyEmail,
         companyPhone: phoneNum,
         companyAddress: dto.companyAddress,
         companyImage: dto.companyImage,

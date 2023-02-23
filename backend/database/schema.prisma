@@ -10,13 +10,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id        String   @id @unique @default(uuid())
+  email     String   @unique
+  password  String
+  role      enumRole @default(BUYER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @unique
+  supplier  Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String? @unique
+
+  @@map("accounts")
+}
+
 model User {
   id         String      @id @unique @default(uuid())
+  account    Account?   
   firstName  String
   lastName   String
-  email      String      @unique
-  hash       String
-  role       enumRole    @default(BUYER)
   supplier   Supplier?   @relation(fields: [supplierId], references: [id])
   supplierId String?
   createdAt  DateTime    @default(now())
@@ -30,18 +43,17 @@ model User {
 
 model Supplier {
   id             String                 @id @unique @default(uuid())
+  account        Account?
   companyName    String
   companyLogo    String                 
-  companyEmail   String                 @unique
   companyPhone   Int
   companyAddress String
   companyImage   String
   companyBio     String            
   slug           String                 @unique
   featured       Boolean                @default(false)
-  role           enumRole               @default(SUPPLIER)
   createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
+  updatedAt      DateTime               @updatedAt               
   user           User[]
   offer          Offer[]
 
