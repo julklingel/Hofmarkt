@@ -38,7 +38,6 @@ export default function SignupForm() {
 
 
   const handleSubmit = async (e: any) => {
-    console.log(isSupplier); // repalce names with isSupplier
 
     e.preventDefault();
     if (password !== password2) {
@@ -114,7 +113,7 @@ export default function SignupForm() {
               />
             </div>
 
-            <ErrorMsg msg={error}  />
+            <ErrorMsg msg={error} setError={setError} />
 
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>

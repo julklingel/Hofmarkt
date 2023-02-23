@@ -88,7 +88,7 @@ export default function LoginForm() {
               />
             </div>
 
-            <ErrorMsg msg={error} />
+            <ErrorMsg msg={error} setError={setError}  />
 
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
