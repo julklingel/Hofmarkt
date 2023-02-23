@@ -30,8 +30,6 @@ model User {
   account    Account?   
   firstName  String
   lastName   String
-  email      String      @unique
-  hash       String
   supplier   Supplier?   @relation(fields: [supplierId], references: [id])
   supplierId String?
   createdAt  DateTime    @default(now())
@@ -48,7 +46,6 @@ model Supplier {
   account        Account?
   companyName    String
   companyLogo    String                 
-  companyEmail   String                 @unique
   companyPhone   Int
   companyAddress String
   companyImage   String
