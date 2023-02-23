@@ -2,28 +2,69 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.seedUsers = void 0;
 const client_1 = require("@prisma/client");
+const client_2 = require("@prisma/client");
 const argon2 = require("argon2");
 const prisma = new client_1.PrismaClient();
 async function seedUsers() {
     const hash = await argon2.hash('123');
-    const alice = await prisma.user.upsert({
-        where: { email: 'alice@prisma.io' },
+    const charlie = await prisma.account.upsert({
+        where: { email: 'charlie1@info.com' },
         update: {},
         create: {
-            email: 'alice@prisma.io',
-            hash: hash,
-            firstName: 'Alice',
-            lastName: 'Smith',
+            email: 'charlie1@info.com',
+            password: hash,
+            role: client_2.enumRole.BUYER,
+            user: {
+                create: {
+                    firstName: 'Charlie',
+                    lastName: 'Smith',
+                },
+            },
         },
     });
-    const bob = await prisma.user.upsert({
-        where: { email: 'bob@prisma.io' },
+    const klaus = await prisma.account.upsert({
+        where: { email: 'klaus@info.com' },
         update: {},
         create: {
-            email: 'bob@prisma.io',
-            hash: hash,
-            firstName: 'Bob',
-            lastName: 'Johnson',
+            email: 'klaus@info.com',
+            password: hash,
+            role: client_2.enumRole.BUYER,
+            user: {
+                create: {
+                    firstName: 'Klaus',
+                    lastName: 'Marka',
+                },
+            },
+        },
+    });
+    const john = await prisma.account.upsert({
+        where: { email: 'john@test.com' },
+        update: {},
+        create: {
+            email: 'john@test.com',
+            password: hash,
+            role: client_2.enumRole.BUYER,
+            user: {
+                create: {
+                    firstName: 'John',
+                    lastName: 'Doe',
+                },
+            },
+        },
+    });
+    const jane = await prisma.account.upsert({
+        where: { email: 'jane@test.de' },
+        update: {},
+        create: {
+            email: 'jane@test.de',
+            password: hash,
+            role: client_2.enumRole.BUYER,
+            user: {
+                create: {
+                    firstName: 'Jane',
+                    lastName: 'Doe',
+                },
+            },
         },
     });
 }
