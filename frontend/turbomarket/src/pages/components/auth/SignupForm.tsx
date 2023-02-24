@@ -123,7 +123,7 @@ export default function SignupForm() {
 
         </div>
         <div className="drop-shadow-xl">
-          {isSupplier ? <Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} /> :  <Image src="/images/supplier-signup.jpeg" alt="Hero picture of vegtables on a table" className=' rounded-full  '  width={500} height={500}/> }
+          {isSupplier ? <Image src="/images/supplier-signup.jpeg" alt="Hero picture of vegtables on a table" className=' rounded-full  '  width={500} height={500}/> : <Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} />  }
         </div>
 
 
