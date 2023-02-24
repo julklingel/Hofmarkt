@@ -8,6 +8,6 @@ export declare class JwtStrategy extends JwtStrategy_base {
     validate(payload: {
         sub: string;
         email: string;
-    }): Promise<import("@prisma/client").User>;
+    }): Promise<import("@prisma/client").Account>;
 }
 export {};

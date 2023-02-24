@@ -1,8 +1,7 @@
 export declare class signupDto {
     email: string;
     password: string;
-    firstName: string;
-    lastName: string;
+    isSupplier: boolean;
 }
 export declare class loginDto {
     email?: string;

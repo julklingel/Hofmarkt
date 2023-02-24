@@ -7,7 +7,7 @@ export declare class AuthService {
     private config;
     private jwt;
     constructor(prisma: PrismaService, config: ConfigService, jwt: JwtService);
-    signToken(user: {
+    signToken(account: {
         email: string;
         id: string;
     }): Promise<{

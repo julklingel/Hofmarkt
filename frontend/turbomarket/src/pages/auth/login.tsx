@@ -1,15 +1,16 @@
-import Navbar from "../components/navbar"
+import React, { Fragment, useState } from "react";
+import LoginForm from "../components/auth/LoginForm";
+import Navbar from "../components/navbar";
 
-export default function Login() {
-    return (
-        <div>
-            <Navbar />
-            <div className="flex flex-col items-center justify-center min-h-screen py-2 -mt-20 px-14 text-center">
-                <title>Login</title>
-                <h1>Login</h1>
-                <link rel="icon" href="/favicon.ico" />
-            </div>
 
-        </div>
-    )
+
+export default function Signup() {
+
+  return (
+    <Fragment>
+      <Navbar/>
+      <LoginForm/>
+    </Fragment>
+  )
 }
+

@@ -13,12 +13,12 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  async signToken(user: { email: string; id: string }) {
+  async signToken(account: { email: string; id: string }) {
     const secret = this.config.get('JWT_secret');
 
     const payload = {
-      email: user.email,
-      sub: user.id,
+      email: account.email,
+      sub: account.id,
     };
 
     const token = this.jwt.sign(payload, {
@@ -32,18 +32,18 @@ export class AuthService {
   }
 
   async signup(dto: signupDto) {
+    dto.isSupplier
     try {
       const hashedPassword = await argon2.hash(dto.password);
 
-      const user = await this.prisma.user.create({
+      const account = await this.prisma.account.create({
         data: {
           email: dto.email,
-          hash: hashedPassword,
-          firstName: dto.firstName,
-          lastName: dto.lastName,
+          password: hashedPassword,
+          role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
         },
       });
-      return this.signToken(user);
+      return this.signToken(account);
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
         throw new ForbiddenException('Looks like you already have an account.');
@@ -53,25 +53,25 @@ export class AuthService {
   }
 
   async login(dto: loginDto) {
-    const user = await this.prisma.user.findUnique({
+    const account = await this.prisma.account.findUnique({
       where: {
         email: dto.email,
       },
       select: {
         id: true,
         email: true,
-        hash: true,
+        password: true,
       },
     });
-    if (!user) {
+    if (!account) {
       throw new ForbiddenException('User not found');
     }
-    const passwordValid = await argon2.verify(user.hash, dto.password);
+    const passwordValid = await argon2.verify(account.password, dto.password);
 
     if (!passwordValid) {
       throw new ForbiddenException('Wrong password');
     }
-    delete user.hash;
-    return this.signToken(user);
+    delete account.password;
+    return this.signToken(account);
   }
 }
