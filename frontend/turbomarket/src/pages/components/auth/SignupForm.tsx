@@ -62,7 +62,7 @@ export default function SignupForm() {
   return (
     <Fragment>
       <h1 className="text-3xl tracking-widest mb-10 font-semibold text-center text-c.green ">
-        SIGN UP
+        Sign Up
       </h1>
 
       <section className=" grid grid-cols-2 p-20 gap-56 content-center">
@@ -123,7 +123,7 @@ export default function SignupForm() {
 
         </div>
         <div className="drop-shadow-xl">
-          <Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} />
+          {isSupplier ? <Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} /> :  <Image src="/images/supplier-signup.jpeg" alt="Hero picture of vegtables on a table" className=' rounded-full  '  width={500} height={500}/> }
         </div>
 
 
