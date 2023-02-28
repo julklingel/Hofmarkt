@@ -1,49 +1,36 @@
 import React, { Fragment, useState } from "react";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
 
-async function loginAccount(email: string, password: string) {
 
-  const res = await fetch('http://localhost:4444/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  const data = await res.json()
-  if (!res.ok) {
-    throw new Error(data.message || 'Something went wrong!')
-  }
-  return data
-}
 
 export default function LoginForm() {
+  
   const [isLogin, setIsLogin] = useState(false);
 
+  const session = useSession()
 
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: any) => {
-
     e.preventDefault();
-    try {
-      const account = await loginAccount(email, password);
-      setEmail("");
-      setPassword("");
 
-    } catch (error: any) {
-      setError(error.message);
+    console.log("Submithandler", password, email);
+    
 
-    }
-
-
+    const result = await signIn("Credentials", { email: email, password: password})
+    console.log("result", result);
+   
+    
+    setEmail("");
+    setPassword("");
+    
+   
   };
 
 
@@ -53,6 +40,7 @@ export default function LoginForm() {
       <h1 className="text-3xl tracking-widest mb-10 font-semibold text-center text-c.green ">
         Log In
       </h1>
+      <h2>{session.status}</h2>
 
       <section className=" grid grid-cols-2 p-20 gap-56 content-center">
         <div className=" px-10 ">
@@ -104,5 +92,3 @@ export default function LoginForm() {
 
   );
 }
-
-

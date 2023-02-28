@@ -64,7 +64,7 @@ export class AuthService {
       },
     });
     if (!account) {
-      throw new ForbiddenException('User not found');
+      throw new ForbiddenException('Account not found');
     }
     const passwordValid = await argon2.verify(account.password, dto.password);
 
