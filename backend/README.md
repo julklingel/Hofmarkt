@@ -64,19 +64,19 @@ To install and run the project on your local machine, please follow these steps:
 5. Create a docker-compose.yml file in the same directory with the following content:
 
   ```
-    services:
-  postgres:
-    image: postgres
-    restart: always
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
+  services:
+    postgres:
+      image: postgres
+      restart: always
+      env_file:
+        - .env
+      environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      volumes:
+        - postgres:/var/lib/postgresql/data
+      ports:
+        - '5432:5432'
   volumes:
     postgres:
   ```
@@ -84,7 +84,7 @@ To install and run the project on your local machine, please follow these steps:
   if this is not working, try to add the following docker-compose.yml file:
 
   ```
-    version: '3.8'
+  version: '3.8'
   services:
     postgres:
       image: postgres:13
