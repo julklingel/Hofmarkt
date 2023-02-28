@@ -58,28 +58,28 @@ To install and run the project on your local machine, please follow these steps:
     POSTGRES_PASSWORD=<your-postgres-password>
     DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}?schema=public"
     JWT_secret=<your-jwt-secret>
-  ```
+    ```
   Make sure to replace <your-postgres-username>, <your-postgres-password>, and <your-jwt-secret> with your actual values.
 
 5. Create a docker-compose.yml file in the same directory with the following content:
 
-    ```
-      services:
-    postgres:
-      image: postgres
-      restart: always
-      env_file:
-        - .env
-      environment:
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      volumes:
-        - postgres:/var/lib/postgresql/data
-      ports:
-        - '5432:5432'
+  ```
+    services:
+  postgres:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
   volumes:
     postgres:
-    ```
+  ```
 
   if this is not working, try to add the following docker-compose.yml file:
 
