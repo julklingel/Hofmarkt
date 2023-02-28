@@ -8,7 +8,6 @@
   "prisma": {
     "schema": "./database/schema.prisma",
     "seed": "ts-node ./database/seed/seed.index.ts"
-   
   },
   "scripts": {
     "prebuild": "rimraf dist",

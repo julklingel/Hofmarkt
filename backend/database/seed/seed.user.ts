@@ -69,5 +69,4 @@ export async function seedUsers() {
       },
     },
   });
-
 }

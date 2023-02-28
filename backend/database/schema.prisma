@@ -11,23 +11,23 @@ datasource db {
 }
 
 model Account {
-  id        String   @id @unique @default(uuid())
-  email     String   @unique
-  password  String
-  role      enumRole @default(BUYER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?  @unique
-  supplier  Supplier? @relation(fields: [supplierId], references: [id])
-  supplierId String? @unique
+  id         String    @id @unique @default(uuid())
+  email      String    @unique
+  password   String
+  role       enumRole  @default(BUYER)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?   @unique
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?   @unique
 
   @@map("accounts")
 }
 
 model User {
   id         String      @id @unique @default(uuid())
-  account    Account?   
+  account    Account?
   firstName  String
   lastName   String
   supplier   Supplier?   @relation(fields: [supplierId], references: [id])
@@ -42,18 +42,18 @@ model User {
 }
 
 model Supplier {
-  id             String                 @id @unique @default(uuid())
+  id             String   @id @unique @default(uuid())
   account        Account?
   companyName    String
-  companyLogo    String                 
+  companyLogo    String
   companyPhone   Int
   companyAddress String
   companyImage   String
-  companyBio     String            
-  slug           String                 @unique
-  featured       Boolean                @default(false)
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt               
+  companyBio     String
+  slug           String   @unique
+  featured       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   user           User[]
   offer          Offer[]
 
@@ -61,17 +61,17 @@ model Supplier {
 }
 
 model Offer {
-  id         String              @id @unique @default(uuid())
+  id         String      @id @unique @default(uuid())
   title      String
   img        String
-  supplier   Supplier            @relation(fields: [supplierId], references: [id])
+  supplier   Supplier    @relation(fields: [supplierId], references: [id])
   supplierId String
   price      Float
   unit       String
   amount     Int
   category   Category[]
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
   watchlist  Watchlist[]
   cart       Cart[]
   order      Order[]
@@ -118,16 +118,14 @@ model Order {
 }
 
 model Category {
-  id        String                 @id @unique @default(uuid())
-  name      String                 @unique
-  createdAt DateTime               @default(now())
-  updatedAt DateTime               @updatedAt
+  id        String   @id @unique @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   offer     Offer[]
 
   @@map("categories")
 }
-
-
 
 enum enumRole {
   BUYER
