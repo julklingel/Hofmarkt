@@ -48,7 +48,7 @@ To install and run the project on your local machine, please follow these steps:
     pnpm install
     ```
 
-4. Create a ```.env``` file in the root directory of the project and add your credentials in the following format:
+4. Create a .env file in the root directory of the project and add your credentials in the following format:
 
     ```
     POSTGRES_HOST="localhost"
@@ -61,7 +61,7 @@ To install and run the project on your local machine, please follow these steps:
   ```
   Make sure to replace <your-postgres-username>, <your-postgres-password>, and <your-jwt-secret> with your actual values.
 
-5. Create a ```docker-compose.yml``` file in the same directory with the following content:
+5. Create a docker-compose.yml file in the same directory with the following content:
 
     ```
       services:
@@ -81,7 +81,7 @@ To install and run the project on your local machine, please follow these steps:
     postgres:
     ```
 
-  if this is not working, try to add the following ```docker-compose.yml``` file:
+  if this is not working, try to add the following docker-compose.yml file:
 
   ```
     version: '3.8'
