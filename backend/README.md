@@ -59,7 +59,7 @@ To install and run the project on your local machine, please follow these steps:
     DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}?schema=public"
     JWT_secret=<your-jwt-secret>
     ```
-  Make sure to replace ```<your-postgres-username>```, ```<your-postgres-password>```, and ```<your-jwt-secret>``` with your actual values.
+  Make sure to replace ```<your-postgres-username>```, ```<your-postgres-password>``` and ```<your-jwt-secret>``` with your actual values.
 
 5. Create a docker-compose.yml file in the same directory with the following content:
 
