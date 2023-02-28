@@ -23,7 +23,8 @@ export default function LoginForm() {
     console.log("Submithandler", password, email);
     
 
-    const result = await signIn("Credentials", { email: email, password: password})
+    const result = await signIn("credentials", { email: email, password: password , redirect: false, callbackUrl: "http://localhost:3000"})
+    
     console.log("result", result);
    
     
