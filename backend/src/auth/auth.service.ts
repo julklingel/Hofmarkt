@@ -4,6 +4,7 @@ import { signupDto, loginDto } from './dto/auth.dto';
 import * as argon2 from 'argon2';
 import { PrismaService } from 'src/db-module/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -32,14 +33,17 @@ export class AuthService {
   }
 
   async signup(dto: signupDto) {
-    dto.isSupplier
+    dto.isSupplier;
     try {
-      const hashedPassword = await argon2.hash(dto.password);
+      const salt = randomBytes(32);
+      const saltedPassword = Buffer.concat([salt, Buffer.from(dto.password)]);
+      const hashedPassword = await argon2.hash(saltedPassword);
 
       const account = await this.prisma.account.create({
         data: {
           email: dto.email,
           password: hashedPassword,
+          salt: salt,
           role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
         },
       });
@@ -61,12 +65,15 @@ export class AuthService {
         id: true,
         email: true,
         password: true,
+        salt: true,
       },
     });
     if (!account) {
       throw new ForbiddenException('User not found');
     }
-    const passwordValid = await argon2.verify(account.password, dto.password);
+    const passwordValid = await argon2.verify(account.password, dto.password, {
+      salt: account.salt,
+    });
 
     if (!passwordValid) {
       throw new ForbiddenException('Wrong password');
