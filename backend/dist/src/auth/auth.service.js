@@ -16,6 +16,11 @@ const argon2 = require("argon2");
 const prisma_service_1 = require("../db-module/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const crypto_1 = require("crypto");
+const hashingConfig = {
+    parallelism: 1,
+    memoryCost: 64000,
+    timeCost: 3,
+};
 let AuthService = class AuthService {
     constructor(prisma, config, jwt) {
         this.prisma = prisma;
@@ -36,12 +41,18 @@ let AuthService = class AuthService {
             access_token: token,
         };
     }
+    async hashPassword(password) {
+        const salt = (0, crypto_1.randomBytes)(16);
+        return await argon2.hash(password, Object.assign(Object.assign({}, hashingConfig), { salt }));
+    }
+    async verifyPasswordWithHash(password, hash, salt) {
+        return await argon2.verify(hash, password, Object.assign(Object.assign({}, hashingConfig), { salt }));
+    }
     async signup(dto) {
         dto.isSupplier;
         try {
-            const salt = (0, crypto_1.randomBytes)(32);
-            const saltedPassword = Buffer.concat([salt, Buffer.from(dto.password)]);
-            const hashedPassword = await argon2.hash(saltedPassword);
+            const salt = (0, crypto_1.randomBytes)(16);
+            const hashedPassword = await this.hashPassword(dto.password);
             const account = await this.prisma.account.create({
                 data: {
                     email: dto.email,
@@ -74,9 +85,7 @@ let AuthService = class AuthService {
         if (!account) {
             throw new common_1.ForbiddenException('User not found');
         }
-        const passwordValid = await argon2.verify(account.password, dto.password, {
-            salt: account.salt,
-        });
+        const passwordValid = await this.verifyPasswordWithHash(dto.password, account.password, account.salt);
         if (!passwordValid) {
             throw new common_1.ForbiddenException('Wrong password');
         }

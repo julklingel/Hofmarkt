@@ -46,11 +46,15 @@ export class AuthService {
     });
   }
 
-  async verifyPasswordWithHash(password: string, hash: string) {
-    return await argon2.verify(hash, password, hashingConfig);
+  async verifyPasswordWithHash(password: string, hash: string, salt: Buffer) {
+    return await argon2.verify(hash, password, {
+      ...hashingConfig,
+      salt,
+    });
   }
 
   async signup(dto: signupDto) {
+    //can we delete this line?
     dto.isSupplier;
     try {
       const salt = randomBytes(16);
@@ -90,6 +94,7 @@ export class AuthService {
     const passwordValid = await this.verifyPasswordWithHash(
       dto.password,
       account.password,
+      account.salt,
     );
 
     if (!passwordValid) {

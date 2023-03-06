@@ -8,7 +8,7 @@ export class signupDto {
   @IsString()
   @IsNotEmpty()
   password: string;
-
+ 
   @IsBoolean()
   isSupplier: boolean;
 }
