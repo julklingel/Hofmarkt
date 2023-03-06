@@ -14,7 +14,7 @@ model Account {
   id         String    @id @unique @default(uuid())
   email      String    @unique
   password   String
-  salt       Bytes?
+  salt       Bytes
   role       enumRole  @default(BUYER)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt

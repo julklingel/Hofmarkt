@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { enumRole } from '@prisma/client';
 import * as argon2 from 'argon2';
+import { randomBytes } from 'crypto';
 
 const prisma = new PrismaClient();
 export async function seedUsers() {
   const hash = await argon2.hash('123');
+  const salt = await randomBytes(16);
 
   const charlie = await prisma.account.upsert({
     where: { email: 'charlie1@info.com' },
@@ -12,6 +14,7 @@ export async function seedUsers() {
     create: {
       email: 'charlie1@info.com',
       password: hash,
+      salt: salt,
       role: enumRole.BUYER,
       user: {
         create: {
@@ -28,6 +31,7 @@ export async function seedUsers() {
     create: {
       email: 'klaus@info.com',
       password: hash,
+      salt: salt,
       role: enumRole.BUYER,
       user: {
         create: {
@@ -44,6 +48,7 @@ export async function seedUsers() {
     create: {
       email: 'john@test.com',
       password: hash,
+      salt: salt,
       role: enumRole.BUYER,
       user: {
         create: {
@@ -60,6 +65,7 @@ export async function seedUsers() {
     create: {
       email: 'jane@test.de',
       password: hash,
+      salt: salt,
       role: enumRole.BUYER,
       user: {
         create: {
