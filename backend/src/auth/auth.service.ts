@@ -1,4 +1,4 @@
-import { ConsoleLogger, ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { signupDto, loginDto } from './dto/auth.dto';
 import * as argon2 from 'argon2';
