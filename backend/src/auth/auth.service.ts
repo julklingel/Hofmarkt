@@ -6,6 +6,12 @@ import { PrismaService } from 'src/db-module/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 
+const hashingConfig = {
+  parallelism: 1,
+  memoryCost: 64000,
+  timeCost: 3,
+};
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -32,13 +38,23 @@ export class AuthService {
     };
   }
 
+  async hashPassword(password: string) {
+    const salt = randomBytes(16);
+    return await argon2.hash(password, {
+      ...hashingConfig,
+      salt,
+    });
+  }
+
+  async verifyPasswordWithHash(password: string, hash: string) {
+    return await argon2.verify(hash, password, hashingConfig);
+  }
+
   async signup(dto: signupDto) {
     dto.isSupplier;
     try {
-      const salt = randomBytes(32);
-      const saltedPassword = Buffer.concat([salt, Buffer.from(dto.password)]);
-      const hashedPassword = await argon2.hash(saltedPassword);
-
+      const salt = randomBytes(16);
+      const hashedPassword = await this.hashPassword(dto.password);
       const account = await this.prisma.account.create({
         data: {
           email: dto.email,
@@ -71,9 +87,10 @@ export class AuthService {
     if (!account) {
       throw new ForbiddenException('User not found');
     }
-    const passwordValid = await argon2.verify(account.password, dto.password, {
-      salt: account.salt,
-    });
+    const passwordValid = await this.verifyPasswordWithHash(
+      dto.password,
+      account.password,
+    );
 
     if (!passwordValid) {
       throw new ForbiddenException('Wrong password');
