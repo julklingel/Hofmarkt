@@ -2,15 +2,12 @@ import React, { Fragment, useState } from "react";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, useSession, getSession } from "next-auth/react";
 
 
 
 export default function LoginForm() {
-  
-  const [isLogin, setIsLogin] = useState(false);
-
-  const session = useSession()
+  const { data: session } = useSession();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,16 +17,15 @@ export default function LoginForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    console.log("Submithandler", password, email);
+    const result:any  = await signIn("credentials", { email: email, password: password , redirect: false })
     
-
-    const result = await signIn("credentials", { email: email, password: password , redirect: false, callbackUrl: "http://localhost:3000"})
-    
-    console.log("result", result);
-   
-    
+    if (result.error) {
+      setError(result.error);
+    }
+    else {
     setEmail("");
     setPassword("");
+    }
     
    
   };
@@ -41,7 +37,7 @@ export default function LoginForm() {
       <h1 className="text-3xl tracking-widest mb-10 font-semibold text-center text-c.green ">
         Log In
       </h1>
-      <h2>{session.status}</h2>
+
 
       <section className=" grid grid-cols-2 p-20 gap-56 content-center">
         <div className=" px-10 ">

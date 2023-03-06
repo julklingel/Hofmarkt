@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
+import { signIn } from "next-auth/react";
 
 async function createAccount(email: string, password: string, isSupplier: boolean) {
 
@@ -16,11 +17,11 @@ async function createAccount(email: string, password: string, isSupplier: boolea
   if (!res.ok) {
     throw new Error(data.message || 'Something went wrong!')
   }
-  return data
+  
+  return signIn("credentials", { email: email, password: password , redirect: false })
 }
 
 export default function SignupForm() {
-  const [isLogin, setIsLogin] = useState(false);
   const [isSupplier, setIsSupplier] = useState(false);
 
   function switchAccountModeHandler() {
@@ -28,7 +29,6 @@ export default function SignupForm() {
   }
 
 
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -41,9 +41,10 @@ export default function SignupForm() {
 
     e.preventDefault();
     if (password !== password2) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
     } else {
       try {
+        
         const account = await createAccount(email, password, isSupplier);
         setEmail("");
         setPassword("");
