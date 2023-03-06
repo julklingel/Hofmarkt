@@ -8,17 +8,17 @@ export class signupDto {
   @IsString()
   @IsNotEmpty()
   password: string;
- 
-  @IsBoolean()
+
+  //@IsBoolean()
   isSupplier: boolean;
 }
 
 export class loginDto {
   @IsEmail()
   @IsNotEmpty()
-  email?: string;
+  email: string;
 
   @IsString()
   @IsNotEmpty()
-  password?: string;
+  password: string;
 }

@@ -23,10 +23,6 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], signupDto.prototype, "password", void 0);
-__decorate([
-    (0, class_validator_1.IsBoolean)(),
-    __metadata("design:type", Boolean)
-], signupDto.prototype, "isSupplier", void 0);
 exports.signupDto = signupDto;
 class loginDto {
 }

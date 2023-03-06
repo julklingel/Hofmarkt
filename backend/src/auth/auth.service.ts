@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConsoleLogger, ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { signupDto, loginDto } from './dto/auth.dto';
 import * as argon2 from 'argon2';
@@ -49,7 +49,7 @@ export class AuthService {
   async verifyPasswordWithHash(password: string, hash: string, salt: Buffer) {
     return await argon2.verify(hash, password, {
       ...hashingConfig,
-      salt,
+      salt: salt,
     });
   }
 
@@ -91,6 +91,7 @@ export class AuthService {
     if (!account) {
       throw new ForbiddenException('User not found');
     }
+
     const passwordValid = await this.verifyPasswordWithHash(
       dto.password,
       account.password,

@@ -46,7 +46,7 @@ let AuthService = class AuthService {
         return await argon2.hash(password, Object.assign(Object.assign({}, hashingConfig), { salt }));
     }
     async verifyPasswordWithHash(password, hash, salt) {
-        return await argon2.verify(hash, password, Object.assign(Object.assign({}, hashingConfig), { salt }));
+        return await argon2.verify(hash, password, Object.assign(Object.assign({}, hashingConfig), { salt: salt }));
     }
     async signup(dto) {
         dto.isSupplier;
