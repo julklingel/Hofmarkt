@@ -31,22 +31,34 @@ export class AuthService {
     };
   }
 
-  async signup(dto: signupDto) {
-    dto.isSupplier
-    try {
-      const hashedPassword = await argon2.hash(dto.password);
+  async mailAlreadyExists(email: string) {
+    return await this.prisma.account.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+  }
 
-      const account = await this.prisma.account.create({
-        data: {
-          email: dto.email,
-          password: hashedPassword,
-          role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
-        },
-      });
-      return this.signToken(account);
+  async signup(dto: signupDto) {
+    dto.isSupplier;
+    try {
+      const mailExists = await this.mailAlreadyExists(dto.email);
+      console.log(mailExists);
+      if (!mailExists) {
+        const hashedPassword = await argon2.hash(dto.password);
+
+        const account = await this.prisma.account.create({
+          data: {
+            email: dto.email.toLowerCase(),
+            password: hashedPassword,
+            role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
+          },
+        });
+        return this.signToken(account);
+      } else {
+        throw new ForbiddenException('Wrong Credentials');
+      }
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
-        throw new ForbiddenException('Looks like you already have an account.');
+        throw new ForbiddenException('Wrong Credentials');
       }
       throw new Error('Something went wrong');
     }
@@ -55,7 +67,7 @@ export class AuthService {
   async login(dto: loginDto) {
     const account = await this.prisma.account.findUnique({
       where: {
-        email: dto.email,
+        email: dto.email.toLowerCase(),
       },
       select: {
         id: true,
@@ -64,12 +76,12 @@ export class AuthService {
       },
     });
     if (!account) {
-      throw new ForbiddenException('User not found');
+      throw new ForbiddenException('Wrong Credentials');
     }
     const passwordValid = await argon2.verify(account.password, dto.password);
 
     if (!passwordValid) {
-      throw new ForbiddenException('Wrong password');
+      throw new ForbiddenException('Wrong Credentials');
     }
     delete account.password;
     return this.signToken(account);

@@ -35,22 +35,34 @@ let AuthService = class AuthService {
             access_token: token,
         };
     }
+    async mailAlreadyExists(email) {
+        return await this.prisma.account.findUnique({
+            where: { email: email.toLowerCase() },
+        });
+    }
     async signup(dto) {
         dto.isSupplier;
         try {
-            const hashedPassword = await argon2.hash(dto.password);
-            const account = await this.prisma.account.create({
-                data: {
-                    email: dto.email,
-                    password: hashedPassword,
-                    role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
-                },
-            });
-            return this.signToken(account);
+            const mailExists = await this.mailAlreadyExists(dto.email);
+            console.log(mailExists);
+            if (!mailExists) {
+                const hashedPassword = await argon2.hash(dto.password);
+                const account = await this.prisma.account.create({
+                    data: {
+                        email: dto.email.toLowerCase(),
+                        password: hashedPassword,
+                        role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
+                    },
+                });
+                return this.signToken(account);
+            }
+            else {
+                throw new common_1.ForbiddenException('Wrong Credentials');
+            }
         }
         catch (error) {
             if (error.code === 'P2002' && error.meta.target.includes('email')) {
-                throw new common_1.ForbiddenException('Looks like you already have an account.');
+                throw new common_1.ForbiddenException('Wrong Credentials');
             }
             throw new Error('Something went wrong');
         }
@@ -58,7 +70,7 @@ let AuthService = class AuthService {
     async login(dto) {
         const account = await this.prisma.account.findUnique({
             where: {
-                email: dto.email,
+                email: dto.email.toLowerCase(),
             },
             select: {
                 id: true,
@@ -67,11 +79,11 @@ let AuthService = class AuthService {
             },
         });
         if (!account) {
-            throw new common_1.ForbiddenException('User not found');
+            throw new common_1.ForbiddenException('Wrong Credentials');
         }
         const passwordValid = await argon2.verify(account.password, dto.password);
         if (!passwordValid) {
-            throw new common_1.ForbiddenException('Wrong password');
+            throw new common_1.ForbiddenException('Wrong Credentials');
         }
         delete account.password;
         return this.signToken(account);

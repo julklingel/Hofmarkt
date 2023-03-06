@@ -6,5 +6,5 @@ export declare class OfferController {
     getOffers(): any;
     getOffer(id: string): any;
     getOffersBySupplier(id: string): any;
-    createOffer(dto: offerDto): import("@prisma/client").Prisma.Prisma__OfferClient<import("@prisma/client").Offer, never>;
+    createOffer(dto: offerDto): import(".prisma/client").Prisma.Prisma__OfferClient<import(".prisma/client").Offer, never>;
 }
