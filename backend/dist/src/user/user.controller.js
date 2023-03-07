@@ -24,6 +24,9 @@ let UserController = class UserController {
     getOwnUser(user) {
         return this.userService.getOwnUser(user);
     }
+    getWorld() {
+        return "Hello World!";
+    }
     getOneUser2() {
         return 'me2';
     }
@@ -35,6 +38,12 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "getOwnUser", null);
+__decorate([
+    (0, common_1.Get)(''),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], UserController.prototype, "getWorld", null);
 __decorate([
     (0, common_1.Patch)('me'),
     __metadata("design:type", Function),

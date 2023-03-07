@@ -14,6 +14,11 @@ export class UserController {
     return this.userService.getOwnUser(user);
   }
 
+  @Get('')
+  getWorld() {
+    return "Hello World!"
+  }
+
   // Patch User Information
   @Patch('me')
   getOneUser2() {
