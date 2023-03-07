@@ -44,7 +44,7 @@ export default function Navbar() {
                     {status === 'authenticated' && (
                     <div>
                         <Link href="/auth/login" onClick={hanldeSubmit} className="p-3 mr-5 rounded-full bg-secondary drop-shadow-lg hover:font-semibold">Logout</Link>
-                        <Link href="/myaccount" className="p-3 rounded-full bg-secondary drop-shadow-lg hover:font-semibold" >Account</Link>
+                        <Link href="/account" className="p-3 rounded-full bg-secondary drop-shadow-lg hover:font-semibold" >Account</Link>
 
                     </div>
                     )}
