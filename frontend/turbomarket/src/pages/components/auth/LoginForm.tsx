@@ -1,52 +1,33 @@
 import React, { Fragment, useState } from "react";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
 import Link from "next/link";
-
-async function loginAccount(email: string, password: string) {
-
-  const res = await fetch('http://localhost:4444/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  const data = await res.json()
-  if (!res.ok) {
-    throw new Error(data.message || 'Something went wrong!')
-  }
-  return data
-}
+import { signIn, useSession } from "next-auth/react";
 
 export default function LoginForm() {
-  const [isLogin, setIsLogin] = useState(false);
+  const { data: session } = useSession();
 
-
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: any) => {
-
     e.preventDefault();
-    try {
-      const account = await loginAccount(email, password);
+
+    const result: any = await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
+    });
+
+    if (result.error) {
+      setError(result.error);
+    } else {
       setEmail("");
       setPassword("");
-
-    } catch (error: any) {
-      setError(error.message);
-
     }
-
-
   };
-
-
 
   return (
     <Fragment>
@@ -59,8 +40,6 @@ export default function LoginForm() {
           <h2 className=" text-lg font-semibold text-c.green">Log In</h2>
           <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
-
-
             <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">
                 Email
@@ -88,21 +67,25 @@ export default function LoginForm() {
               />
             </div>
 
-            <ErrorMsg msg={error} setError={setError}  />
-
+            <ErrorMsg msg={error} setError={setError} />
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
-          <Link href={"/LoginHelp"}><p className=" text-xs text-c.green hover:underline">Forget Password?</p></Link>
-
-
+          <Link href={"/LoginHelp"}>
+            <p className=" text-xs text-c.green hover:underline">
+              Forget Password?
+            </p>
+          </Link>
         </div>
         <div className="drop-shadow-xl">
-          <Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} />
+          <Image
+            src="/images/signup.png"
+            alt="Hero picture of vegtables on a table"
+            className=" rounded-full  "
+            width={500}
+            height={500}
+          />
         </div>
       </section>
     </Fragment>
-
   );
 }
-
-

@@ -87,7 +87,7 @@ export class AuthService {
       },
     });
     if (!account) {
-      throw new ForbiddenException('Wrong credentials');
+      throw new ForbiddenException('User not found');
     }
 
     const passwordValid = await this.verifyPasswordWithHash(

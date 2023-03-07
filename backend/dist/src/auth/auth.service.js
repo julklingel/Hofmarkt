@@ -82,7 +82,7 @@ let AuthService = class AuthService {
             },
         });
         if (!account) {
-            throw new common_1.ForbiddenException('Wrong credentials');
+            throw new common_1.ForbiddenException('User not found');
         }
         const passwordValid = await this.verifyPasswordWithHash(dto.password, account.password, account.salt);
         if (!passwordValid) {
