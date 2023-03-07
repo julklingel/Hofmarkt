@@ -59,7 +59,7 @@ export class AuthService {
       const hashedPassword = await this.hashPassword(dto.password);
       const account = await this.prisma.account.create({
         data: {
-          email: dto.email,
+          email: dto.email.toLowerCase(),
           password: hashedPassword,
           salt: salt,
           role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
@@ -70,14 +70,14 @@ export class AuthService {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
         throw new ForbiddenException('Looks like you already have an account.');
       }
-      throw new Error('Something went wrong');
+      throw new Error('Wrong credentials');
     }
   }
 
   async login(dto: loginDto) {
     const account = await this.prisma.account.findUnique({
       where: {
-        email: dto.email,
+        email: dto.email.toLowerCase(),
       },
       select: {
         id: true,
@@ -87,7 +87,7 @@ export class AuthService {
       },
     });
     if (!account) {
-      throw new ForbiddenException('User not found');
+      throw new ForbiddenException('Wrong credentials');
     }
 
     const passwordValid = await this.verifyPasswordWithHash(
@@ -97,7 +97,7 @@ export class AuthService {
     );
 
     if (!passwordValid) {
-      throw new ForbiddenException('Wrong password');
+      throw new ForbiddenException('Wrong credentials');
     }
     delete account.password;
     return this.signToken(account);
