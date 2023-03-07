@@ -68,7 +68,7 @@ export class AuthService {
       return this.signToken(account);
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
-        throw new ForbiddenException('Looks like you already have an account.');
+        throw new ForbiddenException('Wrong credentials');
       }
       throw new Error('Something went wrong');
     }
@@ -87,7 +87,7 @@ export class AuthService {
       },
     });
     if (!account) {
-      throw new ForbiddenException('User not found');
+      throw new ForbiddenException('Wrong credentials');
     }
 
     const passwordValid = await this.verifyPasswordWithHash(
@@ -97,8 +97,7 @@ export class AuthService {
     );
 
     if (!passwordValid) {
-      throw new ForbiddenException('Wrong password');
-    }
+      throw new ForbiddenException('Wrong credentials');
     delete account.password;
     return this.signToken(account);
   }
