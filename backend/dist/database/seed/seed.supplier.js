@@ -3,15 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.seedSupplier = void 0;
 const client_1 = require("@prisma/client");
 const argon2 = require("argon2");
+const crypto_1 = require("crypto");
 const prisma = new client_1.PrismaClient();
 async function seedSupplier() {
     const hash = await argon2.hash('supplier123');
+    const salt = await (0, crypto_1.randomBytes)(16);
     const klausObstler = await prisma.account.upsert({
         where: { email: 'klaus-obstler@info.com' },
         update: {},
         create: {
             email: 'klaus-obstler@info.com',
             password: hash,
+            salt: salt,
             role: client_1.enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -75,6 +78,7 @@ async function seedSupplier() {
         create: {
             email: 'ammer-imker@info.com',
             password: hash,
+            salt: salt,
             role: client_1.enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -126,6 +130,7 @@ async function seedSupplier() {
         create: {
             email: 'm-hof@info.com',
             password: hash,
+            salt: salt,
             role: client_1.enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -177,6 +182,7 @@ async function seedSupplier() {
         create: {
             email: 'dhunter@gmail.com',
             password: hash,
+            salt: salt,
             role: client_1.enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -227,6 +233,7 @@ async function seedSupplier() {
         create: {
             email: 'maria-bread@info.com',
             password: hash,
+            salt: salt,
             role: client_1.enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -277,6 +284,7 @@ async function seedSupplier() {
         create: {
             email: 'markusFischer@info.com',
             password: hash,
+            salt: salt,
             role: client_1.enumRole.SUPPLIER,
             supplier: {
                 create: {

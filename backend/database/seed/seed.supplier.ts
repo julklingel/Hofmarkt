@@ -1,5 +1,6 @@
 import { enumRole, PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
+import { randomBytes } from 'crypto';
 
 
 
@@ -7,6 +8,7 @@ const prisma = new PrismaClient();
 
 export async function seedSupplier() {
     const hash = await argon2.hash('supplier123');
+    const salt = await randomBytes(16);
 
     const klausObstler = await prisma.account.upsert({
         where: { email: 'klaus-obstler@info.com' },
@@ -14,6 +16,7 @@ export async function seedSupplier() {
         create: {
             email: 'klaus-obstler@info.com',
             password: hash,
+            salt: salt,
             role: enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -79,6 +82,7 @@ export async function seedSupplier() {
         create: {
             email: 'ammer-imker@info.com',
             password: hash,
+            salt: salt,
             role: enumRole.SUPPLIER,
             supplier: {
                 create: {
@@ -133,6 +137,7 @@ const manfredHof = await prisma.account.upsert({
     create: {
         email: 'm-hof@info.com',
         password: hash,
+        salt: salt,
         role: enumRole.SUPPLIER,
         supplier: {
           create: {
@@ -187,6 +192,7 @@ const dominikHunter = await prisma.account.upsert({
     create: {
         email: 'dhunter@gmail.com',
         password: hash,
+        salt: salt,
         role: enumRole.SUPPLIER,
         supplier: {
           create: {
@@ -240,6 +246,7 @@ const mariaBaker = await prisma.account.upsert({
     create: {
         email: 'maria-bread@info.com',
         password: hash,
+        salt: salt,
         role: enumRole.SUPPLIER,
         supplier: {
           create: {
@@ -293,6 +300,7 @@ const markusFisher = await prisma.account.upsert({
     create: {
         email: 'markusFischer@info.com',
         password: hash,
+        salt: salt,
         role: enumRole.SUPPLIER,
         supplier: {
           create: {

@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { ConfigService } from '@nestjs/config';
 import { signupDto, loginDto } from './dto/auth.dto';
 import { PrismaService } from 'src/db-module/prisma.service';
@@ -13,6 +14,8 @@ export declare class AuthService {
     }): Promise<{
         access_token: string;
     }>;
+    hashPassword(password: string): Promise<string>;
+    verifyPasswordWithHash(password: string, hash: string, salt: Buffer): Promise<boolean>;
     signup(dto: signupDto): Promise<{
         access_token: string;
     }>;
