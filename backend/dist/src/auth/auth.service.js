@@ -54,7 +54,7 @@ let AuthService = class AuthService {
             const hashedPassword = await this.hashPassword(dto.password);
             const account = await this.prisma.account.create({
                 data: {
-                    email: dto.email,
+                    email: dto.email.toLowerCase(),
                     password: hashedPassword,
                     salt: salt,
                     role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
@@ -66,13 +66,13 @@ let AuthService = class AuthService {
             if (error.code === 'P2002' && error.meta.target.includes('email')) {
                 throw new common_1.ForbiddenException('Looks like you already have an account.');
             }
-            throw new Error('Something went wrong');
+            throw new Error('Wrong credentials');
         }
     }
     async login(dto) {
         const account = await this.prisma.account.findUnique({
             where: {
-                email: dto.email,
+                email: dto.email.toLowerCase(),
             },
             select: {
                 id: true,
@@ -82,11 +82,11 @@ let AuthService = class AuthService {
             },
         });
         if (!account) {
-            throw new common_1.ForbiddenException('Account not found');
+            throw new common_1.ForbiddenException('User not found');
         }
         const passwordValid = await this.verifyPasswordWithHash(dto.password, account.password, account.salt);
         if (!passwordValid) {
-            throw new common_1.ForbiddenException('Wrong password');
+            throw new common_1.ForbiddenException('Wrong credentials');
         }
         delete account.password;
         return this.signToken(account);
