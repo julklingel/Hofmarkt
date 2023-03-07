@@ -54,10 +54,8 @@ export class AuthService {
   }
 
   async signup(dto: signupDto) {
-    //can we delete this line?
-    dto.isSupplier;
     try {
-      const salt = randomBytes(16);
+      const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
       const account = await this.prisma.account.create({
         data: {

@@ -49,9 +49,8 @@ let AuthService = class AuthService {
         return await argon2.verify(hash, password, Object.assign(Object.assign({}, hashingConfig), { salt: salt }));
     }
     async signup(dto) {
-        dto.isSupplier;
         try {
-            const salt = (0, crypto_1.randomBytes)(16);
+            const salt = (0, crypto_1.randomBytes)(128);
             const hashedPassword = await this.hashPassword(dto.password);
             const account = await this.prisma.account.create({
                 data: {
