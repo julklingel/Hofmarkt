@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
 import Link from "next/link";
-import { signIn, useSession, getSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function LoginForm() {
   const { data: session } = useSession();

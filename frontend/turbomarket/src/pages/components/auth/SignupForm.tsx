@@ -9,6 +9,7 @@ async function createAccount(
   password: string,
   isSupplier: boolean
 ) {
+  
   const res = await fetch("http://localhost:4444/auth/signup", {
     method: "POST",
     body: JSON.stringify({ email, password, isSupplier }),
@@ -20,7 +21,6 @@ async function createAccount(
   if (!res.ok) {
     throw new Error(data.message || "Something went wrong!");
   }
-
   return signIn("credentials", {
     email: email,
     password: password,
