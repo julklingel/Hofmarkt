@@ -13,7 +13,7 @@ export declare class AuthService {
     }): Promise<{
         access_token: string;
     }>;
-    mailAlreadyExists(email: string): Promise<import(".prisma/client").Account>;
+    mailAlreadyExists(email: string): Promise<import("@prisma/client").Account>;
     signup(dto: signupDto): Promise<{
         access_token: string;
     }>;

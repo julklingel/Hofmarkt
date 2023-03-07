@@ -6,5 +6,5 @@ export declare class SupplierService {
     getSuppliers(): Promise<any>;
     getFeaturedSuppliers(): Promise<any>;
     getSupplier(id: any): Promise<any>;
-    createSupplier(dto: supplierDto): import(".prisma/client").Prisma.Prisma__SupplierClient<import(".prisma/client").Supplier, never>;
+    createSupplier(dto: supplierDto): import("@prisma/client").Prisma.Prisma__SupplierClient<import("@prisma/client").Supplier, never>;
 }
