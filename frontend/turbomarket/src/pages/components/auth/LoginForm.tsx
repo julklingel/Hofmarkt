@@ -4,8 +4,6 @@ import ErrorMsg from "../msg/ErrorMsg";
 import Link from "next/link";
 import { signIn, useSession, getSession } from "next-auth/react";
 
-
-
 export default function LoginForm() {
   const { data: session } = useSession();
 
@@ -17,20 +15,19 @@ export default function LoginForm() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const result:any  = await signIn("credentials", { email: email, password: password , redirect: false })
-    
+    const result: any = await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
+    });
+
     if (result.error) {
       setError(result.error);
+    } else {
+      setEmail("");
+      setPassword("");
     }
-    else {
-    setEmail("");
-    setPassword("");
-    }
-    
-   
   };
-
-
 
   return (
     <Fragment>
@@ -38,14 +35,11 @@ export default function LoginForm() {
         Log In
       </h1>
 
-
       <section className=" grid grid-cols-2 p-20 gap-56 content-center">
         <div className=" px-10 ">
           <h2 className=" text-lg font-semibold text-c.green">Log In</h2>
           <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
-
-
             <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">
                 Email
@@ -73,19 +67,25 @@ export default function LoginForm() {
               />
             </div>
 
-            <ErrorMsg msg={error} setError={setError}  />
-
+            <ErrorMsg msg={error} setError={setError} />
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
-          <Link href={"/LoginHelp"}><p className=" text-xs text-c.green hover:underline">Forget Password?</p></Link>
-
-
+          <Link href={"/LoginHelp"}>
+            <p className=" text-xs text-c.green hover:underline">
+              Forget Password?
+            </p>
+          </Link>
         </div>
         <div className="drop-shadow-xl">
-          <Image src="/images/signup.png" alt="Hero picture of vegtables on a table" className=' rounded-full  ' width={500} height={500} />
+          <Image
+            src="/images/signup.png"
+            alt="Hero picture of vegtables on a table"
+            className=" rounded-full  "
+            width={500}
+            height={500}
+          />
         </div>
       </section>
     </Fragment>
-
   );
 }
