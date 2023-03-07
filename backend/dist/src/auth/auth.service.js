@@ -43,22 +43,15 @@ let AuthService = class AuthService {
     async signup(dto) {
         dto.isSupplier;
         try {
-            const mailExists = await this.mailAlreadyExists(dto.email);
-            console.log(mailExists);
-            if (!mailExists) {
-                const hashedPassword = await argon2.hash(dto.password);
-                const account = await this.prisma.account.create({
-                    data: {
-                        email: dto.email.toLowerCase(),
-                        password: hashedPassword,
-                        role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
-                    },
-                });
-                return this.signToken(account);
-            }
-            else {
-                throw new common_1.ForbiddenException('Wrong Credentials');
-            }
+            const hashedPassword = await argon2.hash(dto.password);
+            const account = await this.prisma.account.create({
+                data: {
+                    email: dto.email.toLowerCase(),
+                    password: hashedPassword,
+                    role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
+                },
+            });
+            return this.signToken(account);
         }
         catch (error) {
             if (error.code === 'P2002' && error.meta.target.includes('email')) {
