@@ -20,12 +20,13 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  async signToken(account: { email: string; id: string }) {
+  async signToken(account: { email: string; id: string; role: string }) {
     const secret = this.config.get('JWT_secret');
 
     const payload = {
       email: account.email,
       sub: account.id,
+      role: account.role,
     };
 
     const token = this.jwt.sign(payload, {
@@ -57,7 +58,7 @@ export class AuthService {
     try {
       const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
-      const account = await this.prisma.account.create({
+      await this.prisma.account.create({
         data: {
           email: dto.email.toLowerCase(),
           password: hashedPassword,
@@ -65,7 +66,6 @@ export class AuthService {
           role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
         },
       });
-      return this.signToken(account);
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
         throw new ForbiddenException('Looks like you already have an account.');
@@ -84,6 +84,7 @@ export class AuthService {
         email: true,
         password: true,
         salt: true,
+        role: true,
       },
     });
     if (!account) {
