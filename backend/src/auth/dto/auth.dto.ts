@@ -12,17 +12,18 @@ export class signupDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({ example: 'john@example.com' })
+  @ApiProperty({ example: 'true' })
   //@IsBoolean()
   isSupplier: boolean;
 }
 
 export class loginDto {
-  @ApiProperty({ example: 'pass123' })
+  @ApiProperty({ example: 'john@example.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
+  @ApiProperty({ example: 'pass123' })
   @IsString()
   @IsNotEmpty()
   password: string;
