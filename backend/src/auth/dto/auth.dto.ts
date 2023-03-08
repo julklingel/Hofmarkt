@@ -1,7 +1,6 @@
-import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
 import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { TransformBooleanString } from '../decorator';
 
 export class signupDto {
   @ApiProperty({ example: 'john@example.com' })
@@ -15,16 +14,7 @@ export class signupDto {
   password: string;
 
   @ApiProperty({ example: 'true' })
-  @Transform(({ value }) => {
-    if (typeof value === 'string' && (value === 'true' || value === 'false')) {
-      if (value.toLowerCase() === 'true') {
-        return true;
-      } else if (value.toLowerCase() === 'false') {
-        return false;
-      }
-    }
-    throw new BadRequestException('Invalid boolean value');
-  })
+  @TransformBooleanString()
   @IsBoolean()
   isSupplier: boolean;
 }
