@@ -1,4 +1,6 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
+
 import { AuthService } from './auth.service';
 import { signupDto, loginDto } from './dto/auth.dto';
 
@@ -6,11 +8,13 @@ import { signupDto, loginDto } from './dto/auth.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @ApiOkResponse({ description: '{ access_token: token}' })
   @Post('signup')
   signup(@Body() dto: signupDto) {
     return this.authService.signup(dto);
   }
 
+  @ApiOkResponse({ description: '{ access_token: token}' })
   @HttpCode(200)
   @Post('login')
   login(@Body() dto: loginDto) {
