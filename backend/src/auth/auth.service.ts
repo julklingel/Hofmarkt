@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async signup(dto: signupDto) {
-    console.log(typeof dto.isSupplier);
+    console.log(dto);
     try {
       const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
