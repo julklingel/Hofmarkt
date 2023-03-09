@@ -55,7 +55,6 @@ export class AuthService {
   }
 
   async signup(dto: signupDto) {
-    console.log(dto);
     try {
       const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
@@ -67,6 +66,7 @@ export class AuthService {
           role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
         },
       });
+      return { message: 'Account created successfully' };
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
         throw new ForbiddenException('Looks like you already have an account.');
