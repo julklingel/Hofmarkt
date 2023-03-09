@@ -16,7 +16,7 @@ export default function AddressForm() {
   return (
     <Fragment>
       <section className="grid grid-cols-2 px-40 gap-x-72 content-center">
-        <div className=" text-left text-lg text-c.green">
+        <div className=" text-justify text-lg text-c.green">
           <p className="my-4">
             One of the details we need is your address, which helps us identify
             the local suppliers in your area. This way, we can connect you with

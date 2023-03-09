@@ -19,7 +19,7 @@ export default function NameForm() {
      
 
       <section className=" grid grid-cols-2 px-40  gap-x-72 content-center">
-      <div className=" text-left text-lg text-c.green">
+      <div className=" text-justify text-lg text-c.green">
           <p className="my-4">
             We're thrilled to have you here at Hofmarkt and can't wait to help
             you discover the delicious products our local suppliers have to
