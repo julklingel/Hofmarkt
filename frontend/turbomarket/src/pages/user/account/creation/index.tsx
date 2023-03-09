@@ -1,17 +1,23 @@
 import { getSession } from "next-auth/react";
 import AddressForm from "./AddressForm"
 import NameForm from "./NameForm"
+import HomeButton from "../../../components/button/HomeBotton"
+import Footer from "./Footer"
 
 export default function UserCreation() {
 
     return (
         <div>
-            <h1 className="text-3xl tracking-widest m-10 font-semibold text-center text-c.green ">
+            <div className="p-4"> <HomeButton/> </div>
+            <h1 className="text-3xl tracking-widest my-8 mb-32 font-semibold text-center text-c.green ">
                 Welcome to Hofmarkt
             </h1>
             <AddressForm />
-            <NameForm/>
-        
+
+            {/* <NameForm/> */}
+            <Footer/>
+           
+
         </div>
     );
 
