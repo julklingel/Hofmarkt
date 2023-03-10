@@ -1,9 +1,12 @@
 import Image from "next/image";
+import { Fragment } from "react";
+import Footer from "./Footer";
 
 export default function DataConsentForm() {
   return (
+    <Fragment>
     <section className="grid grid-cols-2 px-40  gap-x-72">
-      <div className=" text-left text-justify text-lg text-c.green">
+      <div className=" text-justify text-lg text-c.green">
         <p className="">
           At Hofmarkt, we take your privacy seriously and ensure that your
           personal information is handled securely. All data that we collect
@@ -53,6 +56,9 @@ export default function DataConsentForm() {
           height={450}
         />
       </div>
+      
     </section>
+
+    </Fragment>
   );
 }

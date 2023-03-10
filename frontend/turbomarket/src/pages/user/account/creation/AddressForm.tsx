@@ -1,4 +1,5 @@
 import React, { Fragment, useRef } from "react";
+import Footer from "./Footer";
 
 export default function AddressForm() {
   const addressLine1 = useRef<HTMLInputElement>(null);
@@ -146,6 +147,7 @@ export default function AddressForm() {
         </div>
  
       </section>
+     
     </Fragment>
   );
 }

@@ -1,4 +1,5 @@
 import React, { Fragment, useRef } from "react";
+import Footer from "./Footer";
 
 export default function NameForm() {
   const firstName = useRef<HTMLInputElement>(null);
@@ -78,11 +79,14 @@ export default function NameForm() {
                 required
               />
             </div>
+            
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
         </div>
-
+        
       </section>
+      
     </Fragment>
+    
   );
 }
