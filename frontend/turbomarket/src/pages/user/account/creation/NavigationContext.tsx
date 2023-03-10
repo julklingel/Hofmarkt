@@ -1,7 +1,7 @@
-import { createContext, useContext, useState } from 'react';
-import NameForm from './NameForm';
-import AddressForm from './AddressForm';
-import DataConsentForm from './DataConsentForm';
+import { createContext, useContext, useState } from "react";
+import NameForm from "./NameForm";
+import AddressForm from "./AddressForm";
+import DataConsentForm from "./DataConsentForm";
 
 type ViewContextType = {
   currentView: 1 | 2 | 3;
@@ -14,9 +14,23 @@ const ViewContext = createContext<ViewContextType>({
 });
 
 const views: Record<1 | 2 | 3, JSX.Element> = {
-  1: <div><NameForm/></div>,
-  2: <div> <AddressForm/>  </div>,
-  3: <div> <DataConsentForm/> </div>,
+  1: (
+    <div>
+      <NameForm />
+    </div>
+  ),
+  2: (
+    <div>
+      {" "}
+      <AddressForm />{" "}
+    </div>
+  ),
+  3: (
+    <div>
+      {" "}
+      <DataConsentForm />{" "}
+    </div>
+  ),
 };
 
 function CurrentView(): JSX.Element {
@@ -33,26 +47,23 @@ function ViewSwitcher(): JSX.Element {
   }
 
   return (
-   
-    <div className='flex justify-center pt-16 text-c.green '>
-
+    <div className="flex justify-center pt-16 text-c.green ">
       {Object.keys(views).map((view) => (
-        <div className='p-6' >
+        <div className="p-6">
           <input
-          id="inline-radio"
-          type="radio"
-          value=""
-          name="inline-radio-group"
-          className="w-4 h-4 "
-          onClick={() => handleClick(view as 1 | 2 | 3)}
-        />
+            id="inline-radio"
+            type="radio"
+            value=""
+            defaultChecked={currentView === Number(view)}
+            name="inline-radio-group"
+            className="w-4 h-4 "
+            onClick={() => handleClick(view as 1 | 2 | 3)}
+          />
         </div>
-
-
       ))}
-    </div>
 
-  
+
+    </div>
   );
 }
 

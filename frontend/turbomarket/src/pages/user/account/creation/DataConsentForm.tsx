@@ -45,6 +45,14 @@ export default function DataConsentForm() {
             .
           </label>
         </div>
+        <div className="pt-6">
+        <button
+          type="button"
+          className="rounded bg-green-700 p-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-green-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        >
+          Submit
+        </button>
+      </div>
       </div>
 
       <div className="place-self-center">
