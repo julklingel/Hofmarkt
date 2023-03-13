@@ -44,8 +44,6 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       async jwt({ token, user }) {
         if (user) {
           token.accessToken = user.access_token;
-          token.email = "test@email.com";
-          token.name = "John Doe";
         }
 
         return token;

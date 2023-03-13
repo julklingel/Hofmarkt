@@ -1,7 +1,19 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useRef, useContext } from "react";
 import Footer from "./Footer";
+import { ViewContext } from "../../../../../store/NavigationContext";
+import { PersonalDataContext, AddressData, PersonalData } from "../../../../../store/DataContext";
+type PersonalDataContextType = {
+  personalData: PersonalData;
+  setPersonalData: React.Dispatch<React.SetStateAction<PersonalData>>;
+  addressData: AddressData;
+  setAddressData: React.Dispatch<React.SetStateAction<AddressData>>;
+};
 
 export default function AddressForm() {
+  const { currentView, setCurrentView } = useContext(ViewContext);
+  const { addressData, setAddressData } = useContext<PersonalDataContextType>(PersonalDataContext);
+
+
   const addressLine1 = useRef<HTMLInputElement>(null);
   const addressLine2 = useRef<HTMLInputElement>(null);
   const city = useRef<HTMLInputElement>(null);
@@ -11,8 +23,31 @@ export default function AddressForm() {
 
   function handleSubmit(e: any) {
     e.preventDefault();
-    console.log("submit");
-  }
+
+    const address = {
+      addressLine1: String(addressLine1.current?.value) ,
+      addressLine2: String(addressLine2.current?.value),
+      city: String(city.current?.value),
+      state: String(state.current?.value),
+      postalCode: String(postalCode.current?.value),
+      country: String(country.current?.value),
+    };
+
+    if (
+      address.addressLine1 &&
+      address.city &&
+      address.state &&
+      address.postalCode &&
+      address.country
+    ) {
+      setAddressData(address);
+      setCurrentView(3);
+    }
+    else {
+      alert("Please fill out all fields");
+    }
+    
+   }
 
   return (
     <Fragment>
@@ -32,7 +67,7 @@ export default function AddressForm() {
         </div>
         <div className=" px-10 ">
           <h2 className=" text-lg font-semibold text-c.green">Your Address</h2>
-          <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
+          <hr className=" bg-gray-200 mb-5 border-1"></hr>
 
           <form
           onSubmit={handleSubmit}
@@ -141,6 +176,13 @@ export default function AddressForm() {
           <div className="flex items-center justify-between">
 
           </div>
+          <button
+          type="button"
+          onClick={handleSubmit}
+          className="rounded bg-green-700 p-2 px-6 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-green-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        >
+          Save
+        </button>
         </form>
 
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>

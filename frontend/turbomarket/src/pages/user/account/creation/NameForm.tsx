@@ -1,19 +1,42 @@
-import React, { Fragment, useRef } from "react";
-import Footer from "./Footer";
+import React, { Fragment, useRef, useContext } from "react";
+import { ViewContext } from "../../../../../store/NavigationContext";
+import { PersonalDataContext, PersonalData, AddressData } from "../../../../../store/DataContext";
+
+type PersonalDataContextType = {
+  personalData: PersonalData;
+  setPersonalData: React.Dispatch<React.SetStateAction<PersonalData>>;
+  addressData: AddressData;
+  setAddressData: React.Dispatch<React.SetStateAction<AddressData>>;
+};
 
 export default function NameForm() {
+  const { currentView, setCurrentView } = useContext(ViewContext);
+  const { personalData, setPersonalData } = useContext<PersonalDataContextType>(PersonalDataContext);
+
   const firstName = useRef<HTMLInputElement>(null);
   const lastName = useRef<HTMLInputElement>(null);
   const phoneNumber = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: any) {
     e.preventDefault();
-    console.log("submit");
 
-    const firstNameValue = firstName.current?.value;
-    const lastNameValue = lastName.current?.value;
-    const phoneNumberValue = phoneNumber.current?.value;
+    const newPersonalData = {
+      firstName: firstName.current!.value,
+      lastName: lastName.current!.value,
+      phoneNumber: Number(phoneNumber.current!.value,)
+    };
+
+    if (newPersonalData.firstName && newPersonalData.lastName && newPersonalData.phoneNumber) {
+      setCurrentView(2);
+      setPersonalData(newPersonalData);
+    } else {
+      alert("Please fill out all fields");
+    }
   }
+  
+  
+
+  
 
   return (
     <Fragment>
@@ -40,7 +63,7 @@ export default function NameForm() {
           <h2 className=" text-lg font-semibold text-c.green">
             Your Personal Information
           </h2>
-          <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
+          <hr className=" mb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
             <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">
@@ -79,6 +102,13 @@ export default function NameForm() {
                 required
               />
             </div>
+            <button
+          type="button"
+          onClick={handleSubmit}
+          className="rounded bg-green-700 p-2 px-6 mb-4 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-green-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-green-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] active:bg-green-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)]"
+        >
+          Save
+        </button>
             
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
