@@ -1,21 +1,25 @@
 import React, { Fragment } from "react";
+import Image from "next/image";
 
 export default function CopmanyNotificationsForm() {
   return (
     <Fragment>
        {/* PAGE 3 */}
+        <section className="grid grid-cols-2">
 
        <div className="mt-10 sm:mt-0">
-        <div className="md:grid md:grid-cols-2 mx-40 md:gap-6">
+        <div className="md:grid md:grid-cols-1 mx-12 md:gap-6">
           <div className="md:col-span-1">
             <div className="px-4 sm:px-0">
               <h3 className="text-base font-semibold leading-6 text-gray-900">Notifications</h3>
-              <p className="mt-1 text-sm text-gray-600">Decide which communications you'd like to receive and how.</p>
+              <p className=" col-auto mt-1 text-sm text-gray-600">Decide which communications you'd like to receive and how.</p>
             </div>
           </div>
+
+
           <div className="mt-5 md:col-span-2 md:mt-0">
             <form>
-              <div className="overflow-hidden shadow sm:rounded-md">
+              <div className="overflow-hidden shadow-2xl  rounded-2xl">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                   <fieldset>
                     <legend className="sr-only">By Email</legend>
@@ -134,6 +138,16 @@ export default function CopmanyNotificationsForm() {
           </div>
         </div>
       </div>
+      <div className="place-self-center pt-20">
+        <Image
+          src="/images/food-notification.png"
+          alt="Hero picture of vegtables on a table"
+          className="rounded-full shadow-2xl"
+          width={500}
+          height={500}
+        />
+      </div>
+      </section>
      
     </Fragment>
   );
