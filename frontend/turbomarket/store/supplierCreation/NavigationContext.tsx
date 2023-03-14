@@ -1,21 +1,31 @@
+
+import DataConsentForm from "../../src/pages/components/supplier/creation/DataConsentForm";
+import CompanyAddressForm from "../../src/pages/components/supplier/creation/CompanyAddressForm";
+import CompanyNameForm from "../../src/pages/components/supplier/creation/CompanyNameForm";
+import CopmanyNotificationsForm from "../../src/pages/components/supplier/creation/CopmanyNotificationsForm"
+
+
 import { createContext, useContext, useState } from "react";
-import NameForm from "../../src/pages/components/user/creation/NameForm";
-import AddressForm from "../../src/pages/components/user/creation/AddressForm";
-import DataConsentForm from "../../src/pages/components/user/creation/DataConsentForm";
 
 
-const views: Record<1 | 2 | 3, JSX.Element> = {
+
+const views: Record<1 | 2 | 3 | 4, JSX.Element> = {
   1: (
     <div>
-      <NameForm  />
+      <CompanyAddressForm  />
     </div>
   ),
   2: (
     <div>
-      <AddressForm />
+      <CompanyNameForm />
     </div>
   ),
   3: (
+    <div>
+      <CopmanyNotificationsForm />
+    </div>
+  ),
+  4: (
     <div>
       <DataConsentForm />
     </div>
@@ -31,22 +41,22 @@ function CurrentView(): JSX.Element {
 function ViewSwitcher(): JSX.Element { 
   const { currentView, setCurrentView } = useContext(ViewContext);
 
-  function handleClick(view: 1 | 2 | 3): void {
+  function handleClick(view: 1 | 2 | 3 | 4): void {
     setCurrentView(view);
   }
 
   return (
-    <div className="flex justify-center text-c.green ">
+    <div className="flex justify-center text-c.green pt-6 ">
       {Object.keys(views).map((view: any) => (
-        <div key={view} className="pt-16">
+        <div key={view} className="">
           <input
             id="inline-radio"
             type="radio"
             value=""
             defaultChecked={currentView === Number(view)}
             name="inline-radio-group"
-            className="w-4 h-4 m-2 text-green-600  focus:ring-green-600"
-            onClick={() => handleClick(view as 1 | 2 | 3)}
+            className="w-4 h-4 m-2 text-green-600  focus:ring-green-600 "
+            onClick={() => handleClick(view as 1 | 2 | 3 | 4)}
           />
         </div>
       ))}
@@ -59,8 +69,8 @@ interface ViewContainerProps {
 }
 
 type ViewContextType = {
-  currentView: 1 | 2 | 3;
-  setCurrentView: (view: 1 | 2 | 3) => void;
+  currentView: 1 | 2 | 3 | 4;
+  setCurrentView: (view: 1 | 2 | 3 | 4) => void;
 };
 
 export const ViewContext = createContext<ViewContextType>({
@@ -72,7 +82,7 @@ export const ViewContext = createContext<ViewContextType>({
 
 
 export default function ViewProvider(props: any): JSX.Element {
-  const [currentView, setCurrentView] = useState<1 | 2 | 3>(1);
+  const [currentView, setCurrentView] = useState<1 | 2 | 3 | 4>(1);
 
 
   return (

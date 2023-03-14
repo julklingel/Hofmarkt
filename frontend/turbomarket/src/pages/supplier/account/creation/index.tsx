@@ -3,6 +3,7 @@ import HomeButton from "../../../components/button/HomeBotton";
 import React, { Fragment} from "react";
 import { GetServerSidePropsContext } from 'next';
 import CompanyNameForm from "../../../components/supplier/creation/CompanyNameForm";
+import ViewProvider from "store/supplierCreation/NavigationContext";
 
 
 
@@ -20,7 +21,7 @@ export default function UserCreation() {
         Welcome to Hofmarkt
       </h1>
 
-      <CompanyNameForm/>
+      <ViewProvider></ViewProvider>
 
   
     </Fragment>

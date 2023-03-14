@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 
-export default function NotificationsForm() {
+export default function CopmanyNotificationsForm() {
   return (
     <Fragment>
        {/* PAGE 3 */}
