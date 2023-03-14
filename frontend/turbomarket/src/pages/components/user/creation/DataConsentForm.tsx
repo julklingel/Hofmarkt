@@ -3,6 +3,7 @@ import { Fragment, useContext, useState } from "react";
 import { PersonalDataContext, AddressData, PersonalData } from "../../../../../store/DataContext";
 import { useSession } from "next-auth/react";
 import { useRouter} from "next/router";
+import { FormEvent } from "react";
 
 
 
@@ -25,12 +26,12 @@ export default function DataConsentForm() {
   const [error, setError] = useState();
   
 
-  const handleCheckboxChange = (e:any) => {
-    setIsChecked(e.target.checked);
+  const handleCheckboxChange = (e: FormEvent<HTMLInputElement>) => {
+    setIsChecked(e.currentTarget.checked);
   };
 
-  async function handleSubmit(e:any) {
-    e.preventDefault(e);
+  async function handleSubmit(e:FormEvent<HTMLButtonElement>) {
+    e.preventDefault();
     try {
       const res = await fetch("http://localhost:4444/user", {
         method: "POST",

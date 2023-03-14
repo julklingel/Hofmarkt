@@ -1,6 +1,7 @@
 import React, { Fragment, useRef, useContext } from "react";
 import { ViewContext } from "../../../../../store/NavigationContext";
 import { PersonalDataContext, PersonalData, AddressData } from "../../../../../store/DataContext";
+import {FormEvent} from "react";
 
 type PersonalDataContextType = {
   personalData: PersonalData;
@@ -17,7 +18,7 @@ export default function NameForm() {
   const lastName = useRef<HTMLInputElement>(null);
   const phoneNumber = useRef<HTMLInputElement>(null);
 
-  function handleSubmit(e: any) {
+  function handleSubmit(e: FormEvent<HTMLButtonElement> ) {
     e.preventDefault();
 
     const newPersonalData = {
@@ -64,7 +65,7 @@ export default function NameForm() {
             Your Personal Information
           </h2>
           <hr className=" mb-5 border-1 dark:bg-gray-700"></hr>
-          <form onSubmit={handleSubmit} className="">
+          <form className="">
             <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">
                 First Name
