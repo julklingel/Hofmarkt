@@ -1,5 +1,4 @@
 import React, { Fragment, useRef, useContext } from "react";
-import Footer from "./Footer";
 import { ViewContext } from "../../../../../store/NavigationContext";
 import { PersonalDataContext, AddressData, PersonalData } from "../../../../../store/DataContext";
 type PersonalDataContextType = {

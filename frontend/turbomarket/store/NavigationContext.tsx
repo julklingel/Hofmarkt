@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import NameForm from "../src/pages/user/account/creation/NameForm";
-import AddressForm from "../src/pages/user/account/creation/AddressForm";
-import DataConsentForm from "../src/pages/user/account/creation/DataConsentForm";
+import NameForm from "../src/pages/components/user/creation/NameForm";
+import AddressForm from "../src/pages/components/user/creation/AddressForm";
+import DataConsentForm from "../src/pages/components/user/creation/DataConsentForm";
 
 
 const views: Record<1 | 2 | 3, JSX.Element> = {

@@ -1,8 +1,7 @@
 import { getSession } from "next-auth/react";
 import HomeButton from "../../../components/button/HomeBotton";
-import React, { Fragment, useContext, useState } from "react";
+import React, { Fragment} from "react";
 import ViewProvider from "../../../../../store/NavigationContext";
-import { ViewContext } from "../../../../../store/NavigationContext";
 import DataProvider from "store/DataContext";
 
 
