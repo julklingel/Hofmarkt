@@ -38,7 +38,7 @@ export default function LoginForm() {
       <section className=" grid grid-cols-2 p-20 gap-56 content-center">
         <div className=" px-10 ">
           <h2 className=" text-lg font-semibold text-c.green">Log In</h2>
-          <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
+          <hr className=" bg-gray-200 mb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
             <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">

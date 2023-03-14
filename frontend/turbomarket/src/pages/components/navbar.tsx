@@ -15,16 +15,16 @@ export default function Navbar() {
     <div>
       <nav>
         <div
-          className="grid grid-cols-4 place-items-center  mt-2  bg-primary text-c.green font-mono"
+          className="grid grid-cols-4 place-items-center mt-4  bg-primary text-c.green font-mono"
           role="navigation"
         >
           <div className="">
             <Link href="/" className="p-2">
               <Image
-                src={"/svgs/logo.svg"}
+                src={"/svgs/logo.png"}
                 alt="logo"
-                width={100}
-                height={100}
+                width={50}
+                height={50}
                 className=" min-h-fit min-w-fit p-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
               />
             </Link>

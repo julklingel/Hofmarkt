@@ -5,6 +5,7 @@ import ErrorMsg from "../msg/ErrorMsg";
 import { signIn } from "next-auth/react";
 
 async function createAccount(
+  
   email: string,
   password: string,
   isSupplier: boolean
@@ -26,9 +27,12 @@ async function createAccount(
     password: password,
     redirect: false,
   });
+  
 }
 
 export default function SignupForm() {
+  const router = useRouter();
+
   const [isSupplier, setIsSupplier] = useState(false);
 
   function switchAccountModeHandler() {
@@ -51,6 +55,11 @@ export default function SignupForm() {
         setEmail("");
         setPassword("");
         setPassword2("");
+        if (isSupplier) {
+          router.push("/supplier/account/creation");
+        } else {
+          router.push("/user/account/creation");
+        }
       } catch (error: any) {
         setError(error.message);
       }
@@ -68,7 +77,7 @@ export default function SignupForm() {
           <h2 className=" text-lg font-semibold text-c.green">
             {isSupplier ? "Supplier Sign Up" : "User Sign Up"}
           </h2>
-          <hr className=" bg-gray-200 pb-5 border-1 dark:bg-gray-700"></hr>
+          <hr className=" bg-gray-200 mb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
             <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">
