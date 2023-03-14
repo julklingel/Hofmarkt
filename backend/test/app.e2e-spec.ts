@@ -29,12 +29,33 @@ describe('App e2e test', () => {
   });
 
   describe('Auth', () => {
+    const dto: signupDto = {
+      email: 'jack@mack.de',
+      password: 'pass123',
+      isSupplier: false,
+    };
     describe('Signup', () => {
-      const dto: signupDto = {
-        email: 'jack@mack.de',
-        password: 'pass123',
-        isSupplier: false,
-      };
+      it('should throw if email is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({ password: dto.password, isSupplier: dto.isSupplier })
+          .expectStatus(400);
+      });
+      it('should throw if password is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({ email: dto.email, isSupplier: dto.isSupplier })
+          .expectStatus(400);
+      });
+      it('should throw if isSupplier is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({ email: dto.email, password: dto.password })
+          .expectStatus(400);
+      });
       it('should create a new user', () => {
         return pactum
           .spec()
@@ -46,14 +67,10 @@ describe('App e2e test', () => {
 
     describe('Login', () => {
       it('should login a user', () => {
-        const dto: loginDto = {
-          email: 'jack@mack.de',
-          password: 'pass123',
-        };
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody(dto)
+          .withBody({ email: dto.email, password: dto.password })
           .expectStatus(200);
       });
     });
