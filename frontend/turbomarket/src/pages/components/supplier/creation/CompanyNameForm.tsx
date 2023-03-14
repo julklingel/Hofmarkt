@@ -17,7 +17,7 @@ export default function CompanyNameForm() {
     <Fragment>
       {/* PAGE 1 */}
       <div>
-        <div className="md:grid md:grid-cols-2 mx-40 md:gap-6">
+        <div className="md:grid md:grid-cols-2 mx-40 md:gap-6  ">
           <div className="md:col-span-1">
             <div className="px-4 sm:px-0">
               <h3 className="text-base font-semibold leading-6 text-gray-900">Your Profile</h3>
@@ -26,9 +26,9 @@ export default function CompanyNameForm() {
               </p>
             </div>
           </div>
-          <div className="mt-5 md:col-span-2 md:mt-0">
+          <div className="mt-5 md:col-span-2 md:mt-0 shadow-2xl ">
             <form>
-              <div className="shadow sm:overflow-hidden sm:rounded-md">
+              <div className="shadow sm:overflow-hidden rounded-3xl">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-3 gap-6">
                     <div className="col-span-3 sm:col-span-2">
@@ -60,7 +60,7 @@ export default function CompanyNameForm() {
                         name="about"
                         rows={3}
                         className="mt-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:py-1.5 sm:text-sm sm:leading-6"
-                        placeholder="you@example.com"
+                        placeholder="Thats how I bake my cakes..."
                         defaultValue={''}
                       />
                     </div>

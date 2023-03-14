@@ -16,7 +16,7 @@ export default function UserCreation() {
       <div className="p-4">
         <HomeButton />
       </div>
-      <h1 className="text-3xl tracking-widest my-8 mb-8 font-semibold text-center text-c.green ">
+      <h1 className="text-3xl tracking-widest my-2 mb-8 font-semibold text-center text-c.green ">
         Welcome to Hofmarkt
       </h1>
 
