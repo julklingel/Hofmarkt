@@ -66,6 +66,20 @@ describe('App e2e test', () => {
     });
 
     describe('Login', () => {
+      it('should throw if email is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({ password: dto.password })
+          .expectStatus(400);
+      });
+      it('should throw if password is empty', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({ email: dto.email })
+          .expectStatus(400);
+      });
       it('should login a user', () => {
         return pactum
           .spec()
