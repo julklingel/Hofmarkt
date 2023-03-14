@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { PrismaService } from '../src/db-module/prisma.service';
 import { AppModule } from '../src/app/app.module';
-import { signupDto } from '../src/auth/dto/';
+import { loginDto, signupDto } from '../src/auth/dto/';
 
 describe('App e2e test', () => {
   let app: INestApplication;
@@ -21,6 +21,7 @@ describe('App e2e test', () => {
 
     prisma = app.get(PrismaService);
     await prisma.cleanDb();
+    pactum.request.setBaseUrl('http://localhost:4444');
   });
 
   afterAll(async () => {
@@ -29,22 +30,32 @@ describe('App e2e test', () => {
 
   describe('Auth', () => {
     describe('Signup', () => {
+      const dto: signupDto = {
+        email: 'jack@mack.de',
+        password: 'pass123',
+        isSupplier: false,
+      };
       it('should create a new user', () => {
-        const dto: signupDto = {
-          email: 'jack@mack.de',
-          password: 'pass123',
-          isSupplier: false,
-        };
         return pactum
           .spec()
-          .post('http://localhost:4444/auth/signup')
+          .post('/auth/signup')
           .withBody(dto)
           .expectStatus(201);
       });
     });
 
     describe('Login', () => {
-      it.todo('should login a user');
+      it('should login a user', () => {
+        const dto: loginDto = {
+          email: 'jack@mack.de',
+          password: 'pass123',
+        };
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody(dto)
+          .expectStatus(200);
+      });
     });
   });
 });
