@@ -3,6 +3,7 @@ import HomeButton from "../../../components/button/HomeBotton";
 import React, { Fragment} from "react";
 import ViewProvider from "../../../../../store/NavigationContext";
 import DataProvider from "store/DataContext";
+import { GetServerSidePropsContext } from 'next';
 
 
 
@@ -27,13 +28,13 @@ export default function UserCreation() {
   );
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession({ req: context.req });
 
   if (!session) {
     return {
       redirect: {
-        destination: "auth/login",
+        destination: "/auth/login",
         permanent: false,
       },
     };
