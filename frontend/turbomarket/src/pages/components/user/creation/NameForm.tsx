@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useContext } from "react";
-import { ViewContext } from "../../../../../store/userCreation/NavigationContext";
-import { PersonalDataContext, PersonalData, AddressData } from "../../../../../store/userCreation/DataContext";
+import { ViewContext } from "../../../../../store/userCreation/NavigationContextUser";
+import { PersonalDataContext, PersonalData, AddressData } from "../../../../../store/userCreation/DataContextUser";
 import {FormEvent} from "react";
 
 type PersonalDataContextType = {

@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useContext } from "react";
-import { ViewContext } from "../../../../../store/userCreation/NavigationContext";
-import { PersonalDataContext, PersonalData, AddressData } from "../../../../../store/userCreation/DataContext";
+import { ViewContext } from "../../../../../store/userCreation/NavigationContextUser";
+import { PersonalDataContext, PersonalData, AddressData } from "../../../../../store/userCreation/DataContextUser";
 import {FormEvent} from "react";
 
 
@@ -30,8 +30,9 @@ export default function CompanyNameForm() {
             <form>
               <div className="shadow sm:overflow-hidden rounded-3xl">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
-                  <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-3 sm:col-span-2">
+                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid">
+                    <div className="">
                       <label htmlFor="company-website" className="block text-sm font-medium leading-6 text-gray-900">
                         Website
                       </label>
@@ -48,6 +49,26 @@ export default function CompanyNameForm() {
                         />
                       </div>
                     </div>
+                  </div>
+                  <div className="grid">
+                    <div className="col-span-3 sm:col-span-1">
+                      <label htmlFor="company-website" className="block text-sm font-medium leading-6 text-gray-900">
+                        Mobile Number
+                      </label>
+                      <div className="mt-2 flex rounded-md shadow-sm">
+                        <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                          tel:
+                        </span>
+                        <input
+                          type="text"
+                          name="company-number"
+                          id="company-number"
+                          className="block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-green-600 sm:text-sm sm:leading-6"
+                          placeholder="Mobile Number"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   </div>
 
                   <div>

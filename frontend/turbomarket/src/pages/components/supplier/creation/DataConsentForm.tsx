@@ -1,28 +1,18 @@
 import Image from "next/image";
 import { Fragment, useContext, useState } from "react";
-import { PersonalDataContext, AddressData, PersonalData } from "../../../../../store/userCreation/DataContext";
 import { useSession } from "next-auth/react";
 import { useRouter} from "next/router";
 import { FormEvent } from "react";
-
-
-
-type PersonalDataContextType = {
-  personalData: PersonalData;
-  setPersonalData: React.Dispatch<React.SetStateAction<PersonalData>>;
-  addressData: AddressData;
-  setAddressData: React.Dispatch<React.SetStateAction<AddressData>>;
-};
+import { AddressDataContext } from "../../../../../store/supplierCreation/DataContextSupplier";
 
 
 export default function DataConsentForm() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const accessToken = session?.accessToken;
-  const { personalData, setPersonalData } = useContext<PersonalDataContextType>(PersonalDataContext);
-  const { addressData, setAddressData } = useContext<PersonalDataContextType>(PersonalDataContext);
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState();
+  const { addressData, setAddressData } = useContext(AddressDataContext);
   
 
   const handleCheckboxChange = (e: FormEvent<HTMLInputElement>) => {
@@ -47,7 +37,6 @@ export default function DataConsentForm() {
       
     }
   }
-
 
   return (
     <Fragment>
@@ -117,6 +106,8 @@ export default function DataConsentForm() {
           height={450}
         />
       </div>
+
+      <div>{JSON.stringify(addressData)}</div>
 
      
       

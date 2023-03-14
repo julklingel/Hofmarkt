@@ -2,8 +2,8 @@ import { getSession } from "next-auth/react";
 import HomeButton from "../../../components/button/HomeBotton";
 import React, { Fragment} from "react";
 import { GetServerSidePropsContext } from 'next';
-import CompanyNameForm from "../../../components/supplier/creation/CompanyNameForm";
-import ViewProvider from "store/supplierCreation/NavigationContext";
+import ViewProvider from "store/supplierCreation/NavigationContextSupplier";
+import DataProvider from "store/supplierCreation/DataContextSupplier";
 
 
 
@@ -21,7 +21,9 @@ export default function UserCreation() {
         Welcome to Hofmarkt
       </h1>
 
+      <DataProvider>
       <ViewProvider></ViewProvider>
+      </DataProvider>
 
   
     </Fragment>

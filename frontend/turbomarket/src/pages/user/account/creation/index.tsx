@@ -1,8 +1,8 @@
 import { getSession } from "next-auth/react";
 import HomeButton from "../../../components/button/HomeBotton";
 import React, { Fragment} from "react";
-import ViewProvider from "../../../../../store/userCreation/NavigationContext";
-import DataProvider from "store/userCreation/DataContext";
+import ViewProvider from "../../../../../store/userCreation/NavigationContextUser";
+import DataProvider from "store/userCreation/DataContextUser";
 import { GetServerSidePropsContext } from 'next';
 
 
