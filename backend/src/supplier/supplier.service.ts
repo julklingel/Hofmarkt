@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/db-module/prisma.service';
+import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
 
 @Injectable()
@@ -30,8 +30,7 @@ export class SupplierService {
         slug: true,
       },
     });
-    
-    
+
     return suppliers;
   }
 
