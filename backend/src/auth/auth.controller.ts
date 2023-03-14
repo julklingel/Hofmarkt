@@ -10,6 +10,8 @@ export class AuthController {
   @ApiOkResponse({ description: '{ message : "Account created successfully"}' })
   @Post('signup')
   signup(@Body() dto: signupDto) {
+    console.log(dto);
+    
     return this.authService.signup(dto);
   }
 
