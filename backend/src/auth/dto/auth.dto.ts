@@ -13,8 +13,9 @@ export class signupDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty({ example: 'true' })
+  @ApiProperty({ example: true })
   @TransformBooleanString()
+  @IsNotEmpty()
   isSupplier: boolean;
 }
 
