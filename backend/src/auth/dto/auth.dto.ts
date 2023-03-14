@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { TransformBooleanString } from '../decorator';
 
 export class signupDto {
@@ -15,6 +15,7 @@ export class signupDto {
 
   @ApiProperty({ example: 'true' })
   @TransformBooleanString()
+  @IsBoolean()
   isSupplier: boolean;
 }
 
