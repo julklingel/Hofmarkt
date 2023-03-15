@@ -3,7 +3,7 @@ import { Fragment, useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter} from "next/router";
 import { FormEvent } from "react";
-import { AddressDataContext } from "../../../../../store/supplierCreation/DataContextSupplier";
+import { AddressDataContext, NameFormDataContext } from "../../../../../store/supplierCreation/DataContextSupplier";
 
 
 export default function DataConsentForm() {
@@ -13,10 +13,12 @@ export default function DataConsentForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState();
   const { addressData, setAddressData } = useContext(AddressDataContext);
+  const { nameFormData, setNameFormData } = useContext(NameFormDataContext);
   
 
   const handleCheckboxChange = (e: FormEvent<HTMLInputElement>) => {
     setIsChecked(e.currentTarget.checked);
+    
   };
 
   async function handleSubmit(e:FormEvent<HTMLButtonElement>) {
@@ -24,7 +26,7 @@ export default function DataConsentForm() {
     try {
       const res = await fetch("http://localhost:4444/supplier", {
         method: "POST",
-        body: JSON.stringify({ personalData, addressData }),
+        body: JSON.stringify({ nameFormData, addressData }),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
@@ -108,6 +110,8 @@ export default function DataConsentForm() {
       </div>
 
       <div>{JSON.stringify(addressData)}</div>
+      <br></br>
+      <div>{JSON.stringify(nameFormData)}</div>
 
      
       

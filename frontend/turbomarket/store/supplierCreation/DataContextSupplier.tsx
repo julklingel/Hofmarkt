@@ -21,8 +21,8 @@ export type NameFormData = {
   website: string;
   mobileNumber: string;
   about: string;
-  profilePicture: string;
-  facilityPicture: Array<string>;
+  profilePicture: Array<File>;
+  facilityPicture: Array<File>;
 };
 
 type NameFormDataContext = {
@@ -51,7 +51,7 @@ export const NameFormDataContext = createContext<NameFormDataContext>({
     website: "",
     mobileNumber: "",
     about: "",
-    profilePicture: "",
+    profilePicture: [],
     facilityPicture: [],
   },
   setNameFormData: () => {}
@@ -75,7 +75,7 @@ export default function DataProvider(props: any): JSX.Element {
     website: "",
     mobileNumber: "",
     about: "",
-    profilePicture: "",
+    profilePicture: [],
     facilityPicture: [],
   });
 

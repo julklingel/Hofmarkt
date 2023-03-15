@@ -5,17 +5,27 @@ import React, {
   useContext,
   ChangeEvent,
 } from "react";
-import { ViewContext } from "store/supplierCreation/NavigationContextSupplier";
+import {
+  ViewContext,
+} from "store/supplierCreation/NavigationContextSupplier";
 import { NameFormDataContext } from "store/supplierCreation/DataContextSupplier";
 import { FormEvent } from "react";
+
+type CompanyNameFormData = {
+  website?: string;
+  mobileNumber?: string;
+  about?: string;
+  profilePicture: File[];
+  facilityPicture: File[];
+};
 
 export default function CompanyNameForm() {
   const [selectedFacilityImages, setSelectedFacilityImages] = useState<File[]>(
     []
   );
   const [selectedLogo, setSelectedLogo] = useState<File[]>([]);
-  const { currentView, setCurrentView } = useContext(ViewContext);
-  const [nameFormData, setNameFormData] = useState(NameFormDataContext);
+  const { setCurrentView } = useContext(ViewContext);
+  const { nameFormData, setNameFormData } = useContext(NameFormDataContext);
 
   const companyWebsite = useRef<HTMLInputElement>(null);
   const aboutText = useRef<HTMLTextAreaElement>(null);
@@ -39,17 +49,21 @@ export default function CompanyNameForm() {
     e.preventDefault();
 
     const newNameData = {
-      website: companyWebsite.current?.value,
-      mobileNumber: mobileNumber.current?.value,
-      about: aboutText.current?.value,
+      website: String(companyWebsite.current!.value) ,
+      mobileNumber: String(mobileNumber.current!.value) ,
+      about: String(aboutText.current!.value),
       profilePicture: selectedLogo,
       facilityPicture: selectedFacilityImages,
     };
 
-    console.log(newNameData);
+    setNameFormData(newNameData);
 
-    // setCurrentView(3);
+    setCurrentView(3);
   }
+
+
+
+  
 
   return (
     <Fragment>
