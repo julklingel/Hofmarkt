@@ -1,59 +1,54 @@
-import React, { Fragment, useRef, useState, useContext } from "react";
+import React, {
+  Fragment,
+  useRef,
+  useState,
+  useContext,
+  ChangeEvent,
+} from "react";
 import { ViewContext } from "store/supplierCreation/NavigationContextSupplier";
 import { NameFormDataContext } from "store/supplierCreation/DataContextSupplier";
 import { FormEvent } from "react";
 
-
-const formatFiles = async (input: any) => {
-  const formData = new FormData();
-  input.forEach((file: any) => {
-    formData.append('files', file);
-  });
-  return formData;
-}
-
-
-
-
 export default function CompanyNameForm() {
-  const [facilityImages, setFacilityImages] = useState([]);
-  const [profileImage, setProfileImage] = useState([]);
+  const [selectedFacilityImages, setSelectedFacilityImages] = useState<File[]>(
+    []
+  );
+  const [selectedLogo, setSelectedLogo] = useState<File[]>([]);
   const { currentView, setCurrentView } = useContext(ViewContext);
   const [nameFormData, setNameFormData] = useState(NameFormDataContext);
-  const []  = useState();
 
   const companyWebsite = useRef<HTMLInputElement>(null);
   const aboutText = useRef<HTMLTextAreaElement>(null);
   const mobileNumber = useRef<HTMLInputElement>(null);
 
-const handleFacilityImages = (e: any) => {
-  setFacilityImages(Array.from(e.target.files));
-  console.log(facilityImages);
-  
-};
+  function handleselectedFacilityImages(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setSelectedFacilityImages([...selectedFacilityImages, ...files]);
+    }
+  }
 
+  function handleselectedLogo(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setSelectedLogo([...selectedLogo, ...files]);
+    }
+  }
 
-  const  handleProfileImage = (e: any) => {
-    setProfileImage(e.target.files);
-  };
-
-
-
-
-  function handleSubmit(e: FormEvent<HTMLButtonElement> ) {
+  function handleSubmit(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault();
-    
+
     const newNameData = {
-      website: companyWebsite.current.value,
-      mobileNumber: mobileNumber.current.value,
-      About: aboutText.current.value,
-      facilityImages: facilityImages,
-      profileImage: profileImage,
+      website: companyWebsite.current?.value,
+      mobileNumber: mobileNumber.current?.value,
+      about: aboutText.current?.value,
+      profilePicture: selectedLogo,
+      facilityPicture: selectedFacilityImages,
     };
 
     console.log(newNameData);
-    
 
+    // setCurrentView(3);
   }
 
   return (
@@ -162,21 +157,20 @@ const handleFacilityImages = (e: any) => {
                           <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                       </span>
-                   
-                         <label
-                            htmlFor="file-upload"
-                            className="ml-5 rounded-md border border-gray-300 bg-white py-1.5 px-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200"
-                          >
-                            <span>Change</span>
-                            <input
-                              id="file-upload"
-                              name="file-upload"
-                              type="file"
-                              className="sr-only"
-                              onChange={handleProfileImage}
-                            />
-                          </label>
-               
+
+                      <label
+                        htmlFor="profile-upload"
+                        className="ml-5 rounded-md border border-gray-300 bg-white py-1.5 px-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200"
+                      >
+                        <span>Change</span>
+                        <input
+                          id="profile-upload"
+                          name="profile-file-upload"
+                          type="file"
+                          className="sr-only"
+                          onChange={handleselectedLogo}
+                        />
+                      </label>
                     </div>
                   </div>
 
@@ -202,17 +196,17 @@ const handleFacilityImages = (e: any) => {
                         </svg>
                         <div className="flex text-sm text-gray-600">
                           <label
-                            htmlFor="file-upload"
+                            htmlFor="facility-upload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-500 focus-within:ring-offset-2 hover:text-green-500"
                           >
                             <span>Upload a file</span>
                             <input
-                              id="file-upload"
-                              name="file-upload"
+                              id="facility-upload"
+                              name="facility-file-upload"
                               type="file"
                               className="sr-only"
                               multiple
-                              onChange={handleFacilityImages}
+                              onChange={handleselectedFacilityImages}
                             />
                           </label>
                           <p className="pl-1">or drag and drop</p>
