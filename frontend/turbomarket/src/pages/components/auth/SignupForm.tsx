@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
@@ -45,6 +45,14 @@ export default function SignupForm() {
 
   const [error, setError] = useState("");
 
+
+  // Add a new state to track client-side rendering (mounted) 
+   // We conditionally render (use effect) the input elements only when isClient is true. This should ensure that the input state is only handled on the client side, which should prevent the hydration error.
+   const [isClient, setIsClient] = useState(false);
+   useEffect(() => {
+     setIsClient(true);
+   }, []);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (password !== password2) {
@@ -79,7 +87,9 @@ export default function SignupForm() {
           </h2>
           <hr className=" bg-gray-200 mb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
-            <div className="mb-4">
+            {isClient && (
+              <>
+              <div className="mb-4">
               <label className="block text-c.green text-sm font-bold mb-2">
                 Email
               </label>
@@ -118,6 +128,11 @@ export default function SignupForm() {
                 onFocus={() => setError("")}
               />
             </div>
+            </>
+            )}
+            
+           
+          
 
             <ErrorMsg msg={error} setError={setError} />
           </form>
