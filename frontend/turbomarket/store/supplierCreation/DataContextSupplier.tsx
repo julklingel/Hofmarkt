@@ -34,23 +34,32 @@ type NameFormDataContext = {
 
 
 export type NotificationSettings = {
-  emailComments: boolean;
-  emailOrders: boolean;
-  emailMessages: boolean;
-  pushNotifications: "everything" | "same_as_email" | "nothing";
+  notiComments: boolean,
+  notiOrders: boolean,
+  notiMessages: boolean,
+  pushAsEmail: boolean,
+  pushEverything: boolean,
+  pushNone: boolean,
 };
 
-export const defaultNotificationSettings: NotificationSettings = {
-  emailComments: false,
-  emailOrders: false,
-  emailMessages: false,
-  pushNotifications: "everything",
-};
+export type NotificationContext = {
+  notificationSettings: NotificationSettings;
+  setNotificationSettings: React.Dispatch<React.SetStateAction<NotificationSettings>>;
+}
 
-export const NotificationSettingsContext = createContext<[NotificationSettings, Dispatch<SetStateAction<NotificationSettings>>]>([
-  defaultNotificationSettings,
-  () => {},
-]);
+
+
+export const NotificationSettingsContext = createContext<NotificationContext>({
+  notificationSettings: {
+    notiComments: false,
+    notiOrders: false,
+    notiMessages: false,
+    pushAsEmail: false,
+    pushEverything: false,
+    pushNone: true,
+  },
+  setNotificationSettings: () => {}
+});
 
 
 
@@ -104,14 +113,21 @@ export default function DataProvider(props: any): JSX.Element {
   });
 
   
-  const [notificationSettings, setNotificationSettings] = useState(defaultNotificationSettings);
+  const [notificationSettings, setNotificationSettings] = useState({
+    notiComments: false,
+    notiOrders: false,
+    notiMessages: false,
+    pushAsEmail: false,
+    pushEverything: false,
+    pushNone: true,
+  });
 
 
 
   return (
     <AddressDataContext.Provider value={{ addressData, setAddressData }}>
       <NameFormDataContext.Provider value={{ nameFormData, setNameFormData }}>
-        <NotificationSettingsContext.Provider value={[notificationSettings, setNotificationSettings]}>
+        <NotificationSettingsContext.Provider value={{notificationSettings, setNotificationSettings}}>
       {props.children}
       </NotificationSettingsContext.Provider>
       </NameFormDataContext.Provider>

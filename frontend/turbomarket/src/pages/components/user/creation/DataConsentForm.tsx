@@ -44,6 +44,7 @@ export default function DataConsentForm() {
       const data = await res.json();
       router.push("/");
     } catch (error) {
+      alert(error);
       console.log(error);
       
     }

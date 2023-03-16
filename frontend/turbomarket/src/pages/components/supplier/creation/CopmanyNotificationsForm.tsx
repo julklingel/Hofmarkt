@@ -1,16 +1,45 @@
 import React, { Fragment, useContext, useState, FormEvent } from "react";
 import Image from "next/image";
 import { NotificationSettingsContext } from "../../../../../store/supplierCreation/DataContextSupplier";
+import { ViewContext } from "store/supplierCreation/NavigationContextSupplier";
+import { NotificationSettings } from "../../../../../store/supplierCreation/DataContextSupplier";
 
 export default function CopmanyNotificationsForm() {
-  const [notificationSettings, setNotificationSettings] = useContext(NotificationSettingsContext);
-  const [localSettings, setLocalSettings] = useState(notificationSettings);
+  const { notificationSettings, setNotificationSettings } = useContext(NotificationSettingsContext)
+  const { setCurrentView } = useContext(ViewContext);
+  const [notiComments, setNotiComments] = useState(false);
+  const [notiOrders, setNotiOrders] = useState(false); 
+  const [notiMsg, setNotiMsg] = useState(false);
+
+  const [pushAsEmail, setPushAsEmail] = useState(false);
+  const [pushEverything, setPushEverything] = useState(false);
+  const [pushNone, setPushNone] = useState(true);
+
+  const newNotificationSettings = {
+    notiComments: notiComments,
+    notiOrders: notiOrders,
+    notiMessages: notiMsg,
+    pushAsEmail: pushAsEmail,
+    pushEverything: pushEverything,
+    pushNone: pushNone,
+  };
+
+  function validateForm(newNotificationSettings: NotificationSettings) {
+    if (pushAsEmail === true || pushEverything === true) {
+      newNotificationSettings.pushNone = false;
+    }
+  }
 
 
 
   function handleSubmit(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setNotificationSettings(localSettings);
+    validateForm(newNotificationSettings);
+    setNotificationSettings(newNotificationSettings);
+    setCurrentView(4);
+
+    
+    
   }
 
 
@@ -44,6 +73,7 @@ export default function CopmanyNotificationsForm() {
                             name="comments"
                             type="checkbox"
                             className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600"
+                            onChange={() => setNotiComments(!notiComments)}
                           />
                         </div>
                         <div className="ml-3 text-sm leading-6">
@@ -56,10 +86,11 @@ export default function CopmanyNotificationsForm() {
                       <div className="flex items-start">
                         <div className="flex h-6 items-center">
                           <input
-                            id="candidates"
-                            name="candidates"
+                            id="orders"
+                            name="orders"
                             type="checkbox"
                             className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600"
+                            onChange={() => setNotiOrders(!notiOrders)}
                           />
                         </div>
                         <div className="ml-3 text-sm leading-6">
@@ -72,10 +103,11 @@ export default function CopmanyNotificationsForm() {
                       <div className="flex items-start">
                         <div className="flex h-6 items-center">
                           <input
-                            id="offers"
-                            name="offers"
+                            id="msg"
+                            name="msg"
                             type="checkbox"
                             className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-600"
+                            onChange={() => setNotiMsg(!notiMsg)}
                           />
                         </div>
                         <div className="ml-3 text-sm leading-6">
@@ -99,6 +131,9 @@ export default function CopmanyNotificationsForm() {
                           name="push-notifications"
                           type="radio"
                           className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-600"
+                          onChange={() => {
+                            setPushEverything(!pushEverything);
+                          }}
                         />
                         <label
                           htmlFor="push-everything"
@@ -113,6 +148,10 @@ export default function CopmanyNotificationsForm() {
                           name="push-notifications"
                           type="radio"
                           className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-600"
+                          onChange={() => {
+                            setPushAsEmail(!pushAsEmail)
+                          
+                          } }
                         />
                         <label htmlFor="push-email" className="ml-3 block text-sm font-medium leading-6 text-gray-900">
                           Same as email
@@ -124,6 +163,7 @@ export default function CopmanyNotificationsForm() {
                           name="push-notifications"
                           type="radio"
                           className="h-4 w-4 border-gray-300 text-green-600 focus:ring-green-600"
+                          defaultChecked={true}
                         />
                         <label
                           htmlFor="push-nothing"

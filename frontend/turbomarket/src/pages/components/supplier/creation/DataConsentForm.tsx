@@ -3,17 +3,18 @@ import { Fragment, useContext, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter} from "next/router";
 import { FormEvent } from "react";
-import { AddressDataContext, NameFormDataContext } from "../../../../../store/supplierCreation/DataContextSupplier";
+import { AddressDataContext, NameFormDataContext, NotificationSettingsContext } from "../../../../../store/supplierCreation/DataContextSupplier";
 
 
 export default function DataConsentForm() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, } = useSession();
   const accessToken = session?.accessToken;
   const [isChecked, setIsChecked] = useState(false);
-  const [error, setError] = useState();
-  const { addressData, setAddressData } = useContext(AddressDataContext);
-  const { nameFormData, setNameFormData } = useContext(NameFormDataContext);
+  const { addressData } = useContext(AddressDataContext);
+  const { nameFormData } = useContext(NameFormDataContext);
+  const { notificationSettings  } = useContext(NotificationSettingsContext)
+
   
 
   const handleCheckboxChange = (e: FormEvent<HTMLInputElement>) => {
@@ -23,10 +24,11 @@ export default function DataConsentForm() {
 
   async function handleSubmit(e:FormEvent<HTMLButtonElement>) {
     e.preventDefault();
+    
     try {
       const res = await fetch("http://localhost:4444/supplier", {
         method: "POST",
-        body: JSON.stringify({ nameFormData, addressData }),
+        body: JSON.stringify({ nameFormData, addressData, notificationSettings }),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
@@ -35,6 +37,7 @@ export default function DataConsentForm() {
       const data = await res.json();
       router.push("/");
     } catch (error) {
+      alert(error);
       console.log(error);
       
     }
@@ -108,12 +111,6 @@ export default function DataConsentForm() {
           height={450}
         />
       </div>
-
-      <div>{JSON.stringify(addressData)}</div>
-      <br></br>
-      <div>{JSON.stringify(nameFormData)}</div>
-
-     
       
     </section>
 
