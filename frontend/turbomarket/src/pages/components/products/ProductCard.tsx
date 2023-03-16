@@ -14,7 +14,6 @@ export default function ProductCard(props: any) {
   const linkPath = `/offer/${slug}/${id}`;
   const imgPath = `/images/supplier/${slug}/offers/${img}`;
 
-
   return (
     <Link href={linkPath}>
       <div className="bg-secondary rounded-2xl shadow-2xl m-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300">
