@@ -12,8 +12,7 @@ export default function LoginForm() {
 
   const [error, setError] = useState("");
 
-    // Add a new state to track client-side rendering (mounted) 
-   // We conditionally render (use effect) the input elements only when isClient is true. This should ensure that the input state is only handled on the client side, which should prevent the hydration error.
+    // Add a new state to track client-side rendering (mounted) -> See docs #1
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
       setIsClient(true);
