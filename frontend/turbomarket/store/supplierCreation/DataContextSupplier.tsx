@@ -1,4 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useState, Dispatch, SetStateAction } from "react";
+
+
 
 
 export type AddressData = {
@@ -31,6 +33,27 @@ type NameFormDataContext = {
 };
 
 
+export type NotificationSettings = {
+  emailComments: boolean;
+  emailOrders: boolean;
+  emailMessages: boolean;
+  pushNotifications: "everything" | "same_as_email" | "nothing";
+};
+
+export const defaultNotificationSettings: NotificationSettings = {
+  emailComments: false,
+  emailOrders: false,
+  emailMessages: false,
+  pushNotifications: "everything",
+};
+
+export const NotificationSettingsContext = createContext<[NotificationSettings, Dispatch<SetStateAction<NotificationSettings>>]>([
+  defaultNotificationSettings,
+  () => {},
+]);
+
+
+
 export const AddressDataContext = createContext<AddressDataContext>({
   addressData: {
     firstName: "",
@@ -60,6 +83,7 @@ export const NameFormDataContext = createContext<NameFormDataContext>({
 
 export default function DataProvider(props: any): JSX.Element {
 
+
   const [addressData, setAddressData] = useState<AddressData>({
     firstName: "",
     lastName: "",
@@ -79,12 +103,17 @@ export default function DataProvider(props: any): JSX.Element {
     facilityPicture: [],
   });
 
+  
+  const [notificationSettings, setNotificationSettings] = useState(defaultNotificationSettings);
+
 
 
   return (
     <AddressDataContext.Provider value={{ addressData, setAddressData }}>
       <NameFormDataContext.Provider value={{ nameFormData, setNameFormData }}>
+        <NotificationSettingsContext.Provider value={[notificationSettings, setNotificationSettings]}>
       {props.children}
+      </NotificationSettingsContext.Provider>
       </NameFormDataContext.Provider>
     </AddressDataContext.Provider>
   );

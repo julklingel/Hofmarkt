@@ -1,12 +1,22 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext, useState, FormEvent } from "react";
 import Image from "next/image";
+import { NotificationSettingsContext } from "../../../../../store/supplierCreation/DataContextSupplier";
 
 export default function CopmanyNotificationsForm() {
+  const [notificationSettings, setNotificationSettings] = useContext(NotificationSettingsContext);
+  const [localSettings, setLocalSettings] = useState(notificationSettings);
+
+
+
+  function handleSubmit(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    setNotificationSettings(localSettings);
+  }
+
+
   return (
     <Fragment>
-       {/* PAGE 3 */}
         <section className="grid grid-cols-2">
-
        <div className="mt-10 sm:mt-0">
         <div className="md:grid md:grid-cols-1 mx-12 md:gap-6">
           <div className="md:col-span-1">
@@ -127,10 +137,12 @@ export default function CopmanyNotificationsForm() {
                 </div>
                 <div className="bg-white px-4 py-3 text-right sm:px-6">
                   <button
+                   onClick={handleSubmit}
                     type="submit"
                     className="inline-flex justify-center rounded-md bg-green-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
                   >
                     Save
+                   
                   </button>
                 </div>
               </div>

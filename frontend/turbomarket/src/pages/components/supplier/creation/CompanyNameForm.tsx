@@ -5,9 +5,7 @@ import React, {
   useContext,
   ChangeEvent,
 } from "react";
-import {
-  ViewContext,
-} from "store/supplierCreation/NavigationContextSupplier";
+import { ViewContext } from "store/supplierCreation/NavigationContextSupplier";
 import { NameFormDataContext } from "store/supplierCreation/DataContextSupplier";
 import { FormEvent } from "react";
 
@@ -49,8 +47,8 @@ export default function CompanyNameForm() {
     e.preventDefault();
 
     const newNameData = {
-      website: String(companyWebsite.current!.value) ,
-      mobileNumber: String(mobileNumber.current!.value) ,
+      website: String(companyWebsite.current!.value),
+      mobileNumber: String(mobileNumber.current!.value),
       about: String(aboutText.current!.value),
       profilePicture: selectedLogo,
       facilityPicture: selectedFacilityImages,
@@ -60,10 +58,6 @@ export default function CompanyNameForm() {
 
     setCurrentView(3);
   }
-
-
-
-  
 
   return (
     <Fragment>
