@@ -3,7 +3,6 @@ import { ViewContext } from "store/supplierCreation/NavigationContextSupplier";
 import { AddressDataContext } from "store/supplierCreation/DataContextSupplier";
 import Image from "next/image";
 
-
 export default function CompanyAddressForm() {
   const { currentView, setCurrentView } = useContext(ViewContext);
   const { addressData, setAddressData } = useContext(AddressDataContext);
@@ -17,7 +16,7 @@ export default function CompanyAddressForm() {
   const state = useRef<HTMLInputElement>(null);
   const postalCode = useRef<HTMLInputElement>(null);
 
-  function handleSubmit(e: FormEvent<HTMLButtonElement> ) {
+  function handleSubmit(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault();
 
     const newAddressData = {
@@ -30,25 +29,22 @@ export default function CompanyAddressForm() {
       state: state.current!.value,
       postalCode: postalCode.current!.value,
     };
-  
-    
 
-    if (newAddressData.firstName && newAddressData.lastName && newAddressData.streetAddress && newAddressData.country && newAddressData.city && newAddressData.state && newAddressData.postalCode) {
+    if (
+      newAddressData.firstName &&
+      newAddressData.lastName &&
+      newAddressData.streetAddress &&
+      newAddressData.country &&
+      newAddressData.city &&
+      newAddressData.state &&
+      newAddressData.postalCode
+    ) {
       setCurrentView(2);
       setAddressData(newAddressData);
-     
-      
-      
     } else {
       alert("Please fill out all fields");
     }
   }
-
-
-
-
-
-
 
   return (
     <Fragment>
@@ -143,7 +139,6 @@ export default function CompanyAddressForm() {
                           <option>United States</option>
                           <option>Canada</option>
                           <option>Mexico</option>
-                      
                         </select>
                       </div>
 
