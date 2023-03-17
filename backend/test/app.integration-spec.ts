@@ -3,9 +3,9 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { PrismaService } from '../src/db-module/prisma.service';
 import { AppModule } from '../src/app/app.module';
-import { signupDto } from '../src/auth/dto/';
+import { signupDto } from '../src/auth/dto';
 
-describe('App e2e test', () => {
+describe('App integration test', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   beforeAll(async () => {
