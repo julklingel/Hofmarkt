@@ -29,7 +29,7 @@ export default function CompanyNameForm() {
   const aboutText = useRef<HTMLTextAreaElement>(null);
   const mobileNumber = useRef<HTMLInputElement>(null);
 
-  function handleselectedFacilityImages(e: ChangeEvent<HTMLInputElement>) {
+  function handleSelectedFacilityImages(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       setSelectedFacilityImages([...selectedFacilityImages, ...files]);
@@ -215,7 +215,7 @@ export default function CompanyNameForm() {
                               type="file"
                               className="sr-only"
                               multiple
-                              onChange={handleselectedFacilityImages}
+                              onChange={handleSelectedFacilityImages}
                             />
                           </label>
                           <p className="pl-1">or drag and drop</p>
