@@ -1,9 +1,9 @@
 import { getSession } from "next-auth/react";
 import HomeButton from "../../../components/button/HomeBotton";
 import React, { Fragment} from "react";
-import ViewProvider from "../../../../../store/userCreation/NavigationContextUser";
-import DataProvider from "store/userCreation/DataContextUser";
 import { GetServerSidePropsContext } from 'next';
+import ViewProvider from "store/supplierCreation/NavigationContextSupplier";
+import DataProvider from "store/supplierCreation/DataContextSupplier";
 
 
 
@@ -14,16 +14,18 @@ export default function UserCreation() {
 
   return (
     <Fragment>
-      <DataProvider>
       <div className="p-4">
         <HomeButton />
       </div>
-      <h1 className="text-3xl tracking-widest my-8 mb-32 font-semibold text-center text-c.green ">
+      <h1 className="text-3xl tracking-widest my-2 mb-8 font-semibold text-center text-c.green ">
         Welcome to Hofmarkt
       </h1>
-      <ViewProvider>
-      </ViewProvider>
+
+      <DataProvider>
+      <ViewProvider></ViewProvider>
       </DataProvider>
+
+  
     </Fragment>
   );
 }

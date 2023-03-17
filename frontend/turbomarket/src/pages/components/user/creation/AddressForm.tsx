@@ -1,6 +1,6 @@
 import React, { Fragment, useRef, useContext } from "react";
-import { ViewContext } from "../../../../../store/NavigationContext";
-import { PersonalDataContext, AddressData, PersonalData } from "../../../../../store/DataContext";
+import { ViewContext } from "../../../../../store/userCreation/NavigationContextUser";
+import { PersonalDataContext, AddressData, PersonalData } from "../../../../../store/userCreation/DataContextUser";
 type PersonalDataContextType = {
   personalData: PersonalData;
   setPersonalData: React.Dispatch<React.SetStateAction<PersonalData>>;

@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import NameForm from "../src/pages/components/user/creation/NameForm";
-import AddressForm from "../src/pages/components/user/creation/AddressForm";
-import DataConsentForm from "../src/pages/components/user/creation/DataConsentForm";
+import NameForm from "../../src/pages/components/user/creation/NameForm";
+import AddressForm from "../../src/pages/components/user/creation/AddressForm";
+import DataConsentForm from "../../src/pages/components/user/creation/DataConsentForm";
 
 
 const views: Record<1 | 2 | 3, JSX.Element> = {
@@ -45,7 +45,7 @@ function ViewSwitcher(): JSX.Element {
             value=""
             defaultChecked={currentView === Number(view)}
             name="inline-radio-group"
-            className="w-4 h-4 m-2 "
+            className="w-4 h-4 m-2 text-green-600  focus:ring-green-600"
             onClick={() => handleClick(view as 1 | 2 | 3)}
           />
         </div>
