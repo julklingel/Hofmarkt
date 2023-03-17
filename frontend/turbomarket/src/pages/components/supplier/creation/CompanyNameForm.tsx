@@ -36,7 +36,7 @@ export default function CompanyNameForm() {
     }
   }
 
-  function handleselectedLogo(e: ChangeEvent<HTMLInputElement>) {
+  function handleSelectedLogo(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       setSelectedLogo([...selectedLogo, ...files]);
@@ -177,7 +177,7 @@ export default function CompanyNameForm() {
                           name="profile-file-upload"
                           type="file"
                           className="sr-only"
-                          onChange={handleselectedLogo}
+                          onChange={handleSelectedLogo}
                         />
                       </label>
                     </div>
