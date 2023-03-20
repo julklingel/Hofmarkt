@@ -44,3 +44,5 @@ docker-compose.yml
 
 # env
 .env
+backend/.env.test
+.env.test

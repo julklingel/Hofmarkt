@@ -1,7 +1,5 @@
 node_modules
-# Keep environment variables out of version control
-.env
-.env.test
+
 # compiled output
 /backend/dist
 /node_modules
@@ -47,3 +45,4 @@ docker-compose.yml
 
 # env
 .env
+.env.test
