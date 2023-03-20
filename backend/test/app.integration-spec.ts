@@ -30,8 +30,8 @@ describe('App integration test', () => {
 
   describe('Auth', () => {
     const dto: signupDto = {
-      email: 'jack@mack.de',
-      password: 'pass123',
+      email: process.env.TEST_EMAIL,
+      password: process.env.TEST_PASSWORD,
       isSupplier: false,
     };
     describe('Signup', () => {
