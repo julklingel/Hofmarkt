@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { signupDto, loginDto } from './dto/auth.dto';
 import * as argon2 from 'argon2';
-import { PrismaService } from 'src/db-module/prisma.service';
+import { PrismaService } from '../db-module/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 

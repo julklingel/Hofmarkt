@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/db-module/prisma.service';
+import { PrismaService } from '../db-module/prisma.service';
 import { offerDto } from './dto';
 
 @Injectable()
@@ -14,11 +14,11 @@ export class OfferService {
             slug: true,
             companyName: true,
             companyAddress: true,
+          },
         },
       },
-    },
     });
- 
+
     return offers;
   }
 
@@ -37,7 +37,6 @@ export class OfferService {
       },
     });
   }
-  
 
   createOffer(dto: offerDto) {
     const price = Number(dto.price);

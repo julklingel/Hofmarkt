@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  
   async onModuleInit() {
     await this.$connect();
   }
@@ -12,5 +11,18 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     this.$on('beforeExit', async () => {
       await app.close();
     });
+  }
+
+  cleanDb() {
+    return this.$transaction([
+      this.watchlist.deleteMany(),
+      this.cart.deleteMany(),
+      this.order.deleteMany(),
+      this.category.deleteMany(),
+      this.offer.deleteMany(),
+      this.supplier.deleteMany(),
+      this.user.deleteMany(),
+      this.account.deleteMany(),
+    ]);
   }
 }
