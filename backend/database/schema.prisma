@@ -27,38 +27,72 @@ model Account {
 }
 
 model User {
-  id         String      @id @unique @default(uuid())
-  account    Account?
-  firstName  String
-  lastName   String
-  supplier   Supplier?   @relation(fields: [supplierId], references: [id])
-  supplierId String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  watchlist  Watchlist[]
-  cart       Cart[]
-  order      Order[]
+  id             String          @id @unique @default(uuid())
+  account        Account?
+  firstName      String
+  lastName       String
+  supplier       Supplier?       @relation(fields: [supplierId], references: [id])
+  supplierId     String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  watchlist      Watchlist[]
+  cart           Cart[]
+  order          Order[]
+  AccountAddress AccountAddress?
+  Review         Review[]
 
   @@map("users")
 }
 
 model Supplier {
-  id             String   @id @unique @default(uuid())
+  id             String          @id @unique @default(uuid())
   account        Account?
   companyName    String
   companyLogo    String
   companyPhone   Int
-  companyAddress String
   companyImage   String
   companyBio     String
-  slug           String   @unique
-  featured       Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  slug           String          @unique
+  featured       Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   user           User[]
   offer          Offer[]
+  AccountAddress AccountAddress?
+  Review         Review[]
 
   @@map("suppliers")
+}
+
+model AccountAddress {
+  id            String    @id @unique @default(uuid())
+  user          User?     @relation(fields: [userId], references: [id])
+  userId        String?   @unique
+  supplier      Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId    String?   @unique
+  country       String
+  city          String
+  streetAddress String
+  zip           String
+  state         String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("account_addresses")
+}
+
+model Review {
+  id         String   @id @unique @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+  supplierId String
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("reviews")
 }
 
 model Offer {
