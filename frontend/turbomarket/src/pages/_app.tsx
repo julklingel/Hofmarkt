@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <Fragment>
 
       <Head>
-        <meta name='viewport' content='width=device-widthm initial-scale=1' />
+        <meta name='viewport' content='width=device-width initial-scale=1' />
       </Head>
       <SessionProvider session={pageProps.session}>
         <Component {...pageProps} />

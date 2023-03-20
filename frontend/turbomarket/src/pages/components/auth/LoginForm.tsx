@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Image from "next/image";
 import ErrorMsg from "../msg/ErrorMsg";
 import Link from "next/link";
@@ -11,6 +11,12 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
 
   const [error, setError] = useState("");
+
+    // Add a new state to track client-side rendering (mounted) -> See docs #1
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -40,32 +46,36 @@ export default function LoginForm() {
           <h2 className=" text-lg font-semibold text-c.green">Log In</h2>
           <hr className=" bg-gray-200 mb-5 border-1 dark:bg-gray-700"></hr>
           <form onSubmit={handleSubmit} className="">
-            <div className="mb-4">
-              <label className="block text-c.green text-sm font-bold mb-2">
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setError("")}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-c.green text-sm font-bold mb-2">
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setError("")}
-              />
-            </div>
+          {isClient && (
+        <>
+          <div className="mb-4">
+            <label className="block text-c.green text-sm font-bold mb-2">
+              Email
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setError("")}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-c.green text-sm font-bold mb-2">
+              Password
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onFocus={() => setError("")}
+            />
+          </div>
+        </>
+      )}
 
             <ErrorMsg msg={error} setError={setError} />
           </form>

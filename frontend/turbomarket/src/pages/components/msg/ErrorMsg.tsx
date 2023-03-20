@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Image from "next/image";
 
 export default function ErrorMsg(props: any) {
@@ -31,6 +31,7 @@ export default function ErrorMsg(props: any) {
       ) : (
         <div className="mb-4">
           <button type="submit">
+            {/* <Suspense fallback={<div>Loading...</div>}>
             <Image
               src="/images/continue-botton.png "
               alt="Continue Botton"
@@ -38,6 +39,7 @@ export default function ErrorMsg(props: any) {
               width={120}
               height={120}
             />{" "}
+            </Suspense> */}
           </button>
         </div>
       )}
