@@ -80,6 +80,13 @@ describe('App integration test', () => {
           .withBody({ email: dto.email })
           .expectStatus(400);
       });
+      it('should throw if password is incorrect', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({ email: dto.email, password: 'wrong' })
+          .expectStatus(403);
+      });
       it('should login a user', () => {
         return pactum
           .spec()
