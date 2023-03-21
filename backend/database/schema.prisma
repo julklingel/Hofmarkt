@@ -48,10 +48,10 @@ model Supplier {
   id             String          @id @unique @default(uuid())
   account        Account?
   companyName    String
-  companyLogo    String
+  companyLogo    String          @default("")
   companyPhone   Int
-  companyImage   String
-  companyBio     String
+  companyImage   String          @default("")
+  companyBio     String          @default(" ")
   slug           String          @unique
   featured       Boolean         @default(false)
   createdAt      DateTime        @default(now())
