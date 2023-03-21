@@ -33,7 +33,8 @@ export default function SupplierHeader(props: any) {
   const imgPath = `/images/supplier/${slug}/${companyImage}`;
   return (
     <Fragment>
-      <div className="grid grid-cols-2 gap-16 mx-32 mt-16">
+      <section className="mx-auto mt-12 max-w-2xl px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-2">
+      <div className="grid grid-cols-2 gap-x-16">
         <section className="text-c.green">
           <div className="grid grid-cols-2">
             <h1 className="flex justify-start text-3xl font-bold">{DUMMY_SUPPLIERS.name}</h1>
@@ -122,6 +123,7 @@ export default function SupplierHeader(props: any) {
           />
         </div>
       </div>
+      </section>
 
     </Fragment>
   );
