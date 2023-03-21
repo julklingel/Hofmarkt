@@ -11,16 +11,11 @@ export class supplierDto {
   @IsNotEmpty()
   companyPhone: any;
 
-  @IsNotEmpty()
-  companyAddress: string;
-
   @IsString()
   companyImage: string;
 
-  @IsNotEmpty()
   @IsString()
-  companyBio: string;
+  companyBio = '';
 
-  @IsNotEmpty()
   featured: any;
 }

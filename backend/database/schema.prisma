@@ -51,7 +51,7 @@ model Supplier {
   companyLogo    String          @default("")
   companyPhone   Int
   companyImage   String          @default("")
-  companyBio     String          @default(" ")
+  companyBio     String
   slug           String          @unique
   featured       Boolean         @default(false)
   createdAt      DateTime        @default(now())
