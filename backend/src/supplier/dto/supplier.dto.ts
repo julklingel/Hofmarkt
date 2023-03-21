@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEmail, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class supplierDto {
   @IsNotEmpty()
@@ -20,11 +20,6 @@ export class supplierDto {
   @IsNotEmpty()
   @IsString()
   companyBio: string;
-
-  @IsNotEmpty()
-  @IsString()
-  slug: string;
-
 
   @IsNotEmpty()
   featured: any;

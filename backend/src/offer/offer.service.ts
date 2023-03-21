@@ -13,7 +13,6 @@ export class OfferService {
           select: {
             slug: true,
             companyName: true,
-            companyAddress: true,
           },
         },
       },

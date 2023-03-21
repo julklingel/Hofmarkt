@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
+import { addressDto } from 'src/address';
 
 @Injectable()
 export class SupplierService {
@@ -10,7 +12,6 @@ export class SupplierService {
     const supplier = await this.prisma.supplier.findMany({
       select: {
         companyName: true,
-        companyAddress: true,
         companyImage: true,
         slug: true,
       },
@@ -25,7 +26,6 @@ export class SupplierService {
       },
       select: {
         companyName: true,
-        companyAddress: true,
         companyImage: true,
         slug: true,
       },
@@ -42,20 +42,57 @@ export class SupplierService {
     });
   }
 
-  createSupplier(dto: supplierDto) {
+  async createSupplier(dto: supplierDto, address: addressDto) {
     const phoneNum = Number(dto.companyPhone);
     const featured = Boolean(dto.featured);
-    return this.prisma.supplier.create({
-      data: {
-        companyName: dto.companyName,
-        companyLogo: dto.companyLogo,
-        companyPhone: phoneNum,
-        companyAddress: dto.companyAddress,
-        companyImage: dto.companyImage,
-        companyBio: dto.companyBio,
-        slug: dto.slug,
-        featured: featured,
-      },
+    const slug = this.generateSlug(dto.companyName);
+
+    try {
+      const newAddress = await this.prisma.accountAddress.create({
+        data: {
+          streetAddress: address.streetAddress,
+          city: address.city,
+          state: address.state,
+          country: address.country,
+          zip: address.zip,
+        },
+      });
+
+      return this.prisma.supplier.create({
+        data: {
+          companyName: dto.companyName,
+          companyLogo: dto.companyLogo,
+          companyPhone: phoneNum,
+          companyImage: dto.companyImage,
+          companyBio: dto.companyBio,
+          slug: slug,
+          featured: featured,
+          AccountAddress: {
+            connect: {
+              id: newAddress.id,
+            },
+          },
+        },
+        include: {
+          AccountAddress: true,
+        },
+      });
+    } catch (err) {
+      if (err.code === 'P2002') {
+        throw new Error('A supplier with that name already exists');
+      } else {
+        throw new Error('Failed to create supplier');
+      }
+    }
+  }
+
+  private generateSlug(name: string): string {
+    const baseSlug = slugify(name, {
+      lower: true,
+      strict: true,
+      replacement: '-',
+      trim: true,
     });
+    return baseSlug;
   }
 }
