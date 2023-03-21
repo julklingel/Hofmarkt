@@ -88,5 +88,7 @@ describe('App integration test', () => {
           .expectStatus(200);
       });
     });
+
+    describe('create Supplier', () => {});
   });
 });

@@ -78,11 +78,10 @@ export class SupplierService {
         },
       });
     } catch (err) {
-      if (err.code === 'P2002') {
+      if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new Error('A supplier with that name already exists');
-      } else {
-        throw new Error('Failed to create supplier');
       }
+      throw new Error('Failed to create supplier');
     }
   }
 
