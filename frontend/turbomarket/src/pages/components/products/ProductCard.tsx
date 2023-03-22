@@ -11,7 +11,7 @@ export default function ProductCard(props: any) {
 
   const { title, img, price, id } = props.product;
   const { slug, name } = props.product.supplier;
-  const linkPath = `/offer/${slug}/${id}`;
+  const linkPath = `/supplier/${slug}/${id}`;
   const imgPath = `/images/supplier/${slug}/offers/${img}`;
 
   return (
