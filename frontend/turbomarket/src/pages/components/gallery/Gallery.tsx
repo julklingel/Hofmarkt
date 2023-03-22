@@ -1,15 +1,6 @@
+import React from "react";
+import GalleryGrid from "./GalleryGrid";
 
-
-
-export default function Gallery() {
-
-    return (
-        <div>
-            <h1>Gallery</h1>
-        </div>
-    )
+export default function Gallary(props: any) {
+  return <GalleryGrid />;
 }
-
-
-
-
