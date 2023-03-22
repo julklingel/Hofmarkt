@@ -1,6 +1,8 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class supplierDto {
+  supplierId: string;
+
   @IsNotEmpty()
   @IsString()
   companyName: string;

@@ -42,7 +42,7 @@ export class SupplierService {
     });
   }
 
-  async createSupplier(dto: supplierDto, address: addressDto) {
+  async createSupplier(id: string, dto: supplierDto, address: addressDto) {
     const phoneNum = Number(dto.companyPhone);
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
@@ -78,6 +78,7 @@ export class SupplierService {
         },
       });
     } catch (err) {
+      //catch not working properly when trying to create a supplier with a name that already exists
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new Error('A supplier with that name already exists');
       }
