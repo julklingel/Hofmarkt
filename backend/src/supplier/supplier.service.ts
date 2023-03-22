@@ -48,6 +48,7 @@ export class SupplierService {
     dto: supplierDto,
     address: addressDto,
   ) {
+    console.log(id, role);
     if (role !== 'SUPPLIER')
       throw new Error('You are not authorized to create a supplier account');
 

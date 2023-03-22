@@ -4,7 +4,6 @@ import { SupplierService } from './supplier.service';
 import { addressDto } from 'src/address';
 import { JwtAuthGuard } from 'src/auth/guard';
 import { GetUser } from 'src/auth/decorator';
-import { Account } from '@prisma/client';
 
 @UseGuards(JwtAuthGuard)
 @Controller('supplier')
@@ -21,9 +20,10 @@ export class SupplierController {
     return this.supplierService.getFeaturedSuppliers();
   }
 
-  @Get(':id')
-  getSupplier(@Param('id') id: string) {
-    return this.supplierService.getSupplier(id);
+  @Get('me')
+  getMySupplier(@GetUser() user: any) {
+    console.log(user);
+    return user;
   }
 
   @Post('create')
@@ -34,5 +34,10 @@ export class SupplierController {
     @Body() address: addressDto,
   ) {
     return this.supplierService.createSupplier(id, role, dto, address);
+  }
+
+  @Get(':id')
+  getSupplier(@Param('id') id: string) {
+    return this.supplierService.getSupplier(id);
   }
 }
