@@ -1,7 +1,7 @@
-import ReviewForm from "./ReviewForm";
+
+import ReviewGrid from "./ReviewGrid";
 
 export default function Reviews() {
   return (
-    <ReviewForm/>
-  )
+  <ReviewGrid/>  )
 }
