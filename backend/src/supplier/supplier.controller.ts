@@ -6,6 +6,7 @@ import { JwtAuthGuard } from 'src/auth/guard';
 import { GetUser } from 'src/auth/decorator';
 import { Account } from '@prisma/client';
 
+@UseGuards(JwtAuthGuard)
 @Controller('supplier')
 export class SupplierController {
   constructor(private supplierService: SupplierService) {}
@@ -25,20 +26,13 @@ export class SupplierController {
     return this.supplierService.getSupplier(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  getMe(@GetUser() account: Account) {
-    // Return the account id from the JWT token
-    console.log('account id: ', account.id);
-    return account;
-  }
-
   @Post('create')
   createSupplier(
-    @GetUser('id') id: string,
+    @GetUser('id') { id },
+    @GetUser('role') { role },
     @Body() dto: supplierDto,
     @Body() address: addressDto,
   ) {
-    return this.supplierService.createSupplier(id, dto, address);
+    return this.supplierService.createSupplier(id, role, dto, address);
   }
 }

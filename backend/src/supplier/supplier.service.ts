@@ -42,7 +42,25 @@ export class SupplierService {
     });
   }
 
-  async createSupplier(id: string, dto: supplierDto, address: addressDto) {
+  async createSupplier(
+    id: string,
+    role: string,
+    dto: supplierDto,
+    address: addressDto,
+  ) {
+    if (role !== 'SUPPLIER')
+      throw new Error('You are not authorized to create a supplier account');
+
+    const existingSupplier = await this.prisma.account.findFirst({
+      where: {
+        supplierId: id,
+      },
+    });
+
+    if (existingSupplier) {
+      throw new Error('The account already has a supplier');
+    }
+
     const phoneNum = Number(dto.companyPhone);
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
