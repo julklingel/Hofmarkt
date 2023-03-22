@@ -1,37 +1,37 @@
-import Stars from "./Stars"
-import ReviewCard from "./ReviewCard"
+import Stars from "./Stars";
+import ReviewCard from "./ReviewCard";
 
 export default function ReviewGrid() {
-
   const DUMMY_REVIEWS = {
     reviews: [
       {
         id: "1",
-        comment: "I recently purchased this honey jar and I'm absolutely in love with it! The honey has a rich, floral flavor that adds a perfect touch of sweetness to my morning oatmeal. The jar is well-sealed and keeps the honey fresh and easy to use. I highly recommend this honey to anyone looking for a delicious and high-quality sweetener.",
+        comment:
+          "I recently purchased this honey jar and I'm absolutely in love with it! The honey has a rich, floral flavor that adds a perfect touch of sweetness to my morning oatmeal. The jar is well-sealed and keeps the honey fresh and easy to use. I highly recommend this honey to anyone looking for a delicious and high-quality sweetener.",
         name: "Bonnie Green",
         date: "22.12.2020",
-        rating: 5,
+        rating: 3,
       },
       {
         id: "2",
-        comment: "I recently purchased this honey jar and I'm absolutely in love with it! The honey has a rich, floral flavor that adds a perfect touch of sweetness to my morning oatmeal. The jar is well-sealed and keeps the honey fresh and easy to use. I highly recommend this honey to anyone looking for a delicious and high-quality sweetener.",
-        name: "Bonnie Green",
+        comment:
+          "I recently purchased this honey jar and I'm absolutely in love with it! The honey has a rich, floral flavor that adds a perfect touch of sweetness to my morning oatmeal. The jar is well-sealed and keeps the honey fresh and easy to use. I highly recommend this honey to anyone looking for a delicious and high-quality sweetener.",
+        name: "Bonnie Blue",
         date: "22.12.2020",
-        rating: 5,
+        rating: 4,
       },
       {
         id: "3",
-        comment: "I recently purchased this honey jar and I'm absolutely in love with it! The honey has a rich, floral flavor that adds a perfect touch of sweetness to my morning oatmeal. The jar is well-sealed and keeps the honey fresh and easy to use. I highly recommend this honey to anyone looking for a delicious and high-quality sweetener.",
-        name: "Bonnie Green",
+        comment:
+          "I recently purchased this honey jar and I'm absolutely in love with it! The honey has a rich, floral flavor that adds a perfect touch of sweetness to my morning oatmeal. The jar is well-sealed and keeps the honey fresh and easy to use. I highly recommend this honey to anyone looking for a delicious and high-quality sweetener.",
+        name: "Bonnie Red",
         date: "22.12.2020",
         rating: 5,
       },
-
     ],
   };
 
   const reviews = DUMMY_REVIEWS.reviews;
-  
 
   return reviews ? (
     <div className="mx-auto max-w-2xl px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-2">
