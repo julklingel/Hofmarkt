@@ -59,7 +59,7 @@ export class SupplierService {
       },
     });
 
-    if (existingSupplier && existingSupplier.supplier) {
+    if (existingSupplier.supplier) {
       throw new HttpException(
         'The account already has a supplier',
         HttpStatus.BAD_REQUEST,

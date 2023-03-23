@@ -1,23 +1,26 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { TransformBooleanString } from '../../auth/decorator';
 
 export class supplierDto {
-  supplierId: string;
-
   @IsNotEmpty()
   @IsString()
   companyName: string;
 
   @IsNotEmpty()
+  @IsString()
   companyLogo: string;
 
   @IsNotEmpty()
-  companyPhone: any;
+  @IsString()
+  companyPhone: string;
 
   @IsString()
   companyImage: string;
 
   @IsString()
-  companyBio = '';
+  companyBio: string;
 
+  @TransformBooleanString()
+  @IsBoolean()
   featured: any;
 }

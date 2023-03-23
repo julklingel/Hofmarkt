@@ -4,6 +4,8 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/db-module/prisma.service';
 import { AppModule } from '../src/app/app.module';
 import { signupDto } from '../src/auth/dto';
+import { supplierDto } from 'src/supplier/dto';
+import { addressDto } from 'src/address';
 
 describe('App integration test', () => {
   let app: INestApplication;
@@ -126,45 +128,83 @@ describe('App integration test', () => {
     });
   });
   describe('Supplier', () => {
-    const dto = {
-      companyName: 'test',
-      companyLogo: 'test',
-      companyPhone: 'test',
-      companyImage: 'test',
-      companyBio: 'test',
-      streetAddress: 'test',
-      city: 'test',
-      state: 'test',
-      country: 'test',
-      zip: 'test',
+    const supplierdto: supplierDto = {
+      companyName: 'jackfruit garden',
+      companyLogo: 'jackfruit.png',
+      companyPhone: 'j4ckfru1t',
+      companyImage: 'jacknfruit.png',
+      companyBio: 'jack loves fruit',
+      featured: false,
+    };
+    const addressdto: addressDto = {
+      streetAddress: 'bergweg 1',
+      city: 'jacksonville',
+      state: 'jackson',
+      country: 'jackland',
+      zip: '7474',
     };
     describe('create supplier', () => {
-      it('should throw if user is not a supplier', () => {
+      it('should throw if account is not a supplier', () => {
         return pactum
           .spec()
           .post('/supplier/create')
           .withHeaders({
             Authorization: 'Bearer $S{userToken}',
-            'Content-Type': 'application/x-www-form-urlencoded',
           })
-          .withForm(dto)
-          .expectStatus(400)
+          .withBody({
+            ...supplierdto,
+            ...addressdto,
+          })
           .expectJson({
             message: 'You are not authorized to create a supplier account',
             statusCode: 400,
           });
       });
 
-      it.todo('should throw if user already has a supplier');
+      it('should throw if company name is empty', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            companyName: '',
+            companyLogo: supplierdto.companyLogo,
+            companyPhone: supplierdto.companyPhone,
+            companyImage: supplierdto.companyImage,
+            companyBio: supplierdto.companyBio,
+            featured: supplierdto.featured,
+            ...addressdto,
+          })
+          .expectJson({
+            error: 'Bad Request',
+            message: ['companyName should not be empty'],
+            statusCode: 400,
+          });
+      });
 
-      it.todo('should throw if company name is empty');
+      it('should create a new supplier', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            ...supplierdto,
+            ...addressdto,
+          })
+          .expectStatus(201);
+      });
+      console.log('Data sent to create:', {
+        ...supplierdto,
+        ...addressdto,
+      });
+
+      it.todo('should throw if account already has a supplier');
 
       it.todo('should throw if company name is already taken');
-
-      it.todo('should create a new supplier');
     });
   });
 });
-function expectJson(arg0: { message: string }) {
-  throw new Error('Function not implemented.');
-}
