@@ -1,8 +1,6 @@
 import { createContext, useState, Dispatch, SetStateAction } from "react";
 
 
-
-
 export type AddressData = {
   firstName: string;
   lastName: string;

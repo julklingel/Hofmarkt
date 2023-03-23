@@ -64,9 +64,9 @@ export default function SignupForm() {
         setPassword("");
         setPassword2("");
         if (isSupplier) {
-          router.push("/supplier/account/creation");
+          window.location.href = '/supplier/account/creation';
         } else {
-          router.push("/user/account/creation");
+          window.location.href ="/user/account/creation"
         }
       } catch (error: any) {
         setError(error.message);
