@@ -85,10 +85,47 @@ describe('App integration test', () => {
           .spec()
           .post('/auth/login')
           .withBody({ email: dto.email, password: dto.password })
-          .expectStatus(200);
+          .expectStatus(200)
+          .stores('token', 'access_token');
       });
     });
+  });
+  describe('Supplier', () => {
+    const dto = {
+      companyName: 'test',
+      companyImage: 'test',
+      companyDescription: 'test',
+      companyWebsite: 'test',
+      companyPhone: 'test',
+      companyEmail: 'test',
+      companyAddress: {
+        street: 'test',
+        city: 'test',
+        state: 'test',
+        country: 'test',
+        zip: 'test',
+      },
+    };
+    describe('create supplier', () => {
+      it('should throw if user is not a supplier', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{token}',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          })
+          .withJson(dto)
+          .expectStatus(401);
+      });
 
-    describe('create Supplier', () => {});
+      it.todo('should throw if user already has a supplier');
+
+      it.todo('should throw if company name is empty');
+
+      it.todo('should throw if company name is already taken');
+
+      it.todo('should create a new supplier');
+    });
   });
 });

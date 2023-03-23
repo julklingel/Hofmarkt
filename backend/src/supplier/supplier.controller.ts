@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Param, Body, UseGuards } from '@nestjs/common';
 import { supplierDto } from './dto';
 import { SupplierService } from './supplier.service';
-import { addressDto } from 'src/address';
-import { JwtAuthGuard } from 'src/auth/guard';
-import { GetUser } from 'src/auth/decorator';
+import { addressDto } from '../address';
+import { JwtAuthGuard } from '../auth/guard';
+import { GetUser } from '../auth/decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('supplier')
