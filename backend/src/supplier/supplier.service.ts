@@ -57,12 +57,11 @@ export class SupplierService {
     if (existingSupplier) {
       throw new Error('The account already has a supplier');
     }
-    console.log('läuft duuurch');
-    const phoneNum = Number(dto.companyPhone);
-    const featured = Boolean(dto.featured);
-    const slug = this.generateSlug(dto.companyName);
-
     try {
+      const phoneNum = Number(dto.companyPhone);
+      const featured = Boolean(dto.featured);
+      const slug = this.generateSlug(dto.companyName);
+
       const newAddress = await this.prisma.accountAddress.create({
         data: {
           streetAddress: address.streetAddress,
@@ -73,7 +72,7 @@ export class SupplierService {
         },
       });
 
-      return this.prisma.supplier.create({
+      await this.prisma.supplier.create({
         data: {
           companyName: dto.companyName,
           companyLogo: dto.companyLogo,
@@ -92,8 +91,10 @@ export class SupplierService {
           AccountAddress: true,
         },
       });
+      return 'Supplier created with name ' + slug;
     } catch (err) {
       //catch not working properly when trying to create a supplier with a name that already exists
+      console.log('erroro code' + err.code);
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new Error('A supplier with that name already exists');
       }
