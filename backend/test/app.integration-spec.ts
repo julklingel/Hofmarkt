@@ -29,7 +29,7 @@ describe('App integration test', () => {
   });
 
   describe('Auth', () => {
-    const dto: signupDto = {
+    const supplierdto: signupDto = {
       email: process.env.TEST_EMAIL,
       password: process.env.TEST_PASSWORD,
       isSupplier: false,
@@ -39,28 +39,37 @@ describe('App integration test', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody({ password: dto.password, isSupplier: dto.isSupplier })
+          .withBody({
+            password: supplierdto.password,
+            isSupplier: supplierdto.isSupplier,
+          })
           .expectStatus(400);
       });
       it('should throw if password is empty', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody({ email: dto.email, isSupplier: dto.isSupplier })
+          .withBody({
+            email: supplierdto.email,
+            isSupplier: supplierdto.isSupplier,
+          })
           .expectStatus(400);
       });
       it('should throw if isSupplier is empty', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody({ email: dto.email, password: dto.password })
+          .withBody({
+            email: supplierdto.email,
+            password: supplierdto.password,
+          })
           .expectStatus(400);
       });
       it('should create a new user', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody(dto)
+          .withBody(supplierdto)
           .expectStatus(201);
       });
     });
@@ -70,21 +79,24 @@ describe('App integration test', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ password: dto.password })
+          .withBody({ password: supplierdto.password })
           .expectStatus(400);
       });
       it('should throw if password is empty', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ email: dto.email })
+          .withBody({ email: supplierdto.email })
           .expectStatus(400);
       });
       it('should login a user', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ email: dto.email, password: dto.password })
+          .withBody({
+            email: supplierdto.email,
+            password: supplierdto.password,
+          })
           .expectStatus(200)
           .stores('token', 'access_token');
       });
@@ -93,18 +105,15 @@ describe('App integration test', () => {
   describe('Supplier', () => {
     const dto = {
       companyName: 'test',
-      companyImage: 'test',
-      companyDescription: 'test',
-      companyWebsite: 'test',
+      companyLogo: 'test',
       companyPhone: 'test',
-      companyEmail: 'test',
-      companyAddress: {
-        street: 'test',
-        city: 'test',
-        state: 'test',
-        country: 'test',
-        zip: 'test',
-      },
+      companyImage: 'test',
+      companyBio: 'test',
+      streetAddress: 'test',
+      city: 'test',
+      state: 'test',
+      country: 'test',
+      zip: 'test',
     };
     describe('create supplier', () => {
       it('should throw if user is not a supplier', () => {
@@ -115,8 +124,12 @@ describe('App integration test', () => {
             Authorization: 'Bearer $S{token}',
             'Content-Type': 'application/x-www-form-urlencoded',
           })
-          .withJson(dto)
-          .expectStatus(401);
+          .withForm(dto)
+          .expectStatus(400)
+          .expectJson({
+            message: 'You are not authorized to create a supplier account',
+            statusCode: 400,
+          });
       });
 
       it.todo('should throw if user already has a supplier');
@@ -129,3 +142,6 @@ describe('App integration test', () => {
     });
   });
 });
+function expectJson(arg0: { message: string }) {
+  throw new Error('Function not implemented.');
+}
