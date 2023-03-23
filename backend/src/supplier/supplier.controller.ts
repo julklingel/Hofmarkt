@@ -20,20 +20,19 @@ export class SupplierController {
     return this.supplierService.getFeaturedSuppliers();
   }
 
+  //can be deleted
   @Get('me')
   getMySupplier(@GetUser() user: any) {
-    console.log(user);
     return user;
   }
 
   @Post('create')
   createSupplier(
-    @GetUser('id') { id },
-    @GetUser('role') { role },
+    @GetUser() user: any,
     @Body() dto: supplierDto,
     @Body() address: addressDto,
   ) {
-    return this.supplierService.createSupplier(id, role, dto, address);
+    return this.supplierService.createSupplier(user, dto, address);
   }
 
   @Get(':id')

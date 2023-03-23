@@ -42,13 +42,9 @@ export class SupplierService {
     });
   }
 
-  async createSupplier(
-    id: string,
-    role: string,
-    dto: supplierDto,
-    address: addressDto,
-  ) {
-    console.log(id, role);
+  async createSupplier(user: any, dto: supplierDto, address: addressDto) {
+    console.log(user);
+    const { id, role } = user;
     if (role !== 'SUPPLIER')
       throw new Error('You are not authorized to create a supplier account');
 
@@ -61,7 +57,7 @@ export class SupplierService {
     if (existingSupplier) {
       throw new Error('The account already has a supplier');
     }
-
+    console.log('läuft duuurch');
     const phoneNum = Number(dto.companyPhone);
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
