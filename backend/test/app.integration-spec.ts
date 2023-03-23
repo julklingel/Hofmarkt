@@ -30,8 +30,13 @@ describe('App integration test', () => {
 
   describe('Auth', () => {
     const supplierdto: signupDto = {
-      email: process.env.TEST_EMAIL,
-      password: process.env.TEST_PASSWORD,
+      email: process.env.SUPPLIER_TEST_EMAIL,
+      password: process.env.SUPPLIER_TEST_PASSWORD,
+      isSupplier: true,
+    };
+    const userdto: signupDto = {
+      email: process.env.USER_TEST_EMAIL,
+      password: process.env.USER_TEST_PASSWORD,
       isSupplier: false,
     };
     describe('Signup', () => {
@@ -65,11 +70,18 @@ describe('App integration test', () => {
           })
           .expectStatus(400);
       });
-      it('should create a new user', () => {
+      it('should create a new supplier', () => {
         return pactum
           .spec()
           .post('/auth/signup')
           .withBody(supplierdto)
+          .expectStatus(201);
+      });
+      it('should create a new user', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody(userdto)
           .expectStatus(201);
       });
     });
@@ -89,7 +101,7 @@ describe('App integration test', () => {
           .withBody({ email: supplierdto.email })
           .expectStatus(400);
       });
-      it('should login a user', () => {
+      it('should login a supplier', () => {
         return pactum
           .spec()
           .post('/auth/login')
@@ -98,7 +110,18 @@ describe('App integration test', () => {
             password: supplierdto.password,
           })
           .expectStatus(200)
-          .stores('token', 'access_token');
+          .stores('supplierToken', 'access_token');
+      });
+      it('should login a user', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({
+            email: userdto.email,
+            password: userdto.password,
+          })
+          .expectStatus(200)
+          .stores('userToken', 'access_token');
       });
     });
   });
@@ -121,7 +144,7 @@ describe('App integration test', () => {
           .spec()
           .post('/supplier/create')
           .withHeaders({
-            Authorization: 'Bearer $S{token}',
+            Authorization: 'Bearer $S{userToken}',
             'Content-Type': 'application/x-www-form-urlencoded',
           })
           .withForm(dto)
