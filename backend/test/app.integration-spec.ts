@@ -113,6 +113,12 @@ describe('App integration test', () => {
           })
           .expectStatus(200)
           .stores('supplierToken', 'access_token');
+      it('should throw if password is incorrect', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({ email: supplierdto.email, password: 'wrong' })
+          .expectStatus(403);
       });
       it('should login a user', () => {
         return pactum
