@@ -80,7 +80,7 @@ export default function LoginForm() {
             <ErrorMsg msg={error} setError={setError} />
           </form>
           <hr className=" bg-gray-200 border-1 dark:bg-gray-700"></hr>
-          <Link href={"/auth/password-reset"}>
+          <Link href={"/auth/account-recovery"}>
             <p className=" text-xs text-c.green hover:underline">
               Forget Password?
             </p>

@@ -1,8 +1,32 @@
 import HomeBotton from "../button/HomeBotton";
 import { useState } from "react";
 
-export default function AccountRecovery() {
+export default function AccountRecovery(onEmailSent: any) {
+  const [email, setEmail] = useState("");
   const [isCheck, setIsCheck] = useState(false);
+
+  const sendEmail = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/password-reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      });
+      if (res.ok) {
+        onEmailSent(true);
+      } else {
+        onEmailSent(false);
+      }
+    } catch (error) {
+      onEmailSent(false);
+      console.error("Error sending email:", error);
+     
+    }
+  };
 
   return (
     <section className="">
@@ -12,7 +36,7 @@ export default function AccountRecovery() {
           Hofmarkt
         </h1>
 
-        <div className="w-full p-6 rounded-lg shadow dark:border md:mt-0 sm:max-w-md bg-secondary sm:p-8">
+        <div className="w-full p-6 rounded-lg shadow md:mt-0 sm:max-w-md bg-secondary sm:p-8">
           <h1 className="mb-1 text-xl font-bold leading-tight tracking-tight text-c.green md:text-2xl ">
             Forgot your password?
           </h1>
@@ -61,11 +85,12 @@ export default function AccountRecovery() {
             <button
               type="submit"
               className={`w-full  ${
-                isCheck ? "bg-green-900 text-white"  : "bg-gray-400 text-black"
+                isCheck ? "bg-green-900 text-white" : "bg-gray-400 text-black"
               } hover:bg-${
                 isCheck ? "green-700" : "gray-500"
               } focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800`}
               disabled={!isCheck}
+              onClick={sendEmail}
             >
               Reset password
             </button>
