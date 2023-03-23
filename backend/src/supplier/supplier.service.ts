@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
@@ -43,18 +43,20 @@ export class SupplierService {
   }
 
   async createSupplier(user: any, dto: supplierDto, address: addressDto) {
-    console.log(user);
     const { id, role } = user;
     if (role !== 'SUPPLIER')
       throw new Error('You are not authorized to create a supplier account');
 
     const existingSupplier = await this.prisma.account.findFirst({
       where: {
-        supplierId: id,
+        id: id,
+      },
+      include: {
+        supplier: true,
       },
     });
 
-    if (existingSupplier) {
+    if (existingSupplier && existingSupplier.supplier) {
       throw new Error('The account already has a supplier');
     }
     try {
@@ -86,6 +88,11 @@ export class SupplierService {
               id: newAddress.id,
             },
           },
+          account: {
+            connect: {
+              id: id,
+            },
+          },
         },
         include: {
           AccountAddress: true,
@@ -93,8 +100,6 @@ export class SupplierService {
       });
       return 'Supplier created with name ' + slug;
     } catch (err) {
-      //catch not working properly when trying to create a supplier with a name that already exists
-      console.log('erroro code' + err.code);
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new Error('A supplier with that name already exists');
       }
