@@ -36,11 +36,17 @@ describe('App integration test', () => {
       password: process.env.SUPPLIER_TEST_PASSWORD,
       isSupplier: true,
     };
+    const supplierdto_two: signupDto = {
+      email: process.env.SUPPLIER_TEST_EMAIL_TWO,
+      password: process.env.SUPPLIER_TEST_PASSWORD,
+      isSupplier: true,
+    };
     const userdto: signupDto = {
       email: process.env.USER_TEST_EMAIL,
       password: process.env.USER_TEST_PASSWORD,
       isSupplier: false,
     };
+
     describe('Signup', () => {
       it('should throw if email is empty', () => {
         return pactum
@@ -79,6 +85,13 @@ describe('App integration test', () => {
           .withBody(supplierdto)
           .expectStatus(201);
       });
+      it('should create another new supplier', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody(supplierdto_two)
+          .expectStatus(201);
+      });
       it('should create a new user', () => {
         return pactum
           .spec()
@@ -113,6 +126,17 @@ describe('App integration test', () => {
           })
           .expectStatus(200)
           .stores('supplierToken', 'access_token');
+      });
+      it('should login another supplier', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({
+            email: supplierdto_two.email,
+            password: supplierdto.password,
+          })
+          .expectStatus(200)
+          .stores('supplierToken_two', 'access_token');
       });
       it('should login a user', () => {
         return pactum
@@ -197,14 +221,44 @@ describe('App integration test', () => {
           })
           .expectStatus(201);
       });
-      console.log('Data sent to create:', {
-        ...supplierdto,
-        ...addressdto,
+
+      it('should throw if account already has a supplier', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            companyName: 'garden of jackfruit 2',
+            companyLogo: supplierdto.companyLogo,
+            companyPhone: supplierdto.companyPhone,
+            companyImage: supplierdto.companyImage,
+            companyBio: supplierdto.companyBio,
+            featured: supplierdto.featured,
+            ...addressdto,
+          })
+          .expectStatus(400);
       });
 
-      it.todo('should throw if account already has a supplier');
-
-      it.todo('should throw if company name is already taken');
+      it('should throw if company name is already taken', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken_two}',
+          })
+          .withBody({
+            companyName: 'jackfruit garden',
+            companyLogo: supplierdto.companyLogo,
+            companyPhone: supplierdto.companyPhone,
+            companyImage: supplierdto.companyImage,
+            companyBio: supplierdto.companyBio,
+            featured: supplierdto.featured,
+            ...addressdto,
+          })
+          .expectStatus(400);
+      });
     });
   });
 });

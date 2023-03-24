@@ -50,6 +50,9 @@ export class SupplierService {
         HttpStatus.BAD_REQUEST,
       );
 
+    const featured = Boolean(dto.featured);
+    const slug = this.generateSlug(dto.companyName);
+
     const existingSupplier = await this.prisma.account.findFirst({
       where: {
         id: id,
@@ -65,8 +68,6 @@ export class SupplierService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const featured = Boolean(dto.featured);
-    const slug = this.generateSlug(dto.companyName);
 
     const newAddressData = {
       streetAddress: address.streetAddress,
@@ -110,8 +111,17 @@ export class SupplierService {
           'A supplier with that name already exists',
           HttpStatus.BAD_REQUEST,
         );
+      } else if (
+        err.code === 'P2002' &&
+        err.meta.target.includes('supplierId')
+      ) {
+        throw new HttpException(
+          'An account can only have one supplier',
+          HttpStatus.BAD_REQUEST,
+        );
+      } else {
+        throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       }
-      throw new Error('Failed to create supplier');
     }
   }
 
