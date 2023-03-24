@@ -126,6 +126,7 @@ describe('App integration test', () => {
           })
           .expectStatus(200)
           .stores('supplierToken', 'access_token');
+      });
       it('should throw if password is incorrect', () => {
         return pactum
           .spec()
