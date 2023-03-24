@@ -65,47 +65,46 @@ export class SupplierService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const featured = Boolean(dto.featured);
+    const slug = this.generateSlug(dto.companyName);
+
+    const newAddressData = {
+      streetAddress: address.streetAddress,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      zip: address.zip,
+    };
+
+    const newSupplierData = {
+      companyName: dto.companyName,
+      companyLogo: dto.companyLogo,
+      companyPhone: dto.companyPhone,
+      companyImage: dto.companyImage,
+      companyBio: dto.companyBio,
+      slug: slug,
+      featured: featured,
+      AccountAddress: {
+        create: newAddressData,
+      },
+      account: {
+        connect: {
+          id: id,
+        },
+      },
+    };
+
     try {
-      const phoneNum = Number(dto.companyPhone);
-      const featured = Boolean(dto.featured);
-      const slug = this.generateSlug(dto.companyName);
-
-      const newAddress = await this.prisma.accountAddress.create({
-        data: {
-          streetAddress: address.streetAddress,
-          city: address.city,
-          state: address.state,
-          country: address.country,
-          zip: address.zip,
-        },
-      });
-
       await this.prisma.supplier.create({
-        data: {
-          companyName: dto.companyName,
-          companyLogo: dto.companyLogo,
-          companyPhone: phoneNum,
-          companyImage: dto.companyImage,
-          companyBio: dto.companyBio,
-          slug: slug,
-          featured: featured,
-          AccountAddress: {
-            connect: {
-              id: newAddress.id,
-            },
-          },
-          account: {
-            connect: {
-              id: id,
-            },
-          },
-        },
+        data: newSupplierData,
         include: {
           AccountAddress: true,
         },
       });
+
       return 'Supplier created with name ' + slug;
     } catch (err) {
+      console.error('Error while creating supplier:', err);
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new HttpException(
           'A supplier with that name already exists',

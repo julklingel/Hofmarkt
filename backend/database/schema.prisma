@@ -49,7 +49,7 @@ model Supplier {
   account        Account?
   companyName    String
   companyLogo    String          @default("")
-  companyPhone   Int
+  companyPhone   String          @default("")
   companyImage   String          @default("")
   companyBio     String
   slug           String          @unique

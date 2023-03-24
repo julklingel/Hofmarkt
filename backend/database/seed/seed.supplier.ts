@@ -21,7 +21,7 @@ export async function seedSupplier() {
           companyName: 'Klaus Obstler',
           companyLogo:
             'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
-          companyPhone: 123456789,
+          companyPhone: '123456789',
           AccountAddress: {
             create: {
               streetAddress: '1234 Main St',
@@ -95,7 +95,7 @@ export async function seedSupplier() {
           companyName: 'Ammersee Imkerei GmbH',
           companyLogo:
             'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
-          companyPhone: 123456789,
+          companyPhone: '123456789',
           AccountAddress: {
             create: {
               streetAddress: '1234 Main St',
@@ -157,7 +157,7 @@ export async function seedSupplier() {
           companyName: 'Manfred Hof',
           companyLogo:
             'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
-          companyPhone: 123456789,
+          companyPhone: '123456789',
           AccountAddress: {
             create: {
               streetAddress: '1234 Main St',
@@ -219,7 +219,7 @@ export async function seedSupplier() {
           companyName: 'Dominik Hunter',
           companyLogo:
             'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
-          companyPhone: 123456789,
+          companyPhone: '123456789',
           AccountAddress: {
             create: {
               streetAddress: '1234 Main St',
@@ -280,7 +280,7 @@ export async function seedSupplier() {
           companyName: 'Bäckerei Maria',
           companyLogo:
             'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
-          companyPhone: 123456789,
+          companyPhone: '123456789',
           AccountAddress: {
             create: {
               streetAddress: '1234 Main St',
@@ -341,7 +341,7 @@ export async function seedSupplier() {
           companyName: 'Markus Fischer',
           companyLogo:
             'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
-          companyPhone: 123456789,
+          companyPhone: '123456789',
           AccountAddress: {
             create: {
               streetAddress: '1234 Main St',

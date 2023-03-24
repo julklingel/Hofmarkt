@@ -5,7 +5,6 @@ import { addressDto } from '../address';
 import { JwtAuthGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
 
-@UseGuards(JwtAuthGuard)
 @Controller('supplier')
 export class SupplierController {
   constructor(private supplierService: SupplierService) {}
@@ -26,6 +25,7 @@ export class SupplierController {
     return user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('create')
   createSupplier(
     @GetUser() user: any,
