@@ -131,7 +131,7 @@ describe('App integration test', () => {
     const supplierdto: supplierDto = {
       companyName: 'jackfruit garden',
       companyLogo: 'jackfruit.png',
-      companyPhone: 'j4ckfru1t',
+      companyPhone: '+491876543',
       companyImage: 'jacknfruit.png',
       companyBio: 'jack loves fruit',
       featured: false,

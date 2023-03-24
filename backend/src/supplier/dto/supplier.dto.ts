@@ -1,4 +1,9 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  IsPhoneNumber,
+} from 'class-validator';
 import { TransformBooleanString } from '../../auth/decorator';
 
 export class supplierDto {
@@ -11,6 +16,7 @@ export class supplierDto {
   companyLogo: string;
 
   @IsNotEmpty()
+  @IsPhoneNumber()
   @IsString()
   companyPhone: string;
 
