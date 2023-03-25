@@ -47,7 +47,7 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
             })
             .expectStatus(201);
         });
-        it('should throw if user already exists', () => {
+        it('should throw if user already exists on Account', () => {
           return pactum
             .spec()
             .post('/user/create')

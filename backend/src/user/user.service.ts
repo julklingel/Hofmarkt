@@ -70,7 +70,7 @@ export class UserService {
     } catch (err) {
       if (err.code === 'P2002' && err.meta.target.includes('supplierId')) {
         throw new HttpException(
-          'An account can only have one supplier',
+          'An account can only have one user',
           HttpStatus.BAD_REQUEST,
         );
       } else {
