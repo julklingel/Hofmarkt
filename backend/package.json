@@ -32,7 +32,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "pretest:integration": "pnpm db:test:restart",
-    "test:integration": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-integration.json"
+    "test:integration": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-integration.json",
+    "show:testdb": "npx dotenv -e .env.test -- prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -53,6 +54,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "slugify": "^1.6.5",
     "swagger-ui-express": "^4.6.2",
     "webpack": "^5.75.0"
   },

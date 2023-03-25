@@ -4,6 +4,8 @@ import * as pactum from 'pactum';
 import { PrismaService } from '../src/db-module/prisma.service';
 import { AppModule } from '../src/app/app.module';
 import { signupDto } from '../src/auth/dto';
+import { supplierDto } from 'src/supplier/dto';
+import { addressDto } from 'src/address';
 
 describe('App integration test', () => {
   let app: INestApplication;
@@ -29,38 +31,72 @@ describe('App integration test', () => {
   });
 
   describe('Auth', () => {
-    const dto: signupDto = {
-      email: process.env.TEST_EMAIL,
-      password: process.env.TEST_PASSWORD,
+    const supplierdto: signupDto = {
+      email: process.env.SUPPLIER_TEST_EMAIL,
+      password: process.env.SUPPLIER_TEST_PASSWORD,
+      isSupplier: true,
+    };
+    const supplierdto_two: signupDto = {
+      email: process.env.SUPPLIER_TEST_EMAIL_TWO,
+      password: process.env.SUPPLIER_TEST_PASSWORD,
+      isSupplier: true,
+    };
+    const userdto: signupDto = {
+      email: process.env.USER_TEST_EMAIL,
+      password: process.env.USER_TEST_PASSWORD,
       isSupplier: false,
     };
+
     describe('Signup', () => {
       it('should throw if email is empty', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody({ password: dto.password, isSupplier: dto.isSupplier })
+          .withBody({
+            password: supplierdto.password,
+            isSupplier: supplierdto.isSupplier,
+          })
           .expectStatus(400);
       });
       it('should throw if password is empty', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody({ email: dto.email, isSupplier: dto.isSupplier })
+          .withBody({
+            email: supplierdto.email,
+            isSupplier: supplierdto.isSupplier,
+          })
           .expectStatus(400);
       });
       it('should throw if isSupplier is empty', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody({ email: dto.email, password: dto.password })
+          .withBody({
+            email: supplierdto.email,
+            password: supplierdto.password,
+          })
           .expectStatus(400);
+      });
+      it('should create a new supplier', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody(supplierdto)
+          .expectStatus(201);
+      });
+      it('should create another new supplier', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody(supplierdto_two)
+          .expectStatus(201);
       });
       it('should create a new user', () => {
         return pactum
           .spec()
           .post('/auth/signup')
-          .withBody(dto)
+          .withBody(userdto)
           .expectStatus(201);
       });
     });
@@ -70,29 +106,165 @@ describe('App integration test', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ password: dto.password })
+          .withBody({ password: supplierdto.password })
           .expectStatus(400);
       });
       it('should throw if password is empty', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ email: dto.email })
+          .withBody({ email: supplierdto.email })
           .expectStatus(400);
+      });
+      it('should login a supplier', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({
+            email: supplierdto.email,
+            password: supplierdto.password,
+          })
+          .expectStatus(200)
+          .stores('supplierToken', 'access_token');
       });
       it('should throw if password is incorrect', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ email: dto.email, password: 'wrong' })
+          .withBody({ email: supplierdto.email, password: 'wrong' })
           .expectStatus(403);
+      });
+      it('should login another supplier', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({
+            email: supplierdto_two.email,
+            password: supplierdto.password,
+          })
+          .expectStatus(200)
+          .stores('supplierToken_two', 'access_token');
       });
       it('should login a user', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({ email: dto.email, password: dto.password })
-          .expectStatus(200);
+          .withBody({
+            email: userdto.email,
+            password: userdto.password,
+          })
+          .expectStatus(200)
+          .stores('userToken', 'access_token');
+      });
+    });
+  });
+  describe('Supplier', () => {
+    const supplierdto: supplierDto = {
+      companyName: 'jackfruit garden',
+      companyLogo: 'jackfruit.png',
+      companyPhone: '+491876543',
+      supplierImages: ['jackfruit1.png', 'jackfruit2.png'],
+      companyBio: 'jack loves fruit',
+      featured: false,
+    };
+    const addressdto: addressDto = {
+      streetAddress: 'bergweg 1',
+      city: 'jacksonville',
+      state: 'jackson',
+      country: 'jackland',
+      zip: '7474',
+    };
+    describe('create supplier', () => {
+      it('should throw if account is not a supplier', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{userToken}',
+          })
+          .withBody({
+            ...supplierdto,
+            ...addressdto,
+          })
+          .expectJson({
+            message: 'You are not authorized to create a supplier account',
+            statusCode: 400,
+          });
+      });
+
+      it('should throw if company name is empty', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            companyName: '',
+            companyLogo: supplierdto.companyLogo,
+            companyPhone: supplierdto.companyPhone,
+            companyImage: supplierdto.supplierImages,
+            companyBio: supplierdto.companyBio,
+            featured: supplierdto.featured,
+            ...addressdto,
+          })
+          .expectJson({
+            error: 'Bad Request',
+            message: ['companyName should not be empty'],
+            statusCode: 400,
+          });
+      });
+
+      it('should create a new supplier', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            ...supplierdto,
+            ...addressdto,
+          })
+          .expectStatus(201);
+      });
+
+      it('should throw if account already has a supplier', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            companyName: 'garden of jackfruit 2',
+            companyLogo: supplierdto.companyLogo,
+            companyPhone: supplierdto.companyPhone,
+            companyImage: supplierdto.supplierImages,
+            companyBio: supplierdto.companyBio,
+            featured: supplierdto.featured,
+            ...addressdto,
+          })
+          .expectStatus(400);
+      });
+
+      it('should throw if company name is already taken', () => {
+        return pactum
+          .spec()
+          .post('/supplier/create')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken_two}',
+          })
+          .withBody({
+            companyName: 'jackfruit garden',
+            companyLogo: supplierdto.companyLogo,
+            companyPhone: supplierdto.companyPhone,
+            companyImage: supplierdto.supplierImages,
+            companyBio: supplierdto.companyBio,
+            featured: supplierdto.featured,
+            ...addressdto,
+          })
+          .expectStatus(400);
       });
     });
   });
