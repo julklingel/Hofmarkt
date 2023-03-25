@@ -5,6 +5,7 @@ import { PrismaService } from '../src/db-module/prisma.service';
 import { AppModule } from '../src/app/app.module';
 import { authTests } from './auth.test';
 import { supplierTests } from './supplier.test';
+import { userTests } from './user.test';
 
 describe('App integration test', () => {
   let app: INestApplication;
@@ -31,4 +32,5 @@ describe('App integration test', () => {
 
   authTests(app, prisma);
   supplierTests(app, prisma);
+  userTests(app, prisma);
 });

@@ -17,7 +17,7 @@ export class UserService {
 
   async createUser(user, dto: userDto, address: addressDto) {
     const { id, role } = user;
-    if (role !== 'USER')
+    if (role !== 'BUYER')
       throw new HttpException(
         'You are not authorized to create a user account',
         HttpStatus.BAD_REQUEST,

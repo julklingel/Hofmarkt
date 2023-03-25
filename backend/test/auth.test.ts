@@ -20,6 +20,11 @@ export const authTests = (app: INestApplication, prisma: PrismaService) => {
       password: process.env.USER_TEST_PASSWORD,
       isSupplier: false,
     };
+    const userdto_two: signupDto = {
+      email: process.env.USER_TEST_EMAIL_TWO,
+      password: process.env.USER_TEST_PASSWORD,
+      isSupplier: false,
+    };
 
     describe('Signup', () => {
       it('should throw if email is empty', () => {
@@ -71,6 +76,13 @@ export const authTests = (app: INestApplication, prisma: PrismaService) => {
           .spec()
           .post('/auth/signup')
           .withBody(userdto)
+          .expectStatus(201);
+      });
+      it('should create another new user', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody(userdto_two)
           .expectStatus(201);
       });
     });
@@ -129,6 +141,17 @@ export const authTests = (app: INestApplication, prisma: PrismaService) => {
           })
           .expectStatus(200)
           .stores('userToken', 'access_token');
+      });
+      it('should login another user', () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody({
+            email: userdto_two.email,
+            password: userdto_two.password,
+          })
+          .expectStatus(200)
+          .stores('userToken_two', 'access_token');
       });
     });
   });
