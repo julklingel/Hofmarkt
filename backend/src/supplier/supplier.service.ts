@@ -12,7 +12,7 @@ export class SupplierService {
     const supplier = await this.prisma.supplier.findMany({
       select: {
         companyName: true,
-        companyImage: true,
+        companyLogo: true,
         slug: true,
       },
     });
@@ -26,7 +26,7 @@ export class SupplierService {
       },
       select: {
         companyName: true,
-        companyImage: true,
+        companyLogo: true,
         slug: true,
       },
     });
@@ -49,6 +49,14 @@ export class SupplierService {
         'You are not authorized to create a supplier account',
         HttpStatus.BAD_REQUEST,
       );
+
+    const defaultImageUrls = ['default_image_url_1', 'default_image_url_2'];
+
+    const hasSupplierImages =
+      dto.supplierImages &&
+      Array.isArray(dto.supplierImages) &&
+      dto.supplierImages.length > 0;
+    const imageUrls = hasSupplierImages ? dto.supplierImages : defaultImageUrls;
 
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
@@ -77,16 +85,24 @@ export class SupplierService {
       zip: address.zip,
     };
 
+    const supplierImages = imageUrls.map((imageUrl) => {
+      return {
+        imageUrl: imageUrl,
+      };
+    });
+
     const newSupplierData = {
       companyName: dto.companyName,
       companyLogo: dto.companyLogo,
       companyPhone: dto.companyPhone,
-      companyImage: dto.companyImage,
       companyBio: dto.companyBio,
       slug: slug,
       featured: featured,
       AccountAddress: {
         create: newAddressData,
+      },
+      SupplierImage: {
+        create: supplierImages,
       },
       account: {
         connect: {
@@ -100,12 +116,12 @@ export class SupplierService {
         data: newSupplierData,
         include: {
           AccountAddress: true,
+          SupplierImage: true,
         },
       });
 
       return 'Supplier created with name ' + slug;
     } catch (err) {
-      console.error('Error while creating supplier:', err);
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new HttpException(
           'A supplier with that name already exists',

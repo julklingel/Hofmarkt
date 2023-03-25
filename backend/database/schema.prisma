@@ -50,7 +50,6 @@ model Supplier {
   companyName    String
   companyLogo    String          @default("")
   companyPhone   String          @default("")
-  companyImage   String          @default("")
   companyBio     String
   slug           String          @unique
   featured       Boolean         @default(false)
@@ -60,8 +59,20 @@ model Supplier {
   offer          Offer[]
   AccountAddress AccountAddress?
   Review         Review[]
+  SupplierImage  SupplierImage[]
 
   @@map("suppliers")
+}
+
+model SupplierImage {
+  id         String   @id @unique @default(uuid())
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+  supplierId String
+  imageUrl   String   @default("Placeholder Image?")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("supplier_images")
 }
 
 model AccountAddress {
