@@ -8,6 +8,7 @@ function cn(...classes: string[]) {
 
 export default function SupplierCard(props: any) {
   const [isLoading, setLoading] = useState(true);
+  
 
   const { companyName, companyImage, companyAddress, slug } = props.supplier;
   const linkPath = `/supplier/${slug}`;

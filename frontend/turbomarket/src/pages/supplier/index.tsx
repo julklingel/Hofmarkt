@@ -4,6 +4,8 @@ import AllSuppliers from "./AllSuppliers";
 
 export default function AllSuppliersPage(supplierObj: any) {
   const supplier = supplierObj;
+  console.log(supplier);
+  
 
   return (
     <Fragment>

@@ -3,6 +3,7 @@ import React from "react";
 
 export default function SupplierGrid(props: any) {
   const suppliers = props.suppliers;
+  
 
   if (!suppliers) {
     return (
