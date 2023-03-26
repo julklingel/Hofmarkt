@@ -17,6 +17,7 @@ export default function CompanyAddressForm() {
   const postalCode = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: FormEvent<HTMLButtonElement>) {
+
     e.preventDefault();
 
     const newAddressData = {

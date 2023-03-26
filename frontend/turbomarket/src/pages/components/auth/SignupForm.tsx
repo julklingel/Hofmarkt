@@ -5,12 +5,10 @@ import ErrorMsg from "../msg/ErrorMsg";
 import { signIn } from "next-auth/react";
 
 async function createAccount(
-  
   email: string,
   password: string,
   isSupplier: boolean
 ) {
-  
   const res = await fetch("http://localhost:4444/auth/signup", {
     method: "POST",
     body: JSON.stringify({ email, password, isSupplier }),
@@ -27,7 +25,6 @@ async function createAccount(
     password: password,
     redirect: false,
   });
-  
 }
 
 export default function SignupForm() {
@@ -45,13 +42,12 @@ export default function SignupForm() {
 
   const [error, setError] = useState("");
 
-
-  // Add a new state to track client-side rendering (mounted) 
-   // We conditionally render (use effect) the input elements only when isClient is true. This should ensure that the input state is only handled on the client side, which should prevent the hydration error.
-   const [isClient, setIsClient] = useState(false);
-   useEffect(() => {
-     setIsClient(true);
-   }, []);
+  // Add a new state to track client-side rendering (mounted)
+  // We conditionally render (use effect) the input elements only when isClient is true. This should ensure that the input state is only handled on the client side, which should prevent the hydration error.
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -64,9 +60,9 @@ export default function SignupForm() {
         setPassword("");
         setPassword2("");
         if (isSupplier) {
-          router.push("/supplier/account/creation");
+          window.location.href = "/supplier/account/creation";
         } else {
-          router.push("/user/account/creation");
+          window.location.href = "/user/account/creation";
         }
       } catch (error: any) {
         setError(error.message);
@@ -89,50 +85,47 @@ export default function SignupForm() {
           <form onSubmit={handleSubmit} className="">
             {isClient && (
               <>
-              <div className="mb-4">
-              <label className="block text-c.green text-sm font-bold mb-2">
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setError("")}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-c.green text-sm font-bold mb-2">
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setError("")}
-              />
-            </div>
-            <div className="mb-6">
-              <label className="block text-c.green text-sm font-bold mb-2">
-                Re-enter Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="password"
-                placeholder="Password"
-                value={password2}
-                onChange={(e) => setPassword2(e.target.value)}
-                onFocus={() => setError("")}
-              />
-            </div>
-            </>
+                <div className="mb-4">
+                  <label className="block text-c.green text-sm font-bold mb-2">
+                    Email
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onFocus={() => setError("")}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-c.green text-sm font-bold mb-2">
+                    Password
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onFocus={() => setError("")}
+                  />
+                </div>
+                <div className="mb-6">
+                  <label className="block text-c.green text-sm font-bold mb-2">
+                    Re-enter Password
+                  </label>
+                  <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    type="password"
+                    placeholder="Password"
+                    value={password2}
+                    onChange={(e) => setPassword2(e.target.value)}
+                    onFocus={() => setError("")}
+                  />
+                </div>
+              </>
             )}
-            
-           
-          
 
             <ErrorMsg msg={error} setError={setError} />
           </form>
