@@ -9,14 +9,21 @@ export class SupplierService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getSuppliers(): Promise<any> {
-    const supplier = await this.prisma.supplier.findMany({
+    const suppliers = await this.prisma.supplier.findMany({
+   
       select: {
         companyName: true,
         companyLogo: true,
         slug: true,
+        SupplierImage: {
+          select: {
+            imageUrl: true,
+          },
+        },
       },
     });
-    return supplier;
+  
+    return suppliers;
   }
 
   async getFeaturedSuppliers(): Promise<any> {
@@ -28,6 +35,11 @@ export class SupplierService {
         companyName: true,
         companyLogo: true,
         slug: true,
+        SupplierImage: {
+          select: {
+            imageUrl: true,
+          },
+        },
       },
     });
 
