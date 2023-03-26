@@ -12,6 +12,7 @@ export class SupplierController {
   @Get()
   getSuppliers() {
     return this.supplierService.getSuppliers();
+
   }
 
   @Get('featured')

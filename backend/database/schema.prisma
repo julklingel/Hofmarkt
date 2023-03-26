@@ -71,6 +71,7 @@ model SupplierImage {
   imageUrl   String   @default("Placeholder Image?")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  type       String   @default("profile") // profile, gallery, cover
 
   @@map("supplier_images")
 }

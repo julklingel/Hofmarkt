@@ -31,7 +31,11 @@ export async function seedSupplier() {
               zip: '12345',
             },
           },
-          companyImage: 'obstler.jpeg',
+          SupplierImage: {
+            create: {
+              imageUrl: 'obstler.jpeg',
+            },
+          },
           companyBio: 'Klaus hat einen Obstbaum Garten',
           slug: 'klaus-obstler',
           offer: {
@@ -105,7 +109,11 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          companyImage: 'Imkerei.jpeg',
+          SupplierImage: {
+            create: {
+              imageUrl: 'Imkerei.jpeg',
+            },
+          },
           companyBio: 'The best honey in the world comes from Ammersee',
           slug: 'ammer-imker',
           featured: true,
@@ -167,7 +175,11 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          companyImage: 'Farmhouse.jpeg',
+          SupplierImage: {
+            create: {
+              imageUrl: 'Farmhouse.jpeg',
+            },
+          },
           companyBio: 'Ilgen special farm products',
           slug: 'manfred-hof',
           featured: true,
@@ -229,7 +241,12 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          companyImage: 'hunter-4436354_1920.jpg',
+          SupplierImage: {
+            create: {
+              imageUrl:
+                'hunter-4436354_1920.jpg',
+            },
+          },
           companyBio: 'Ilgen special farm products',
           slug: 'dominik-hunter',
           offer: {
@@ -290,7 +307,12 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          companyImage: 'Bäckerei_Bayer_1.webp',
+          SupplierImage: {
+            create: {
+              imageUrl:
+                'Bäckerei_Bayer_1.webp',
+            },
+          },
           companyBio: "Bäckerei Maria's bread is the best in the world",
           slug: 'maria-baker',
           offer: {
@@ -351,7 +373,12 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          companyImage: 'fisher.jpg',
+          SupplierImage: {
+            create: {
+              imageUrl: 'fisher.jpg',
+            },
+          },
+
           companyBio: 'Fish from the Ammersee and the Starnberger See',
           slug: 'markus-fisher',
           offer: {
