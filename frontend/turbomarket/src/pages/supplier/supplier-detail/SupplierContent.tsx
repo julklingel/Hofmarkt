@@ -6,7 +6,6 @@ import Gallery from "@/pages/components/gallery/Gallery";
 
 export default function SupplierContent(props: any) {
   const offer = props;
-  console.log("Suppliercontent", offer);
   
   
   const [selectedView, setSelectedView] = useState("Products");

@@ -33,6 +33,7 @@ interface Props {
 
 export default function Supplier(supplier: Props) {
   const { offer } = supplier.supplier;
+  const { slug } = supplier.supplier;
   
 
   return (
@@ -66,6 +67,12 @@ export const getStaticProps: GetStaticProps<Props, { slug: string }> = async (
 
   const res = await fetch(`http://localhost:4444/supplier/${slug}`);
   const supplier = await res.json();
+
+  // Add the slug property to each offer object
+  supplier.offer = supplier.offer.map((offer: Offer) => ({
+    ...offer,
+    slug: supplier.slug,
+  }));
 
   return {
     props: {
