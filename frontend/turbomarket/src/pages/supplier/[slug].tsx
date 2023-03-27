@@ -16,10 +16,10 @@ interface Supplier {
   city: string;
   rating: number;
   reviewsNum: number;
-  products: Product[];
+  offer: Offer[];
 }
 
-interface Product {
+interface Offer {
   id: string;
   name: string;
   image: string;
@@ -32,13 +32,14 @@ interface Props {
 }
 
 export default function Supplier(supplier: Props) {
-  console.log("supplier", supplier);
+  const { offer } = supplier.supplier;
+  
+
   return (
     <Fragment>
       <Navbar />
-      <div>Hello</div>
-      {/* <SupplierHeader supplier={supplier} />
-      <SupplierContent /> */}
+      <SupplierHeader supplier={supplier} />
+      <SupplierContent offers={offer}  />
     </Fragment>
   );
 }

@@ -47,12 +47,49 @@ export class SupplierService {
   }
 
   async getSupplier(slug): Promise<any> {
-    return await this.prisma.supplier.findUnique({
+    const supplier = await this.prisma.supplier.findUnique({
       where: {
         slug: slug,
       },
+      select: {
+        companyName: true,
+        companyLogo: true,
+        slug: true,
+        companyBio: true,
+        SupplierImage: {
+          select: {
+            imageUrl: true,
+          },
+        },
+        AccountAddress: {
+          select: {
+            streetAddress: true,
+            city: true,
+            state: true,
+            country: true,
+            zip: true,
+          },
+        },
+        offer: {
+          select: {
+            id: true,
+            title: true,
+            unit: true,
+            price: true,
+            img: true,
+            category: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
+  
+    return supplier;
   }
+  
 
   async createSupplier(user: any, dto: supplierDto, address: addressDto) {
     const { id, role } = user;

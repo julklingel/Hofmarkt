@@ -5,7 +5,10 @@ import Reviews from "@/pages/components/reviews/Reviews";
 import Gallery from "@/pages/components/gallery/Gallery";
 
 export default function SupplierContent(props: any) {
-  const product = props.products;
+  const offer = props;
+  console.log("Suppliercontent", offer);
+  
+  
   const [selectedView, setSelectedView] = useState("Products");
 
   function viewToggle(event: React.ChangeEvent<HTMLInputElement>) {
@@ -75,7 +78,7 @@ export default function SupplierContent(props: any) {
         </ul>
       </section>
       <section>
-        {selectedView === "Products" && <AllProducts products={product} />}
+        {selectedView === "Products" && <AllProducts offer={offer} />}
         {selectedView === "Gallery" && <Gallery />}
         {selectedView === "Reviews" && <Reviews />}
       </section>

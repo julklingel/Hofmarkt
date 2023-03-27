@@ -2,13 +2,15 @@ import React from "react";
 import Navbar from "../components/navbar";
 import AllProducts from "./AllProducts";
 
-export default function Products(productObj: any) {
-  const product = productObj;
+export default function Products(offers: any) {
+  const offer = offers;
+  console.log("index", offer);
+  
 
   return (
     <div className=" h-screen">
       <Navbar />
-      <AllProducts products={product} />
+      <AllProducts offer={offer} />
     </div>
   );
 }
@@ -18,7 +20,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      productObj,
+      offers: productObj,
     },
   };
 }
