@@ -30,5 +30,5 @@ export class supplierDto {
 
   @IsString({ each: true })
   @IsOptional()
-  supplierImages: string[];
+  supplierImage: string[];
 }

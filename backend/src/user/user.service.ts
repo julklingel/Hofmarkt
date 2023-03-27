@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { addressDto } from '../address';
 import { userDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
+import { enumImageType } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -50,6 +51,12 @@ export class UserService {
     const newUserData = {
       firstName: dto.firstName,
       lastName: dto.lastName,
+      profileImage: {
+        create: {
+          imageUrl: dto.profileImage,
+          type: enumImageType.PROFILE,
+        },
+      },
       AccountAddress: {
         create: newAddressData,
       },
@@ -65,6 +72,7 @@ export class UserService {
         data: newUserData,
         include: {
           AccountAddress: true,
+          Image: true,
         },
       });
     } catch (err) {

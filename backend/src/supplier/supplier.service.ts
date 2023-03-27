@@ -3,6 +3,7 @@ import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
 import { addressDto } from 'src/address';
+import { enumImageType } from '@prisma/client';
 
 @Injectable()
 export class SupplierService {
@@ -10,19 +11,18 @@ export class SupplierService {
 
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
-   
       select: {
         companyName: true,
         companyLogo: true,
         slug: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
         },
       },
     });
-  
+
     return suppliers;
   }
 
@@ -35,7 +35,7 @@ export class SupplierService {
         companyName: true,
         companyLogo: true,
         slug: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
@@ -65,10 +65,10 @@ export class SupplierService {
     const defaultImageUrls = ['default_image_url_1', 'default_image_url_2'];
 
     const hasSupplierImages =
-      dto.supplierImages &&
-      Array.isArray(dto.supplierImages) &&
-      dto.supplierImages.length > 0;
-    const imageUrls = hasSupplierImages ? dto.supplierImages : defaultImageUrls;
+      dto.supplierImage &&
+      Array.isArray(dto.supplierImage) &&
+      dto.supplierImage.length > 0;
+    const imageUrls = hasSupplierImages ? dto.supplierImage : defaultImageUrls;
 
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
@@ -97,15 +97,21 @@ export class SupplierService {
       zip: address.zip,
     };
 
-    const supplierImages = imageUrls.map((imageUrl) => {
+    const supplierImage = imageUrls.map((imageUrl) => {
       return {
         imageUrl: imageUrl,
+        type: enumImageType.FACILTY,
       };
     });
 
     const newSupplierData = {
       companyName: dto.companyName,
-      companyLogo: dto.companyLogo,
+      companyLogo: {
+        create: {
+          imageUrl: dto.companyLogo,
+          type: enumImageType.PROFILE,
+        },
+      },
       companyPhone: dto.companyPhone,
       companyBio: dto.companyBio,
       slug: slug,
@@ -114,7 +120,9 @@ export class SupplierService {
         create: newAddressData,
       },
       SupplierImage: {
-        create: supplierImages,
+        create: {
+          imageUrl: supplierImage,
+        },
       },
       account: {
         connect: {
@@ -128,7 +136,7 @@ export class SupplierService {
         data: newSupplierData,
         include: {
           AccountAddress: true,
-          SupplierImage: true,
+          Image: true,
         },
       });
 
