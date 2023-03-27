@@ -1,45 +1,74 @@
 import { Fragment } from "react";
+import { GetStaticProps, GetStaticPropsContext, GetStaticPaths } from "next";
 import Navbar from "../components/navbar";
 import SupplierHeader from "./supplier-detail/SupplierHeader";
 import SupplierContent from "./supplier-detail/SupplierContent";
 import AllProducts from "../market/AllProducts";
 
-// You need to retrieve the slug from the URL and then use it to fetch the data for the supplier#
-// You need to retrieve data from the supplier and offers.
+interface Supplier {
+  id: string;
+  name: string;
+  catSvgLink: string;
+  companyImage: string;
+  slug: string;
+  bio: string;
+  zip: string;
+  city: string;
+  rating: number;
+  reviewsNum: number;
+  products: Product[];
+}
 
-export default function Supplier(productObj: any) {
-  const product = productObj;
+interface Product {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  description: string;
+}
 
+interface Props {
+  supplier: Supplier;
+}
+
+export default function Supplier(supplier: Props) {
+  console.log("supplier", supplier);
   return (
     <Fragment>
       <Navbar />
-      <SupplierHeader />
-      <SupplierContent products={product} />
+      <div>Hello</div>
+      {/* <SupplierHeader supplier={supplier} />
+      <SupplierContent /> */}
     </Fragment>
   );
 }
 
-export async function getStaticPaths() {
-  const res = await fetch("http://localhost:4444/supplier");
-  const productObj = await res.json();
-  const paths = productObj.map((product: any) => ({
-    params: { slug: product.slug },
+export const getStaticPaths: GetStaticPaths = async () => {
+  const res = await fetch(`http://localhost:4444/supplier`);
+  const suppliers = await res.json();
+
+  const paths = suppliers.map((supplier: Supplier) => ({
+    params: { slug: supplier.slug },
   }));
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
-}
+};
 
-export async function getStaticProps({ params }: { params: { slug: string } }) {
-  // const res = await fetch(`http://localhost:4444/${params.slug}/offers/`);
-  const res = await fetch(`http://localhost:4444/offer`);
-  const productObj = await res.json();
+export const getStaticProps: GetStaticProps<Props, { slug: string }> = async (
+  context: GetStaticPropsContext<{ slug: string }>
+) => {
+  const { params } = context;
+  const slug = params?.slug;
+
+  const res = await fetch(`http://localhost:4444/supplier/${slug}`);
+  const supplier = await res.json();
 
   return {
     props: {
-      productObj,
+      supplier,
     },
   };
-}
+};

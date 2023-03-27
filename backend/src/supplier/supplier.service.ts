@@ -46,10 +46,10 @@ export class SupplierService {
     return suppliers;
   }
 
-  async getSupplier(id): Promise<any> {
+  async getSupplier(slug): Promise<any> {
     return await this.prisma.supplier.findUnique({
       where: {
-        id: id,
+        slug: slug,
       },
     });
   }
