@@ -28,7 +28,7 @@ export class AuthController {
     return this.authService.sendResetCode(dto);
   }
 
-  @ApiOkResponse({ description: '{ message: Email successfully fired!}' })
+  @ApiOkResponse({ description: '{ message: Code successfully verified!}' })
   @HttpCode(200)
   @Post('enter-resetCode')
   verifyResetCode(@Body() dto: resetCodeDto) {
