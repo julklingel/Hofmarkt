@@ -23,7 +23,7 @@ export class AuthController {
 
   @ApiOkResponse({ description: '{ message: Email successfully fired!}' })
   @HttpCode(200)
-  @Post('reset-password')
+  @Post('send-reset-mail')
   sendResetCode(@Body() dto: resetMailDto) {
     return this.authService.sendResetCode(dto);
   }

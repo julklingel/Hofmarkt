@@ -1,6 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { signupDto, loginDto, resetMailDto , resetCodeDto } from './dto/auth.dto';
+import {
+  signupDto,
+  loginDto,
+  resetMailDto,
+  resetCodeDto,
+} from './dto/auth.dto';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../db-module/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -120,33 +125,32 @@ export class AuthService {
     if (!account) {
       throw new ForbiddenException('User not found');
     }
-
+  
     const resetCode = Math.floor(Math.random() * 1000000)
       .toString()
       .padStart(6, '0');
-
-    
-
+  
     const transporter = nodemailer.createTransport({
-      host: 'smtp.example.com',
-      secure: true, // use tls
-      port: 1111,
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: 'user@example.com',
-        pass: 'password',
+        user: this.config.get('EMAIL_USER'),
+        pass: this.config.get('EMAIL_PASSWORD'),
       },
     });
-
+  
     await transporter.sendMail({
       from: 'noreply@example.com',
       to: account.email,
       subject: 'Hofmarkt // Password Reset',
       text: `This is your reset code: ${resetCode}`,
     });
-
+  
     // Return the reset code to the client
     return { message: 'Email successfully fired!' };
   }
+  
 
   async verifyResetCode(dto: resetCodeDto) {
     // Retrieve the reset code and verify it.
