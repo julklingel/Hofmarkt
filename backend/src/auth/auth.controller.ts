@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { signupDto, loginDto } from './dto/auth.dto';
+import { signupDto, loginDto, resetMailDto, resetCodeDto } from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -21,10 +21,17 @@ export class AuthController {
   }
 
 
-  @ApiOkResponse({ description: '{ access_token: token}' })
+  @ApiOkResponse({ description: '{ message: Email successfully fired!}' })
   @HttpCode(200)
   @Post('reset-password')
   sendResetCode(@Body() dto: resetMailDto) {
     return this.authService.sendResetCode(dto);
+  }
+
+  @ApiOkResponse({ description: '{ message: Email successfully fired!}' })
+  @HttpCode(200)
+  @Post('enter-resetCode')
+  verifyResetCode(@Body() dto: resetCodeDto) {
+    return this.authService.verifyResetCode(dto);
   }
 }

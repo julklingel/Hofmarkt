@@ -37,3 +37,10 @@ export class resetMailDto {
   @IsNotEmpty()
   email: string;
 }
+
+
+export class resetCodeDto {
+  @ApiProperty({ example: '123456' })
+  @IsNotEmpty()
+  code: number;
+}
