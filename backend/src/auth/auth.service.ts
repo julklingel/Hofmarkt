@@ -125,6 +125,8 @@ export class AuthService {
       .toString()
       .padStart(6, '0');
 
+    
+
     const transporter = nodemailer.createTransport({
       host: 'smtp.example.com',
       secure: true, // use tls
