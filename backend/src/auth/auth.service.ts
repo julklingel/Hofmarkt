@@ -5,6 +5,7 @@ import * as argon2 from 'argon2';
 import { PrismaService } from '../db-module/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
+import * as nodemailer from 'nodemailer';
 
 const hashingConfig = {
   parallelism: 1,
@@ -104,4 +105,48 @@ export class AuthService {
     delete account.password;
     return this.signToken(account);
   }
-}
+
+  async sendResetCode(dto: resetMailDto) {
+    const account = await this.prisma.account.findUnique({
+      where: {
+        email: dto.email.toLowerCase(),
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
+    });
+    if (!account) {
+      throw new ForbiddenException('User not found');
+    }
+
+    const resetCode = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.example.com',
+      secure: true, // use tls
+      port: 1111,
+      auth: {
+        user: 'user@example.com',
+        pass: 'password',
+      },
+    });
+
+    await transporter.sendMail({
+      from: 'noreply@example.com',
+      to: account.email,
+      subject: 'Hofmarkt // Password Reset',
+      text: `This is your reset code: ${resetCode}`,
+    });
+
+    // Return the reset code to the client
+    return { message: 'Email successfully fired!' };;
+  }
+
+  async verifyResetCode(dto: verifyResetCodeDto) {
+
+    // Retrieve the reset code and verify it. 
+
+  }
+

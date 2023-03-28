@@ -19,4 +19,12 @@ export class AuthController {
   login(@Body() dto: loginDto) {
     return this.authService.login(dto);
   }
+
+
+  @ApiOkResponse({ description: '{ access_token: token}' })
+  @HttpCode(200)
+  @Post('reset-password')
+  sendResetCode(@Body() dto: resetMailDto) {
+    return this.authService.sendResetCode(dto);
+  }
 }

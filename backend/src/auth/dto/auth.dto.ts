@@ -30,3 +30,10 @@ export class loginDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class resetMailDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+}
