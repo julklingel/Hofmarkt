@@ -17,6 +17,7 @@ export class UserService {
   }
 
   async createUser(user, dto: userDto, address: addressDto) {
+    console.log('user', dto);
     const { id, role } = user;
     if (role !== 'BUYER')
       throw new HttpException(
@@ -53,7 +54,7 @@ export class UserService {
       lastName: dto.lastName,
       profileImage: {
         create: {
-          imageUrl: dto.profileImage,
+          imageUrl: dto.imageUrl,
           type: enumImageType.PROFILE,
         },
       },

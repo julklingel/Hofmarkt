@@ -100,7 +100,7 @@ export class SupplierService {
     const supplierImage = imageUrls.map((imageUrl) => {
       return {
         imageUrl: imageUrl,
-        type: enumImageType.FACILTY,
+        type: enumImageType.FACILITY,
       };
     });
 
@@ -119,10 +119,8 @@ export class SupplierService {
       AccountAddress: {
         create: newAddressData,
       },
-      SupplierImage: {
-        create: {
-          imageUrl: supplierImage,
-        },
+      supplierImage: {
+        create: supplierImage,
       },
       account: {
         connect: {

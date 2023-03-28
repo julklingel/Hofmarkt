@@ -1,5 +1,4 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { type } from 'os';
 
 export class userDto {
   @IsNotEmpty()
@@ -10,5 +9,6 @@ export class userDto {
   @IsString()
   lastName: string;
 
-  profileImage: string;
+  @IsString()
+  imageUrl: string;
 }

@@ -206,7 +206,7 @@ enum enumRole {
 
 enum enumImageType {
   PROFILE
-  FACILTY
+  FACILITY
   OFFER
   CATEGORY
 }
