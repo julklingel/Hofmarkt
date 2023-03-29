@@ -62,8 +62,9 @@ export class SupplierService {
     user: any,
     dto: supplierDto,
     address: addressDto,
-    files: any,
+    files: Express.Multer.File[],
   ) {
+    console.log('user', files);
     const { id, role } = user;
     if (role !== 'SUPPLIER')
       throw new HttpException(
@@ -103,14 +104,10 @@ export class SupplierService {
       const file = files[index];
       const image = await this.cloudinaryService.uploadImage(file);
 
-      if (image.format === 'jpg' || image.format === 'jpeg') {
-        if (index === 0) {
-          companyLogo = image.secure_url;
-        } else {
-          imageUrls.push(image.secure_url);
-        }
+      if (index === 0) {
+        companyLogo = image.secure_url;
       } else {
-        throw new Error('Only JPEG images are allowed');
+        imageUrls.push(image.secure_url);
       }
     }
 
@@ -131,12 +128,6 @@ export class SupplierService {
 
     const newSupplierData = {
       companyName: dto.companyName,
-      companyLogo: {
-        create: {
-          imageUrl: companyLogo,
-          type: enumImageType.PROFILE,
-        },
-      },
       companyPhone: dto.companyPhone,
       companyBio: dto.companyBio,
       slug: slug,
@@ -146,6 +137,12 @@ export class SupplierService {
       },
       supplierImage: {
         create: supplierImage,
+      },
+      companyLogo: {
+        create: {
+          imageUrl: companyLogo,
+          type: enumImageType.PROFILE,
+        },
       },
       account: {
         connect: {
@@ -160,6 +157,7 @@ export class SupplierService {
         include: {
           AccountAddress: true,
           Image: true,
+          companyLogo: true,
         },
       });
 
