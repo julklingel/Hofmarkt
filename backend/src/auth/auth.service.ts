@@ -140,18 +140,20 @@ export class AuthService {
       if (existingResetPassword) {
         await this.prisma.resetPassword.update({
           where: { email },
-          data: { token },
-        });
+          data: { token },  
+        })
       } else {
         await this.prisma.resetPassword.create({
           data: { email, token },
         });
       }
-
       await this.mailService.sendResetCode(account.email, token);
+
 
       return { message: 'Reset code sent successfully' };
     } catch (error) {
+      console.log(error);
+      
       throw new Error('Something went wrong');
     }
   }
