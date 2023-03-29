@@ -129,11 +129,9 @@ export class AuthService {
         throw new ForbiddenException('User not found');
       }
 
-      const token = 
-        Math.floor(Math.random() * 1000000)
-          .toString()
-          .padStart(6, '0')
-      
+      const token = Math.floor(Math.random() * 1000000)
+        .toString()
+        .padStart(6, '0');
 
       const existingResetPassword = await this.prisma.resetPassword.findUnique({
         where: { email },
@@ -161,9 +159,6 @@ export class AuthService {
     try {
       const email = dto.email.toLowerCase();
       const token = dto.token;
-     
-      
-      
 
       const account = await this.prisma.account.findUnique({
         where: { email },
@@ -171,7 +166,6 @@ export class AuthService {
       if (!account) {
         throw new ForbiddenException('User not found');
       }
-
       const resetPassword = await this.prisma.resetPassword.findUnique({
         where: { email },
       });
@@ -183,7 +177,7 @@ export class AuthService {
         throw new ForbiddenException('Wrong reset code');
       }
 
-      return { message: 'Reset code verified successfully', data: { token  } };
+      return { message: 'Reset code verified successfully', data: { token } };
     } catch (error) {
       console.log(error);
       throw new Error('Something went wrong');
@@ -212,7 +206,6 @@ export class AuthService {
       }
       const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
-      
 
       await this.prisma.account.update({
         where: { email },
