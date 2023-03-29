@@ -4,7 +4,7 @@ import {
   signupDto,
   loginDto,
   resetMailDto,
-  resetCodeDto,
+  resetTokenDto,
 } from './dto/auth.dto';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../db-module/prisma.service';
@@ -140,8 +140,8 @@ export class AuthService {
       if (existingResetPassword) {
         await this.prisma.resetPassword.update({
           where: { email },
-          data: { token },  
-        })
+          data: { token },
+        });
       } else {
         await this.prisma.resetPassword.create({
           data: { email, token },
@@ -149,17 +149,41 @@ export class AuthService {
       }
       await this.mailService.sendResetCode(account.email, token);
 
-
       return { message: 'Reset code sent successfully' };
     } catch (error) {
       console.log(error);
-      
+
       throw new Error('Something went wrong');
     }
   }
 
-  async verifyResetCode(dto: resetCodeDto) {
-    // Retrieve the reset code and verify it.
+  async verifyResetCode(dto: resetTokenDto) {
+    try {
+      const email = dto.email.toLowerCase();
+
+      const account = await this.prisma.account.findUnique({
+        where: { email },
+      });
+      if (!account) {
+        throw new ForbiddenException('User not found');
+      }
+
+      const resetPassword = await this.prisma.resetPassword.findUnique({
+        where: { email },
+      });
+      if (!resetPassword) {
+        throw new ForbiddenException('Reset code not found');
+      }
+
+      if (resetPassword.token !== dto.token) {
+        throw new ForbiddenException('Wrong reset code');
+      }
+
+      return { message: 'Reset code verified successfully' };
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong');
+    }
   }
 
   async patchPassword(dto: any) {

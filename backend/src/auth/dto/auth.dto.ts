@@ -39,8 +39,13 @@ export class resetMailDto {
 }
 
 
-export class resetCodeDto {
+export class resetTokenDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
   @ApiProperty({ example: '123456' })
   @IsNotEmpty()
-  code: number;
+  token: number;
 }

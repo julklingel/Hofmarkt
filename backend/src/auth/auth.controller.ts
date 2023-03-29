@@ -31,7 +31,7 @@ export class AuthController {
   @ApiOkResponse({ description: '{ message: Code successfully verified!}' })
   @HttpCode(200)
   @Post('enter-resetCode')
-  verifyResetCode(@Body() dto: resetCodeDto) {
+  verifyResetCode(@Body() dto: resetTokenDto) {
     return this.authService.verifyResetCode(dto);
   }
 }
