@@ -49,3 +49,20 @@ export class resetTokenDto {
   @IsNotEmpty()
   token: number;
 }
+
+
+export class resetPasswordDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsNotEmpty()
+  token: number;
+
+  @ApiProperty({ example: 'pass123' })
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}

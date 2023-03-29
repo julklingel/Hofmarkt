@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { signupDto, loginDto, resetMailDto, resetCodeDto } from './dto/auth.dto';
+import { signupDto, loginDto, resetMailDto, resetTokenDto , resetPasswordDto} from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -34,4 +34,16 @@ export class AuthController {
   verifyResetCode(@Body() dto: resetTokenDto) {
     return this.authService.verifyResetCode(dto);
   }
+
+
+@ApiOkResponse({ description: '{ message: Code successfully verified!}' })
+@HttpCode(200)
+@Post('reset-password')
+resetPassword(@Body() dto: resetPasswordDto) {
+  return this.authService.resetPassword(dto);
 }
+
+}
+
+
+
