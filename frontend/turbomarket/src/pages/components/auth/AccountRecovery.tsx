@@ -1,12 +1,24 @@
 import HomeBotton from "../button/HomeBotton";
 import { useState } from "react";
 
-export default function AccountRecovery(onEmailSent: any) {
+export default function AccountRecovery({
+  onEmailSent,
+  onEmailChange,
+}: {
+  onEmailSent: any;
+  onEmailChange: any;
+}) {
   const [email, setEmail] = useState("");
   const [isCheck, setIsCheck] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const sendEmail = async () => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    onEmailChange(e.target.value);
+  };
+
+  const sendEmail = async (e: any) => {
+    e.preventDefault();
     try {
       setLoading(true);
       const res = await fetch("http://localhost:4444/auth/send-reset-mail", {
@@ -20,7 +32,7 @@ export default function AccountRecovery(onEmailSent: any) {
       });
       if (res.status === 200) {
         setLoading(false);
-        console.log("Email sent successfully");
+        onEmailSent(true);
       }
     } catch (error) {
       alert("Failed to send email");
@@ -59,7 +71,7 @@ export default function AccountRecovery(onEmailSent: any) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="name@my-email.com"
                 required
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => handleEmailChange(e)}
               />
             </div>
             <div className="flex items-start">
