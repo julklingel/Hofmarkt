@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { useState, useEffect } from "react";
 import AccountRecoveryPin from "@/pages/components/auth/AccountRecoveryPin";
 import AccountRecovery from "@/pages/components/auth/AccountRecovery";
+import PasswordReset from "@/pages/components/auth/PasswordReset";
 
 export default function ResetPassword() {
   const [emailSend, setEmailSend] = useState(false);
@@ -27,21 +28,26 @@ export default function ResetPassword() {
 
   const handleTokenChange = (token: string) => {
     setToken(token);
-    console.log("token: ", token);
-    
   };
 
   return (
     <Fragment>
-      {isClient && (emailSend ? (
-          <AccountRecoveryPin email={email} token={token} onTokenChange={handleTokenChange} />
+      {isClient &&
+        !token &&
+        (emailSend ? (
+          <AccountRecoveryPin
+            email={email}
+            token={token}
+            onTokenChange={handleTokenChange}
+          />
         ) : (
           <AccountRecovery
             onEmailSent={handleEmailSent}
             onEmailChange={handleEmailChange}
-             // pass callback function to child component
           />
         ))}
+
+      {isClient && token && <PasswordReset token={token} email={email} />}
     </Fragment>
   );
 }

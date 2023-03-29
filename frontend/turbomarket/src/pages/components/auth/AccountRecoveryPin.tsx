@@ -21,8 +21,7 @@ export default function AccountRecovery(props: any = {}) {
       });
       const data = await res.json();
       if (res.status === 200) {
-        console.log(data);
-        props.onTokenChange(token); // pass token back up to parent component
+        props.onTokenChange(token); 
       }
     } catch (error) {
       console.error("Error checking token: ", error);
