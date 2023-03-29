@@ -10,6 +10,7 @@ import { UserModule } from '../user/user.module';
 import { PrismaModule } from '../db-module/prisma.module';
 import { SupplierModule } from '../supplier/supplier.module';
 import { OfferModule } from '../offer/offer.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { OfferModule } from '../offer/offer.module';
     OfferModule,
     AuthModule,
     UserModule,
+    CloudinaryModule,
     PrismaModule,
     ConfigModule.forRoot(),
   ],

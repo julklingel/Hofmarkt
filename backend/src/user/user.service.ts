@@ -3,10 +3,14 @@ import { addressDto } from '../address';
 import { userDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
 import { enumImageType } from '@prisma/client';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   getOwnUser(user) {
     user = {
@@ -16,7 +20,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(user, dto: userDto, address: addressDto) {
+  async createUser(user, dto: userDto, address: addressDto, file: any) {
     console.log('user', dto);
     const { id, role } = user;
     if (role !== 'BUYER')
@@ -41,6 +45,10 @@ export class UserService {
       );
     }
 
+    const response = await this.cloudinaryService.uploadImage(file);
+
+    const imageUrl = response.secure_url ? response.secure_url : null;
+
     const newAddressData = {
       streetAddress: address.streetAddress,
       city: address.city,
@@ -54,7 +62,7 @@ export class UserService {
       lastName: dto.lastName,
       profileImage: {
         create: {
-          imageUrl: dto.imageUrl,
+          imageUrl: imageUrl,
           type: enumImageType.PROFILE,
         },
       },

@@ -6,6 +6,10 @@ import { AppModule } from '../src/app/app.module';
 import { authTests } from './auth.test';
 import { supplierTests } from './supplier.test';
 import { userTests } from './user.test';
+import { ConfigService } from '@nestjs/config';
+import { CloudinaryService } from '../src/cloudinary/cloudinary.service';
+import { CloudinaryServiceMock } from './mocks/cloudinary.service.mock';
+import { ConfigServiceMock } from './mocks/configService.mock';
 
 describe('App integration test', () => {
   let app: INestApplication;
@@ -13,7 +17,13 @@ describe('App integration test', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(ConfigService)
+      .useClass(ConfigServiceMock)
+      .overrideProvider(CloudinaryService)
+      .useClass(CloudinaryServiceMock)
+      .compile();
+
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(
       new ValidationPipe({ whitelist: true, transform: true }),

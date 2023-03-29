@@ -4,10 +4,14 @@ import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
 import { addressDto } from 'src/address';
 import { enumImageType } from '@prisma/client';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class SupplierService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
@@ -54,21 +58,18 @@ export class SupplierService {
     });
   }
 
-  async createSupplier(user: any, dto: supplierDto, address: addressDto) {
+  async createSupplier(
+    user: any,
+    dto: supplierDto,
+    address: addressDto,
+    files: any,
+  ) {
     const { id, role } = user;
     if (role !== 'SUPPLIER')
       throw new HttpException(
         'You are not authorized to create a supplier account',
         HttpStatus.BAD_REQUEST,
       );
-
-    const defaultImageUrls = ['default_image_url_1', 'default_image_url_2'];
-
-    const hasSupplierImages =
-      dto.supplierImage &&
-      Array.isArray(dto.supplierImage) &&
-      dto.supplierImage.length > 0;
-    const imageUrls = hasSupplierImages ? dto.supplierImage : defaultImageUrls;
 
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
@@ -87,6 +88,30 @@ export class SupplierService {
         'The account already has a supplier',
         HttpStatus.BAD_REQUEST,
       );
+    }
+
+    const index = 0;
+
+    if (index >= files.length) {
+      throw new Error('No image uploaded');
+    }
+
+    let companyLogo = '';
+    const imageUrls = [];
+
+    for (let index = 0; index < files.length; index++) {
+      const file = files[index];
+      const image = await this.cloudinaryService.uploadImage(file);
+
+      if (image.format === 'jpg' || image.format === 'jpeg') {
+        if (index === 0) {
+          companyLogo = image.secure_url;
+        } else {
+          imageUrls.push(image.secure_url);
+        }
+      } else {
+        throw new Error('Only JPEG images are allowed');
+      }
     }
 
     const newAddressData = {
@@ -108,7 +133,7 @@ export class SupplierService {
       companyName: dto.companyName,
       companyLogo: {
         create: {
-          imageUrl: dto.companyLogo,
+          imageUrl: companyLogo,
           type: enumImageType.PROFILE,
         },
       },
@@ -140,6 +165,7 @@ export class SupplierService {
 
       return 'Supplier created with name ' + slug;
     } catch (err) {
+      console.log(err);
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new HttpException(
           'A supplier with that name already exists',

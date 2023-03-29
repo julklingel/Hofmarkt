@@ -3,7 +3,6 @@ import {
   IsNotEmpty,
   IsString,
   IsPhoneNumber,
-  IsOptional,
 } from 'class-validator';
 import { TransformBooleanString } from '../../auth/decorator';
 
@@ -11,10 +10,6 @@ export class supplierDto {
   @IsNotEmpty()
   @IsString()
   companyName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  companyLogo: string;
 
   @IsNotEmpty()
   @IsPhoneNumber()
@@ -27,8 +22,4 @@ export class supplierDto {
   @TransformBooleanString()
   @IsBoolean()
   featured: any;
-
-  @IsString({ each: true })
-  @IsOptional()
-  supplierImage: string[];
 }

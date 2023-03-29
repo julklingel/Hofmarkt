@@ -8,7 +8,4 @@ export class userDto {
   @IsNotEmpty()
   @IsString()
   lastName: string;
-
-  @IsString()
-  imageUrl: string;
 }

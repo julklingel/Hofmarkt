@@ -1,4 +1,4 @@
-import { enumRole, PrismaClient } from '@prisma/client';
+import { enumImageType, enumRole, PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 
@@ -19,8 +19,13 @@ export async function seedSupplier() {
       supplier: {
         create: {
           companyName: 'Klaus Obstler',
-          companyLogo:
-            'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+          companyLogo: {
+            create: {
+              imageUrl:
+                'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+              type: enumImageType.PROFILE,
+            },
+          },
           companyPhone: '123456789',
           AccountAddress: {
             create: {
@@ -31,9 +36,10 @@ export async function seedSupplier() {
               zip: '12345',
             },
           },
-          SupplierImage: {
+          supplierImage: {
             create: {
               imageUrl: 'obstler.jpeg',
+              type: enumImageType.FACILITY,
             },
           },
           companyBio: 'Klaus hat einen Obstbaum Garten',
@@ -48,7 +54,12 @@ export async function seedSupplier() {
                     create: { name: 'fruit' },
                   },
                 },
-                img: 'orange.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'orange.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -61,7 +72,12 @@ export async function seedSupplier() {
                     create: { name: 'fruit' },
                   },
                 },
-                img: 'apple.jpg',
+                images: {
+                  create: {
+                    imageUrl: 'apple.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -74,7 +90,12 @@ export async function seedSupplier() {
                     create: { name: 'fruit' },
                   },
                 },
-                img: 'banana.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'banana.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -97,8 +118,13 @@ export async function seedSupplier() {
       supplier: {
         create: {
           companyName: 'Ammersee Imkerei GmbH',
-          companyLogo:
-            'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+          companyLogo: {
+            create: {
+              imageUrl:
+                'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+              type: enumImageType.PROFILE,
+            },
+          },
           companyPhone: '123456789',
           AccountAddress: {
             create: {
@@ -109,9 +135,10 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          SupplierImage: {
+          supplierImage: {
             create: {
               imageUrl: 'Imkerei.jpeg',
+              type: enumImageType.FACILITY,
             },
           },
           companyBio: 'The best honey in the world comes from Ammersee',
@@ -127,7 +154,12 @@ export async function seedSupplier() {
                     create: { name: 'honey' },
                   },
                 },
-                img: 'flower-honey.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'flower-honey.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -140,7 +172,12 @@ export async function seedSupplier() {
                     create: { name: 'honey' },
                   },
                 },
-                img: 'forresthoney.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'forest-honey.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -163,8 +200,13 @@ export async function seedSupplier() {
       supplier: {
         create: {
           companyName: 'Manfred Hof',
-          companyLogo:
-            'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+          companyLogo: {
+            create: {
+              imageUrl:
+                'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+              type: enumImageType.PROFILE,
+            },
+          },
           companyPhone: '123456789',
           AccountAddress: {
             create: {
@@ -175,9 +217,10 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          SupplierImage: {
+          supplierImage: {
             create: {
               imageUrl: 'Farmhouse.jpeg',
+              type: enumImageType.FACILITY,
             },
           },
           companyBio: 'Ilgen special farm products',
@@ -193,7 +236,12 @@ export async function seedSupplier() {
                     create: { name: 'eggs' },
                   },
                 },
-                img: 'eier.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'egg.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -206,7 +254,12 @@ export async function seedSupplier() {
                     create: { name: 'diary' },
                   },
                 },
-                img: 'milk.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'milk.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -229,8 +282,13 @@ export async function seedSupplier() {
       supplier: {
         create: {
           companyName: 'Dominik Hunter',
-          companyLogo:
-            'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+          companyLogo: {
+            create: {
+              imageUrl:
+                'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+              type: enumImageType.PROFILE,
+            },
+          },
           companyPhone: '123456789',
           AccountAddress: {
             create: {
@@ -241,10 +299,10 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          SupplierImage: {
+          supplierImage: {
             create: {
-              imageUrl:
-                'hunter-4436354_1920.jpg',
+              imageUrl: 'hunter-4436354_1920.jpg',
+              type: enumImageType.FACILITY,
             },
           },
           companyBio: 'Ilgen special farm products',
@@ -259,7 +317,12 @@ export async function seedSupplier() {
                     create: { name: 'meat' },
                   },
                 },
-                img: 'pork.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'pork.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -272,7 +335,12 @@ export async function seedSupplier() {
                     create: { name: 'meat' },
                   },
                 },
-                img: 'beef.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'beef.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -295,8 +363,13 @@ export async function seedSupplier() {
       supplier: {
         create: {
           companyName: 'Bäckerei Maria',
-          companyLogo:
-            'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+          companyLogo: {
+            create: {
+              imageUrl:
+                'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+              type: enumImageType.PROFILE,
+            },
+          },
           companyPhone: '123456789',
           AccountAddress: {
             create: {
@@ -307,10 +380,10 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          SupplierImage: {
+          supplierImage: {
             create: {
-              imageUrl:
-                'Bäckerei_Bayer_1.webp',
+              imageUrl: 'Bäckerei_Bayer_1.webp',
+              type: enumImageType.FACILITY,
             },
           },
           companyBio: "Bäckerei Maria's bread is the best in the world",
@@ -325,7 +398,12 @@ export async function seedSupplier() {
                     create: { name: 'grain' },
                   },
                 },
-                img: 'bread.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'bread.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -338,7 +416,12 @@ export async function seedSupplier() {
                     create: { name: 'grain' },
                   },
                 },
-                img: 'buns.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'buns.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -361,8 +444,13 @@ export async function seedSupplier() {
       supplier: {
         create: {
           companyName: 'Markus Fischer',
-          companyLogo:
-            'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+          companyLogo: {
+            create: {
+              imageUrl:
+                'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
+              type: enumImageType.PROFILE,
+            },
+          },
           companyPhone: '123456789',
           AccountAddress: {
             create: {
@@ -373,9 +461,10 @@ export async function seedSupplier() {
               zip: '82319',
             },
           },
-          SupplierImage: {
+          supplierImage: {
             create: {
               imageUrl: 'fisher.jpg',
+              type: enumImageType.FACILITY,
             },
           },
 
@@ -391,7 +480,12 @@ export async function seedSupplier() {
                     create: { name: 'fish' },
                   },
                 },
-                img: 'trout.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'trout.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
@@ -404,7 +498,12 @@ export async function seedSupplier() {
                     create: { name: 'fish' },
                   },
                 },
-                img: 'salmon.jpeg',
+                images: {
+                  create: {
+                    imageUrl: 'salmon.jpeg',
+                    type: enumImageType.OFFER,
+                  },
+                },
                 price: 1.99,
                 unit: 'lb',
                 amount: 100,
