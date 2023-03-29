@@ -4,7 +4,7 @@ import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
 import { addressDto } from 'src/address';
 import { enumImageType } from '@prisma/client';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class SupplierService {
@@ -62,9 +62,8 @@ export class SupplierService {
     user: any,
     dto: supplierDto,
     address: addressDto,
-    files: Express.Multer.File[],
+    files: Express.Multer.File[] = [],
   ) {
-    console.log('user', files);
     const { id, role } = user;
     if (role !== 'SUPPLIER')
       throw new HttpException(
@@ -91,23 +90,19 @@ export class SupplierService {
       );
     }
 
-    const index = 0;
-
-    if (index >= files.length) {
-      throw new Error('No image uploaded');
-    }
-
     let companyLogo = '';
     const imageUrls = [];
 
-    for (let index = 0; index < files.length; index++) {
-      const file = files[index];
-      const image = await this.cloudinaryService.uploadImage(file);
+    if (files.length > 0) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        const image = await this.cloudinaryService.uploadImage(file);
 
-      if (index === 0) {
-        companyLogo = image.secure_url;
-      } else {
-        imageUrls.push(image.secure_url);
+        if (index === 0) {
+          companyLogo = image.secure_url;
+        } else {
+          imageUrls.push(image.secure_url);
+        }
       }
     }
 
@@ -119,14 +114,7 @@ export class SupplierService {
       zip: address.zip,
     };
 
-    const supplierImage = imageUrls.map((imageUrl) => {
-      return {
-        imageUrl: imageUrl,
-        type: enumImageType.FACILITY,
-      };
-    });
-
-    const newSupplierData = {
+    const newSupplierData: any = {
       companyName: dto.companyName,
       companyPhone: dto.companyPhone,
       companyBio: dto.companyBio,
@@ -135,21 +123,33 @@ export class SupplierService {
       AccountAddress: {
         create: newAddressData,
       },
-      supplierImage: {
-        create: supplierImage,
-      },
-      companyLogo: {
-        create: {
-          imageUrl: companyLogo,
-          type: enumImageType.PROFILE,
-        },
-      },
       account: {
         connect: {
           id: id,
         },
       },
     };
+
+    if (companyLogo !== '') {
+      newSupplierData.companyLogo = {
+        create: {
+          imageUrl: companyLogo,
+          type: enumImageType.PROFILE,
+        },
+      };
+    }
+
+    if (imageUrls.length > 0) {
+      const supplierImage = imageUrls.map((imageUrl) => {
+        return {
+          imageUrl: imageUrl,
+          type: enumImageType.FACILITY,
+        };
+      });
+      newSupplierData.supplierImage = {
+        create: supplierImage,
+      };
+    }
 
     try {
       await this.prisma.supplier.create({
@@ -163,7 +163,6 @@ export class SupplierService {
 
       return 'Supplier created with name ' + slug;
     } catch (err) {
-      console.log(err);
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new HttpException(
           'A supplier with that name already exists',

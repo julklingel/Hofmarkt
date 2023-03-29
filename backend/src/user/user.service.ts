@@ -20,8 +20,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(user, dto: userDto, address: addressDto, file: any) {
-    console.log('user', dto);
+  async createUser(user, dto: userDto, address: addressDto, file: any = 0) {
     const { id, role } = user;
     if (role !== 'BUYER')
       throw new HttpException(
@@ -45,9 +44,12 @@ export class UserService {
       );
     }
 
-    const response = await this.cloudinaryService.uploadImage(file);
+    let imageUrl = null;
 
-    const imageUrl = response.secure_url ? response.secure_url : null;
+    if (file) {
+      const response = await this.cloudinaryService.uploadImage(file);
+      imageUrl = response.secure_url ? response.secure_url : null;
+    }
 
     const newAddressData = {
       streetAddress: address.streetAddress,
@@ -60,12 +62,6 @@ export class UserService {
     const newUserData = {
       firstName: dto.firstName,
       lastName: dto.lastName,
-      profileImage: {
-        create: {
-          imageUrl: imageUrl,
-          type: enumImageType.PROFILE,
-        },
-      },
       AccountAddress: {
         create: newAddressData,
       },
@@ -74,6 +70,14 @@ export class UserService {
           id: id,
         },
       },
+      ...(imageUrl && {
+        profileImage: {
+          create: {
+            imageUrl: imageUrl,
+            type: enumImageType.PROFILE,
+          },
+        },
+      }),
     };
 
     try {

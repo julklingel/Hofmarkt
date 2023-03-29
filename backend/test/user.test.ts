@@ -10,8 +10,6 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
       const userdto: userDto = {
         firstName: 'Peter',
         lastName: 'Fischer',
-        imageUrl:
-          'https://imglarger.com/Images/before-after/ai-image-enlarger-1-after-2.jpg',
       };
 
       const addressdto: addressDto = {
