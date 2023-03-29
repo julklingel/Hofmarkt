@@ -80,7 +80,7 @@ export async function seedUsers() {
     where: { email: '' },
     update: {},
     create: {
-      email: '',
+      email: 'hofmarkt24@gmail.com',
       password: hash,
       salt: salt,
       role: enumRole.BUYER,

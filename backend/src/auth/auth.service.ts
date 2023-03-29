@@ -113,27 +113,33 @@ export class AuthService {
   }
 
   async sendResetCode(dto: resetMailDto) {
-    const account = await this.prisma.account.findUnique({
-      where: {
-        email: dto.email.toLowerCase(),
-      },
-      select: {
-        id: true,
-        email: true,
-        role: true,
-      },
-    });
-    if (!account) {
-      throw new ForbiddenException('User not found');
+    try {
+      const account = await this.prisma.account.findUnique({
+        where: {
+          email: dto.email.toLowerCase(),
+        },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
+      });
+      if (!account) {
+        throw new ForbiddenException('User not found');
+      }
+
+      const token = parseInt(
+        Math.floor(Math.random() * 1000000)
+          .toString()
+          .padStart(6, '0'),
+      );
+
+      await this.mailService.sendResetCode(account.email, token);
+
+      return { message: 'Reset code sent successfully' };
+    } catch (error) {
+      return { error: 'Failed to send reset code' };
     }
-
-    const token = parseInt(
-      Math.floor(Math.random() * 1000000)
-        .toString()
-        .padStart(6, '0'),
-    );
-
-    await this.mailService.sendResetCode(account.email, token);
   }
 
   async verifyResetCode(dto: resetCodeDto) {
