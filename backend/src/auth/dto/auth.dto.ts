@@ -47,7 +47,7 @@ export class resetTokenDto {
 
   @ApiProperty({ example: '123456' })
   @IsNotEmpty()
-  token: number;
+  token: string;
 }
 
 
@@ -59,7 +59,7 @@ export class resetPasswordDto {
 
   @ApiProperty({ example: '123456' })
   @IsNotEmpty()
-  token: number;
+  token: string;
 
   @ApiProperty({ example: 'pass123' })
   @IsString()

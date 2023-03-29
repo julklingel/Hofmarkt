@@ -129,11 +129,11 @@ export class AuthService {
         throw new ForbiddenException('User not found');
       }
 
-      const token = parseInt(
+      const token = 
         Math.floor(Math.random() * 1000000)
           .toString()
-          .padStart(6, '0'),
-      );
+          .padStart(6, '0')
+      
 
       const existingResetPassword = await this.prisma.resetPassword.findUnique({
         where: { email },
@@ -153,14 +153,17 @@ export class AuthService {
       return { message: 'Reset code sent successfully' };
     } catch (error) {
       console.log(error);
-
-      throw new Error('Something went wrong');
+      return { message: 'Something went wrong' };
     }
   }
 
   async verifyResetCode(dto: resetTokenDto) {
     try {
       const email = dto.email.toLowerCase();
+      const token = dto.token;
+     
+      
+      
 
       const account = await this.prisma.account.findUnique({
         where: { email },
@@ -176,11 +179,11 @@ export class AuthService {
         throw new ForbiddenException('Reset code not found');
       }
 
-      if (resetPassword.token !== dto.token) {
+      if (resetPassword.token !== token) {
         throw new ForbiddenException('Wrong reset code');
       }
 
-      return { message: 'Reset code verified successfully' };
+      return { message: 'Reset code verified successfully', data: { token  } };
     } catch (error) {
       console.log(error);
       throw new Error('Something went wrong');

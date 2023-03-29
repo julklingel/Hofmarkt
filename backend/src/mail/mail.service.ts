@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendResetCode(account: string, token: number) {
+  async sendResetCode(account: string, token: string) {
     try {
       await this.mailerService.sendMail({
         to: account,
