@@ -177,10 +177,11 @@ model Category {
 model ResetPassword {
   id        String   @id @unique @default(uuid())
   email     String   @unique
-  resetCode String
+  token     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
 
 enum enumRole {
   BUYER

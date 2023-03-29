@@ -114,10 +114,10 @@ export class AuthService {
 
   async sendResetCode(dto: resetMailDto) {
     try {
+      const email = dto.email.toLowerCase();
+
       const account = await this.prisma.account.findUnique({
-        where: {
-          email: dto.email.toLowerCase(),
-        },
+        where: { email },
         select: {
           id: true,
           email: true,
@@ -134,11 +134,25 @@ export class AuthService {
           .padStart(6, '0'),
       );
 
+      const existingResetPassword = await this.prisma.resetPassword.findUnique({
+        where: { email },
+      });
+      if (existingResetPassword) {
+        await this.prisma.resetPassword.update({
+          where: { email },
+          data: { token },
+        });
+      } else {
+        await this.prisma.resetPassword.create({
+          data: { email, token },
+        });
+      }
+
       await this.mailService.sendResetCode(account.email, token);
 
       return { message: 'Reset code sent successfully' };
     } catch (error) {
-      return { error: 'Failed to send reset code' };
+      throw new Error('Something went wrong');
     }
   }
 
