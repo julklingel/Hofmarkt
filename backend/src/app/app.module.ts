@@ -10,17 +10,19 @@ import { UserModule } from '../user/user.module';
 import { PrismaModule } from '../db-module/prisma.module';
 import { SupplierModule } from '../supplier/supplier.module';
 import { OfferModule } from '../offer/offer.module';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
-    AppModule,
     SupplierModule,
     OfferModule,
     AuthModule,
     UserModule,
     PrismaModule,
+    MailModule,
     ConfigModule.forRoot(),
   ],
+  
   controllers: [AppController],
   providers: [AppService],
 })
