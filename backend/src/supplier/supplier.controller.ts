@@ -7,15 +7,14 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFiles,
-  UploadedFile,
 } from '@nestjs/common';
 import { supplierDto } from './dto';
 import { SupplierService } from './supplier.service';
 import { addressDto } from '../address';
 import { JwtAuthGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { imageUploadPipe } from '../imageUpload';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { imageUploadFileFilter } from '../imageUpload';
 
 @Controller('supplier')
 export class SupplierController {
@@ -41,12 +40,9 @@ export class SupplierController {
   @Post('create')
   @UseInterceptors(
     FilesInterceptor('image', 6, {
-      fileFilter: (_, file, cb) => {
-        const allowedTypes = ['image/jpeg', 'image/png'];
-        if (!allowedTypes.includes(file.mimetype)) {
-          return cb(new Error('Only JPG and PNG files are allowed'), false);
-        }
-        cb(null, true);
+      fileFilter: imageUploadFileFilter,
+      limits: {
+        fileSize: 1 * 1024 * 1024, // 1 MB in bytes
       },
     }),
   )
