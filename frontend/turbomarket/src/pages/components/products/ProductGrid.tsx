@@ -2,13 +2,13 @@ import React from "react";
 import ProductCard from "./ProductCard";
 
 export default function ProductGrid(props: any) {
-  const products = props.products;
+  const offers = props.offer.offers;
 
-  return products ? (
+  return offers ? (
     <div className="mx-auto max-w-2xl px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-2">
       <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {products.productObj.map((product: any) => (
-          <ProductCard key={product.id} product={product} />
+        {offers.map((offer: any) => (
+          <ProductCard key={offer.id} product={offer} />
         ))}
       </div>
     </div>
