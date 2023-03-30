@@ -31,6 +31,8 @@ model User {
   account        Account?
   firstName      String
   lastName       String
+  profileImage   Image?          @relation("UserProfileImage")
+  profileImageId String?         @unique
   supplier       Supplier?       @relation(fields: [supplierId], references: [id])
   supplierId     String?
   createdAt      DateTime        @default(now())
@@ -40,6 +42,8 @@ model User {
   order          Order[]
   AccountAddress AccountAddress?
   Review         Review[]
+  Image          Image?          @relation(fields: [imageId], references: [id])
+  imageId        String?
 
   @@map("users")
 }
@@ -48,7 +52,8 @@ model Supplier {
   id             String          @id @unique @default(uuid())
   account        Account?
   companyName    String
-  companyLogo    String          @default("")
+  companyLogo    Image?          @relation("SupplierCompanyLogo", fields: [companyLogoId], references: [id])
+  companyLogoId  String?         @unique
   companyPhone   String          @default("")
   companyBio     String
   slug           String          @unique
@@ -59,21 +64,35 @@ model Supplier {
   offer          Offer[]
   AccountAddress AccountAddress?
   Review         Review[]
-  SupplierImage  SupplierImage[]
+  supplierImage  Image[]         @relation("SupplierImages")
+  Image          Image?          @relation(fields: [imageId], references: [id])
+  imageId        String?         @unique
+  Category       Category[]
 
   @@map("suppliers")
 }
 
-model SupplierImage {
-  id         String   @id @unique @default(uuid())
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-  supplierId String
-  imageUrl   String   @default("Placeholder Image?")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  type       String   @default("profile") // profile, gallery, cover
+model Image {
+  id                    String        @id @unique @default(uuid())
+  imageUrl              String        @default("")
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  type                  enumImageType
+  user                  User?         @relation("UserProfileImage", fields: [userId], references: [id])
+  userId                String?       @unique
+  offer                 Offer?        @relation(fields: [offerId], references: [id])
+  offerId               String?
+  Category              Category?     @relation("CategoryImages")
+  categoryId            String?       @unique
+  User                  User[]
+  supplierCompanyLogo   Supplier?     @relation("SupplierCompanyLogo")
+  supplierCompanyLogoId String?       @unique
+  supplierImage         Supplier?     @relation("SupplierImages", fields: [supplierId], references: [id])
+  supplierImagesId      String?       @unique
+  Supplier              Supplier?
+  supplierId            String?
 
-  @@map("supplier_images")
+  @@map("images")
 }
 
 model AccountAddress {
@@ -110,7 +129,6 @@ model Review {
 model Offer {
   id         String      @id @unique @default(uuid())
   title      String
-  img        String
   supplier   Supplier    @relation(fields: [supplierId], references: [id])
   supplierId String
   price      Float
@@ -122,6 +140,7 @@ model Offer {
   watchlist  Watchlist[]
   cart       Cart[]
   order      Order[]
+  images     Image[]
 
   @@map("offers")
 }
@@ -165,11 +184,15 @@ model Order {
 }
 
 model Category {
-  id        String   @id @unique @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  offer     Offer[]
+  id         String    @id @unique @default(uuid())
+  name       String    @unique
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  offer      Offer[]
+  image      Image?    @relation("CategoryImages", fields: [imageId], references: [id])
+  imageId    String?   @unique
+  Supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?
 
   @@map("categories")
 }
@@ -179,4 +202,11 @@ enum enumRole {
   SUPPLIER
   ADMIN
   EMPLOYEE
+}
+
+enum enumImageType {
+  PROFILE
+  FACILITY
+  OFFER
+  CATEGORY
 }
