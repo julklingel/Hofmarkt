@@ -1,7 +1,6 @@
 import { getSession } from "next-auth/react";
 import { Fragment } from "react";
 import Overview from "../components/account/Overview";
-import UserAccount from "../components/account/UpdateProfile";
 import Navbar from "../components/navbar";
 
 export default function AccountPage() {
@@ -9,8 +8,6 @@ export default function AccountPage() {
     <Fragment>
       <Navbar/>
       <Overview/>
-{/*       
-      <UserAccount/> */}
     </Fragment>
   );
 }
