@@ -129,9 +129,13 @@ export class AuthService {
         throw new ForbiddenException('User not found');
       }
 
-      const token = Math.floor(Math.random() * 1000000)
-        .toString()
-        .padStart(6, '0');
+      function generateRandomNumber() {
+        const crypto = require('crypto');
+        const randomNumber = crypto.randomInt(100000, 1000000);
+        return randomNumber.toString();
+      }
+
+      const token = generateRandomNumber();
 
       const existingResetPassword = await this.prisma.resetPassword.findUnique({
         where: { email },
