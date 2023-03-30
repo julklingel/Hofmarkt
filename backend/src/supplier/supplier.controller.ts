@@ -36,8 +36,8 @@ export class SupplierController {
     return this.supplierService.createSupplier(user, dto, address);
   }
 
-  @Get(':id')
-  getSupplier(@Param('id') id: string) {
-    return this.supplierService.getSupplier(id);
+  @Get(':slug')
+  getSupplier(@Param('slug') slug: string) {
+    return this.supplierService.getSupplier(slug);
   }
 }
