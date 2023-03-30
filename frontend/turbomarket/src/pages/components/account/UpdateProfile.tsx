@@ -14,9 +14,11 @@ export default function UpdateProfile() {
     signOut({ redirect: true, callbackUrl: "/auth/login" });
   };
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  const handleSelectedLogo = (e: any) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    console.log(file);
+  };
 
   return (
     <Fragment>
@@ -24,7 +26,38 @@ export default function UpdateProfile() {
         <Fragment>
           <section className="bg-secondary">
             <form>
-              <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
+              <div className=" col-span-2 mb-2">
+                <label className="block text-sm font-medium leading-6 text-gray-900">
+                  Photo
+                </label>
+                <div className="mt-2 flex items-center">
+                  <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                    <svg
+                      className="h-full w-full text-gray-300"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </span>
+
+                  <label
+                    htmlFor="profile-upload"
+                    className="ml-5 rounded-md border border-gray-300 bg-white py-1.5 px-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200"
+                  >
+                    <span>Change</span>
+                    <input
+                      id="profile-upload"
+                      name="profile-file-upload"
+                      type="file"
+                      className="sr-only"
+                      onChange={handleSelectedLogo}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="grid cols-2 gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                 <div className="w-full">
                   <label
                     htmlFor="firstName"
@@ -89,7 +122,6 @@ export default function UpdateProfile() {
                     required
                   />
                 </div>
-              
               </div>
               <div className="flex items-center space-x-4">
                 <button
@@ -98,7 +130,6 @@ export default function UpdateProfile() {
                 >
                   Update
                 </button>
-         
               </div>
             </form>
           </section>

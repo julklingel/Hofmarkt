@@ -20,9 +20,6 @@ export default function UpdateAddress() {
     signOut({ redirect: true, callbackUrl: "/auth/login" });
   };
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Fragment>
