@@ -31,7 +31,7 @@ export default function UpdateAddress() {
           <section className="bg-secondary">
           <form>
                 <div className="overflow-hidden">
-                  <div className=" px-4 py-5 sm:p-6">
+                  <div className=" px-4 sm:p-6">
                     <div className="grid grid-cols-6 gap-6">
 
                       <div className="col-span-6 sm:col-span-3">
