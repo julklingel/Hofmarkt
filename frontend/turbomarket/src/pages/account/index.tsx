@@ -1,14 +1,17 @@
-import UserAccount from "./UserAccount";
 import { getSession } from "next-auth/react";
+import { Fragment } from "react";
+import Overview from "../components/account/Overview";
+import UserAccount from "../components/account/UpdateProfile";
+import Navbar from "../components/navbar";
 
 export default function AccountPage() {
   return (
-    <div>
-      <h1 className="text-3xl tracking-widest m-10 font-semibold text-center text-c.green ">
-        Account
-      </h1>
-      <UserAccount />
-    </div>
+    <Fragment>
+      <Navbar/>
+      <Overview/>
+{/*       
+      <UserAccount/> */}
+    </Fragment>
   );
 }
 
