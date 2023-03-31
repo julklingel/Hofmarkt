@@ -1,10 +1,17 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { signupDto, loginDto } from './dto/auth.dto';
+import {
+  signupDto,
+  loginDto,
+  resetMailDto,
+  resetTokenDto,
+  resetPasswordDto,
+} from './dto/auth.dto';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../db-module/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
+import { MailService } from './../mail/mail.service';
 
 const hashingConfig = {
   parallelism: 1,
@@ -18,6 +25,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private config: ConfigService,
     private jwt: JwtService,
+    private mailService: MailService,
   ) {}
 
   async signToken(account: { email: string; id: string; role: string }) {
@@ -103,5 +111,119 @@ export class AuthService {
     }
     delete account.password;
     return this.signToken(account);
+  }
+
+  async sendResetCode(dto: resetMailDto) {
+    try {
+      const email = dto.email.toLowerCase();
+
+      const account = await this.prisma.account.findUnique({
+        where: { email },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+        },
+      });
+      if (!account) {
+        throw new ForbiddenException('User not found');
+      }
+
+      function generateRandomNumber() {
+        const crypto = require('crypto');
+        const randomNumber = crypto.randomInt(100000, 1000000);
+        return randomNumber.toString();
+      }
+
+      const token = generateRandomNumber();
+
+      const existingResetPassword = await this.prisma.resetPassword.findUnique({
+        where: { email },
+      });
+      if (existingResetPassword) {
+        await this.prisma.resetPassword.update({
+          where: { email },
+          data: { token },
+        });
+      } else {
+        await this.prisma.resetPassword.create({
+          data: { email, token },
+        });
+      }
+      await this.mailService.sendResetCode(account.email, token);
+
+      return { message: 'Reset code sent successfully' };
+    } catch (error) {
+      console.log(error);
+      return { message: 'Something went wrong' };
+    }
+  }
+
+  async verifyResetCode(dto: resetTokenDto) {
+    try {
+      const email = dto.email.toLowerCase();
+      const token = dto.token;
+
+      const account = await this.prisma.account.findUnique({
+        where: { email },
+      });
+      if (!account) {
+        throw new ForbiddenException('User not found');
+      }
+      const resetPassword = await this.prisma.resetPassword.findUnique({
+        where: { email },
+      });
+      if (!resetPassword) {
+        throw new ForbiddenException('Reset code not found');
+      }
+
+      if (resetPassword.token !== token) {
+        throw new ForbiddenException('Wrong reset code');
+      }
+
+      return { message: 'Reset code verified successfully', data: { token } };
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong');
+    }
+  }
+
+  async resetPassword(dto: resetPasswordDto) {
+    try {
+      const email = dto.email.toLowerCase();
+      const account = await this.prisma.account.findUnique({
+        where: { email },
+      });
+      if (!account) {
+        throw new ForbiddenException('User not found');
+      }
+
+      const resetPassword = await this.prisma.resetPassword.findUnique({
+        where: { email },
+      });
+      if (!resetPassword) {
+        throw new ForbiddenException('Reset code not found');
+      }
+
+      if (resetPassword.token !== dto.token) {
+        throw new ForbiddenException('Wrong reset code');
+      }
+      const salt = randomBytes(128);
+      const hashedPassword = await this.hashPassword(dto.password);
+
+      await this.prisma.account.update({
+        where: { email },
+        data: { password: hashedPassword, salt: salt },
+      });
+
+      await this.prisma.resetPassword.delete({
+        where: { email },
+      });
+
+      return { message: 'Password changed successfully' };
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong');
+    }
   }
 }

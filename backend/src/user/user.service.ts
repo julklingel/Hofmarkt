@@ -2,10 +2,15 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { addressDto } from '../address';
 import { userDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
+import { enumImageType } from '@prisma/client';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   getOwnUser(user) {
     user = {
@@ -15,7 +20,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(user, dto: userDto, address: addressDto) {
+  async createUser(user, dto: userDto, address: addressDto, file: any = 0) {
     const { id, role } = user;
     if (role !== 'BUYER')
       throw new HttpException(
@@ -39,6 +44,13 @@ export class UserService {
       );
     }
 
+    let imageUrl = null;
+
+    if (file) {
+      const response = await this.cloudinaryService.uploadImage(file);
+      imageUrl = response.secure_url ? response.secure_url : null;
+    }
+
     const newAddressData = {
       streetAddress: address.streetAddress,
       city: address.city,
@@ -58,6 +70,14 @@ export class UserService {
           id: id,
         },
       },
+      ...(imageUrl && {
+        profileImage: {
+          create: {
+            imageUrl: imageUrl,
+            type: enumImageType.PROFILE,
+          },
+        },
+      }),
     };
 
     try {
@@ -65,6 +85,7 @@ export class UserService {
         data: newUserData,
         include: {
           AccountAddress: true,
+          Image: true,
         },
       });
     } catch (err) {

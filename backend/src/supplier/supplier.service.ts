@@ -3,26 +3,30 @@ import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
 import { addressDto } from 'src/address';
+import { enumImageType } from '@prisma/client';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class SupplierService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
-   
       select: {
         companyName: true,
         companyLogo: true,
         slug: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
         },
       },
     });
-  
+
     return suppliers;
   }
 
@@ -35,7 +39,7 @@ export class SupplierService {
         companyName: true,
         companyLogo: true,
         slug: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
@@ -56,7 +60,7 @@ export class SupplierService {
         companyLogo: true,
         slug: true,
         companyBio: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
@@ -76,12 +80,16 @@ export class SupplierService {
             title: true,
             unit: true,
             price: true,
-            img: true,
             category: {
               select: {
                 name: true,
               },
             },
+            images: {
+              select: {
+                imageUrl: true,
+                type: true,
+              },},
           },
         },
       },
@@ -91,21 +99,18 @@ export class SupplierService {
   }
   
 
-  async createSupplier(user: any, dto: supplierDto, address: addressDto) {
+  async createSupplier(
+    user: any,
+    dto: supplierDto,
+    address: addressDto,
+    files: Express.Multer.File[] = [],
+  ) {
     const { id, role } = user;
     if (role !== 'SUPPLIER')
       throw new HttpException(
         'You are not authorized to create a supplier account',
         HttpStatus.BAD_REQUEST,
       );
-
-    const defaultImageUrls = ['default_image_url_1', 'default_image_url_2'];
-
-    const hasSupplierImages =
-      dto.supplierImages &&
-      Array.isArray(dto.supplierImages) &&
-      dto.supplierImages.length > 0;
-    const imageUrls = hasSupplierImages ? dto.supplierImages : defaultImageUrls;
 
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);
@@ -126,6 +131,22 @@ export class SupplierService {
       );
     }
 
+    let companyLogo = '';
+    const imageUrls = [];
+
+    if (files.length > 0) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        const image = await this.cloudinaryService.uploadImage(file);
+
+        if (index === 0) {
+          companyLogo = image.secure_url;
+        } else {
+          imageUrls.push(image.secure_url);
+        }
+      }
+    }
+
     const newAddressData = {
       streetAddress: address.streetAddress,
       city: address.city,
@@ -134,24 +155,14 @@ export class SupplierService {
       zip: address.zip,
     };
 
-    const supplierImages = imageUrls.map((imageUrl) => {
-      return {
-        imageUrl: imageUrl,
-      };
-    });
-
-    const newSupplierData = {
+    const newSupplierData: any = {
       companyName: dto.companyName,
-      companyLogo: dto.companyLogo,
       companyPhone: dto.companyPhone,
       companyBio: dto.companyBio,
       slug: slug,
       featured: featured,
       AccountAddress: {
         create: newAddressData,
-      },
-      SupplierImage: {
-        create: supplierImages,
       },
       account: {
         connect: {
@@ -160,12 +171,34 @@ export class SupplierService {
       },
     };
 
+    if (companyLogo !== '') {
+      newSupplierData.companyLogo = {
+        create: {
+          imageUrl: companyLogo,
+          type: enumImageType.PROFILE,
+        },
+      };
+    }
+
+    if (imageUrls.length > 0) {
+      const supplierImage = imageUrls.map((imageUrl) => {
+        return {
+          imageUrl: imageUrl,
+          type: enumImageType.FACILITY,
+        };
+      });
+      newSupplierData.supplierImage = {
+        create: supplierImage,
+      };
+    }
+
     try {
       await this.prisma.supplier.create({
         data: newSupplierData,
         include: {
           AccountAddress: true,
-          SupplierImage: true,
+          Image: true,
+          companyLogo: true,
         },
       });
 
