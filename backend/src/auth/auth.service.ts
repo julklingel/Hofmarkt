@@ -6,6 +6,7 @@ import {
   resetMailDto,
   resetTokenDto,
   resetPasswordDto,
+  confirmationCodeDto,
 } from './dto/auth.dto';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../db-module/prisma.service';
@@ -62,7 +63,12 @@ export class AuthService {
     });
   }
 
+
+
+
+
   async signup(dto: signupDto) {
+    
     try {
       const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
@@ -74,6 +80,17 @@ export class AuthService {
           role: dto.isSupplier ? 'SUPPLIER' : 'BUYER',
         },
       });
+
+      const confirmationCode = randomBytes(20).toString('hex');
+      await this.mailService.sendConfirmMail(dto.email, confirmationCode);
+      await this.prisma.emailVerification.create({
+        data: {
+          token: confirmationCode,
+          email: dto.email.toLowerCase(),
+        },
+      });
+
+
       return { message: 'Account created successfully' };
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
@@ -221,6 +238,44 @@ export class AuthService {
       });
 
       return { message: 'Password changed successfully' };
+    } catch (error) {
+      console.log(error);
+      throw new Error('Something went wrong');
+    }
+  }
+
+  async confirmAccount(emailDto, tokenDto) {
+    console.log(emailDto, tokenDto);
+    try {
+      const email = emailDto.toLowerCase();
+      const account = await this.prisma.account.findUnique({
+        where: { email },
+      });
+      if (!account) {
+        throw new ForbiddenException('User not found');
+      }
+
+      const confirmation = await this.prisma.emailVerification.findUnique({
+        where: { email },
+      });
+      if (!confirmation) {
+        throw new ForbiddenException('Confirmation code not found');
+      }
+
+      if (confirmation.token !== tokenDto) {
+        throw new ForbiddenException('Wrong confirmation code');
+      }
+
+      await this.prisma.account.update({
+        where: { email },
+        data: { verified: true },
+      });
+
+      await this.prisma.emailVerification.delete({
+        where: { email },
+      });
+
+      return { message: 'Account confirmed successfully' };
     } catch (error) {
       console.log(error);
       throw new Error('Something went wrong');

@@ -66,3 +66,16 @@ export class resetPasswordDto {
   @IsNotEmpty()
   password: string;
 }
+
+
+export class confirmationCodeDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsNotEmpty()
+  token: string;
+  
+}
