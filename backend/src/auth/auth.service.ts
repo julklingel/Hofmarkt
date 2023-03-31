@@ -63,12 +63,7 @@ export class AuthService {
     });
   }
 
-
-
-
-
   async signup(dto: signupDto) {
-    
     try {
       const salt = randomBytes(128);
       const hashedPassword = await this.hashPassword(dto.password);
@@ -82,7 +77,7 @@ export class AuthService {
       });
 
       const confirmationCode = randomBytes(20).toString('hex');
-      await this.mailService.sendConfirmMail(dto.email, confirmationCode);
+
       await this.prisma.emailVerification.create({
         data: {
           token: confirmationCode,
@@ -90,6 +85,7 @@ export class AuthService {
         },
       });
 
+      await this.mailService.sendConfirmMail(dto.email, confirmationCode);
 
       return { message: 'Account created successfully' };
     } catch (error) {
@@ -245,7 +241,6 @@ export class AuthService {
   }
 
   async confirmAccount(emailDto, tokenDto) {
-    console.log(emailDto, tokenDto);
     try {
       const email = emailDto.toLowerCase();
       const account = await this.prisma.account.findUnique({
