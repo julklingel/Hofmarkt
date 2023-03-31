@@ -33,7 +33,6 @@ interface Props {
 
 export default function Supplier(supplier: Props) {
   const { offer } = supplier.supplier;
-  const { slug } = supplier.supplier;
   
 
   return (

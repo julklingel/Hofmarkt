@@ -16,6 +16,12 @@ export class OfferService {
             companyName: true,
           },
         },
+        images: {
+          select: {
+            imageUrl: true,
+            type: true,
+            
+          }},
       },
     });
 
@@ -34,6 +40,14 @@ export class OfferService {
     return this.prisma.offer.findMany({
       where: {
         supplierId: id,
+      },
+      include: {
+        images: {
+          select: {
+            imageUrl: true,
+            type: true,
+          },
+        },
       },
     });
   }

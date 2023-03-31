@@ -3,6 +3,7 @@ import ProductCard from "./ProductCard";
 
 export default function ProductGrid(props: any) {
   const offers = props.offer.offers;
+  
 
   return offers ? (
     <div className="mx-auto max-w-2xl px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-2">

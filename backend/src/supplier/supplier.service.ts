@@ -60,7 +60,7 @@ export class SupplierService {
         companyLogo: true,
         slug: true,
         companyBio: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
@@ -80,12 +80,16 @@ export class SupplierService {
             title: true,
             unit: true,
             price: true,
-            img: true,
             category: {
               select: {
                 name: true,
               },
             },
+            images: {
+              select: {
+                imageUrl: true,
+                type: true,
+              },},
           },
         },
       },
