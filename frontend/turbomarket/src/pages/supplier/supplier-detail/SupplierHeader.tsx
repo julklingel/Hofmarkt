@@ -17,7 +17,6 @@ export default function SupplierHeader({ supplier }: any) {
   
 
   const imgPath = "/images/supplier/" + slug + "/" + supplier.supplier.supplierImage[0].imageUrl;;
-  console.log(imgPath);
   
 
   
