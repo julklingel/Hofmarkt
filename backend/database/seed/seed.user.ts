@@ -76,4 +76,22 @@ export async function seedUsers() {
     },
   });
 
+  const hofmarkt24 = await prisma.account.upsert({
+    where: { email: '' },
+    update: {},
+    create: {
+      email: 'hofmarkt24@gmail.com',
+      password: hash,
+      salt: salt,
+      role: enumRole.BUYER,
+      user: {
+        create: {
+          firstName: 'Hofmarkt',
+          lastName: '24',
+        },
+      },
+    },
+  });
+
+
 }

@@ -2,48 +2,35 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import HomeBotton from "@/pages/components/button/HomeBotton";
 
-export default function PasswordReset() {
+export default function PasswordReset(props: any) {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedToken = sessionStorage.getItem("passwordResetToken");
-    if (storedToken) {
-      setToken(storedToken);
-    } else {
-      router.push("/auth/account-recovery");
-    }
-  }, []);
 
   const validatePasswords = async (e: any) => {
+
     e.preventDefault();
     if (password === confirmPassword) {
-      const res = await fetch("http://localhost:3000/api/auth/password-reset", {
+      const res = await fetch("http://localhost:4444/auth/reset-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           password: password,
-          token: token,
+          token: props.token,
+          email: props.email,
         }),
       });
 
-      if (res.ok) {
-        sessionStorage.removeItem("passwordResetToken");
+      if (res.status === 200) {
         router.push("/auth/login");
       }
     } else {
       setErrorMessage("Passwords do not match.");
     }
   };
-
-  if (!token) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <section className="">
@@ -73,8 +60,8 @@ export default function PasswordReset() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-gray-50 border border-gray-300
-              text-c.green sm:text-sm rounded-lg focus:ring-primary-600 focus:border-green-600 block w-full p-2.5  dark:placeholder-gray-400
-                    dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+              text-c.green sm:text-sm rounded-lg focus:ring-primary-600 focus:border-green-600 block w-full p-2.5 
+                     dark:focus:ring-green-500 dark:focus:border-green-500"
               />
             </div>
             <div>
@@ -92,8 +79,8 @@ export default function PasswordReset() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="bg-gray-50 border border-gray-300
-              text-c.green sm:text-sm rounded-lg focus:ring-primary-600 focus:border-green-600 block w-full p-2.5  dark:placeholder-gray-400
-                    dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+              text-c.green sm:text-sm rounded-lg focus:ring-primary-600 focus:border-green-600 block w-full p-2.5  
+                    dark:focus:ring-green-500 dark:focus:border-green-500"
               />
             </div>
             <div className="flex items-start"></div>
