@@ -8,8 +8,8 @@ import { MailModule } from 'src/mail/mail.module';
 
 
 @Module({
-    imports: [AuthModule , JwtModule.register({}), ConfigModule, MailModule] ,
-    controllers: [AuthController],
-    providers: [AuthService, JwtStrategy],
+  imports: [AuthModule, JwtModule.register({}), ConfigModule, MailModule],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}

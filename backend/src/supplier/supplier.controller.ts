@@ -1,9 +1,20 @@
-import { Controller, Get, Post, Param, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  UseGuards,
+  UseInterceptors,
+  UploadedFiles,
+} from '@nestjs/common';
 import { supplierDto } from './dto';
 import { SupplierService } from './supplier.service';
 import { addressDto } from '../address';
 import { JwtAuthGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { imageUploadFileFilter } from '../imageUpload';
 
 @Controller('supplier')
 export class SupplierController {
@@ -12,7 +23,6 @@ export class SupplierController {
   @Get()
   getSuppliers() {
     return this.supplierService.getSuppliers();
-
   }
 
   @Get('featured')
@@ -28,12 +38,22 @@ export class SupplierController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  createSupplier(
+  @UseInterceptors(
+    FilesInterceptor('image', 6, {
+      fileFilter: imageUploadFileFilter,
+      limits: {
+        fileSize: 1 * 1024 * 1024, // 1 MB in bytes
+      },
+    }),
+  )
+  async createSupplier(
     @GetUser() user: any,
     @Body() dto: supplierDto,
     @Body() address: addressDto,
+    @UploadedFiles()
+    files: Express.Multer.File[],
   ) {
-    return this.supplierService.createSupplier(user, dto, address);
+    return this.supplierService.createSupplier(user, dto, address, files);
   }
 
   @Get(':slug')

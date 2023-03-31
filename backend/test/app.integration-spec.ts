@@ -14,6 +14,7 @@ describe('App integration test', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
+
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(
       new ValidationPipe({ whitelist: true, transform: true }),

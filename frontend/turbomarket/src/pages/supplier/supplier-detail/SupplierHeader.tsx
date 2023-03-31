@@ -8,12 +8,15 @@ import Stars from "@/pages/components/reviews/Stars";
 
 export default function SupplierHeader({ supplier }: any) {
 
-  const { companyName, slug, companyLogo, companyBio } = supplier.supplier;
-  const {imageUrl} = supplier.supplier.SupplierImage[0];
+
+  console.log(supplier.supplier.supplierImage[0].imageUrl);
+  const { companyName, slug , companyBio } = supplier.supplier;
+  const {imageUrl} = supplier.supplier.supplierImage[0].imageUrl;
   const {zip, city} = supplier.supplier.AccountAddress;
+
   
 
-  const imgPath = "/images/supplier/" + slug + "/" + imageUrl;
+  const imgPath = "/images/supplier/" + slug + "/" + supplier.supplier.supplierImage[0].imageUrl;;
   
 
   

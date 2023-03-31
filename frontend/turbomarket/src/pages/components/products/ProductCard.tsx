@@ -9,9 +9,10 @@ function cn(...classes: string[]) {
 export default function ProductCard(props: any) {
   const [isLoading, setLoading] = useState(true);
 
-  const { title, img, price, id, slug } = props.product;
+  const { title, images, price, id, slug } = props.product;
+
   const linkPath = `/supplier/${slug}/${id}`;
-  const imgPath = `/images/supplier/${slug}/offers/${img}`;
+  const imgPath = `/images/supplier/${slug}/offers/${images[0].imageUrl}`;
 
   
 

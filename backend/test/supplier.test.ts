@@ -8,9 +8,7 @@ export const supplierTests = (app: INestApplication, prisma: PrismaService) => {
   describe('Supplier', () => {
     const supplierdto: supplierDto = {
       companyName: 'jackfruit garden',
-      companyLogo: 'jackfruit.png',
       companyPhone: '+491876543',
-      supplierImages: ['jackfruit1.png', 'jackfruit2.png'],
       companyBio: 'jack loves fruit',
       featured: false,
     };
@@ -48,9 +46,7 @@ export const supplierTests = (app: INestApplication, prisma: PrismaService) => {
           })
           .withBody({
             companyName: '',
-            companyLogo: supplierdto.companyLogo,
             companyPhone: supplierdto.companyPhone,
-            companyImage: supplierdto.supplierImages,
             companyBio: supplierdto.companyBio,
             featured: supplierdto.featured,
             ...addressdto,
@@ -85,9 +81,7 @@ export const supplierTests = (app: INestApplication, prisma: PrismaService) => {
           })
           .withBody({
             companyName: 'garden of jackfruit 2',
-            companyLogo: supplierdto.companyLogo,
             companyPhone: supplierdto.companyPhone,
-            companyImage: supplierdto.supplierImages,
             companyBio: supplierdto.companyBio,
             featured: supplierdto.featured,
             ...addressdto,
@@ -104,9 +98,7 @@ export const supplierTests = (app: INestApplication, prisma: PrismaService) => {
           })
           .withBody({
             companyName: 'jackfruit garden',
-            companyLogo: supplierdto.companyLogo,
             companyPhone: supplierdto.companyPhone,
-            companyImage: supplierdto.supplierImages,
             companyBio: supplierdto.companyBio,
             featured: supplierdto.featured,
             ...addressdto,
