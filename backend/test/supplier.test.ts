@@ -19,6 +19,16 @@ export const supplierTests = (app: INestApplication, prisma: PrismaService) => {
       country: 'jackland',
       zip: '7474',
     };
+    describe('get all supplier', () => {
+      it('should get all suppliers', () => {
+        return pactum.spec().get('/supplier').expectStatus(200);
+      });
+    });
+    describe('get supplier by slug', () => {
+      it('should get supplier by slug', () => {
+        return pactum.spec().get('/supplier/klaus-obstler').expectStatus(200);
+      });
+    });
     describe('create supplier', () => {
       it('should throw if account is not a supplier', () => {
         return pactum
