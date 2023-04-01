@@ -10,10 +10,6 @@ export class offerDto {
   @IsString()
   category: string;
 
-  @IsString({ each: true })
-  @IsOptional()
-  images: string[];
-
   @IsNotEmpty()
   @IsString()
   supplierId: string;

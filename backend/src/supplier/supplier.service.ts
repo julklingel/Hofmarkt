@@ -57,10 +57,14 @@ export class SupplierService {
       },
       select: {
         companyName: true,
-        companyLogo: true,
+        companyLogo: {
+          select: {
+            imageUrl: true,
+          },
+        },
         slug: true,
         companyBio: true,
-        SupplierImage: {
+        supplierImage: {
           select: {
             imageUrl: true,
           },
@@ -80,7 +84,7 @@ export class SupplierService {
             title: true,
             unit: true,
             price: true,
-            img: true,
+            images: true,
             category: {
               select: {
                 name: true,
@@ -90,10 +94,9 @@ export class SupplierService {
         },
       },
     });
-  
+
     return supplier;
   }
-  
 
   async createSupplier(
     user: any,

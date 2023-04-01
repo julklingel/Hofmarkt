@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  UploadedFiles,
+} from '@nestjs/common';
+import { GetUser } from '../auth/decorator';
 import { offerDto } from './dto';
 import { OfferService } from './offer.service';
 
@@ -22,8 +30,12 @@ export class OfferController {
   }
 
   @Post()
-  createOffer(@Body() dto: offerDto) {
-    return this.offerService.createOffer(dto);
+  async createOffer(
+    @GetUser() user: any,
+    @Body() dto: offerDto,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.offerService.createOffer(dto, user, files);
   }
-
 }
