@@ -45,8 +45,7 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
               ...userdto,
               ...addressdto,
             })
-            .expectStatus(201)
-            .inspect();
+            .expectStatus(201);
         });
         it('should throw if user already exists on Account', () => {
           return pactum
