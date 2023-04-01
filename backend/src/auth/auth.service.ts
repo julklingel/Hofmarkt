@@ -130,6 +130,7 @@ export class AuthService {
       }
 
       function generateRandomNumber() {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const crypto = require('crypto');
         const randomNumber = crypto.randomInt(100000, 1000000);
         return randomNumber.toString();
