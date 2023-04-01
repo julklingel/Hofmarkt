@@ -61,6 +61,13 @@ export class OfferService {
         const image = await this.cloudinaryService.uploadImage(file);
 
         imageUrls.push(image.secure_url);
+
+        if (!imageUrls) {
+          throw new HttpException(
+            'An error occurred while uploading the images',
+            HttpStatus.BAD_REQUEST,
+          );
+        }
       }
     }
 

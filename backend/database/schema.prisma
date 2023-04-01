@@ -31,7 +31,7 @@ model User {
   account        Account?
   firstName      String
   lastName       String
-  profileImage   Image?          @relation("UserProfileImage")
+  profileImage   Image?          @relation("UserProfileImage", fields: [profileImageId], references: [id])
   profileImageId String?         @unique
   supplier       Supplier?       @relation(fields: [supplierId], references: [id])
   supplierId     String?
@@ -42,6 +42,8 @@ model User {
   order          Order[]
   AccountAddress AccountAddress?
   Review         Review[]
+  Image          Image?          @relation(fields: [imageId], references: [id])
+  imageId        String?         @unique
 
   @@map("users")
 }
@@ -76,8 +78,8 @@ model Image {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   type                  enumImageType
-  user                  User?         @relation("UserProfileImage", fields: [userId], references: [id])
-  userId                String?       @unique
+  profileImage          User?         @relation("UserProfileImage")
+  profileImageId        String?       @unique
   offer                 Offer?        @relation(fields: [offerId], references: [id])
   offerId               String?
   Category              Category?     @relation("CategoryImages")
@@ -88,6 +90,8 @@ model Image {
   supplierImagesId      String?       @unique
   Supplier              Supplier?
   supplierId            String?
+  User                  User?
+  userId                String?
 
   @@map("images")
 }

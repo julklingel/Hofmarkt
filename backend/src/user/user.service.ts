@@ -49,6 +49,12 @@ export class UserService {
     if (file) {
       const response = await this.cloudinaryService.uploadImage(file);
       imageUrl = response.secure_url ? response.secure_url : null;
+      if (imageUrl === null) {
+        throw new HttpException(
+          'Image could not be uploaded',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     const newAddressData = {
@@ -59,7 +65,14 @@ export class UserService {
       zip: address.zip,
     };
 
-    const newUserData = {
+    const newImageData = imageUrl
+      ? {
+          imageUrl,
+          type: enumImageType.PROFILE,
+        }
+      : null;
+
+    const newUserData: any = {
       firstName: dto.firstName,
       lastName: dto.lastName,
       AccountAddress: {
@@ -70,24 +83,23 @@ export class UserService {
           id: id,
         },
       },
-      ...(imageUrl && {
-        profileImage: {
-          create: {
-            imageUrl: imageUrl,
-            type: enumImageType.PROFILE,
-          },
-        },
-      }),
     };
+
+    if (newImageData) {
+      newUserData.profileImage = {
+        create: newImageData,
+      };
+    }
 
     try {
       await this.prisma.user.create({
         data: newUserData,
         include: {
           AccountAddress: true,
-          Image: true,
+          profileImage: true,
         },
       });
+      return 'user created with name ' + dto.firstName;
     } catch (err) {
       if (err.code === 'P2002' && err.meta.target.includes('supplierId')) {
         throw new HttpException(
