@@ -30,3 +30,39 @@ export class loginDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class resetMailDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+}
+
+
+export class resetTokenDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsNotEmpty()
+  token: string;
+}
+
+
+export class resetPasswordDto {
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsNotEmpty()
+  token: string;
+
+  @ApiProperty({ example: 'pass123' })
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}

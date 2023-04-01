@@ -198,6 +198,15 @@ model Category {
   @@map("categories")
 }
 
+model ResetPassword {
+  id        String   @id @unique @default(uuid())
+  email     String   @unique
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 enum enumRole {
   BUYER
   SUPPLIER
