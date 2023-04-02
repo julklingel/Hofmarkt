@@ -1,26 +1,53 @@
-# Base image
-FROM node:18-alpine
+###################
+# BUILD FOR LOCAL DEVELOPMENT
+###################
 
-# Create app directory
+FROM node:18 As development
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+
 WORKDIR /usr/src/app
 
-# Install pnpm
-RUN npm install -g pnpm
+COPY --chown=node:node pnpm-lock.yaml ./
 
+RUN pnpm fetch --prod
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
-
-# Install app dependencies
+COPY --chown=node:node . .
 RUN pnpm install
 
+USER node
 
-# Bundle app source
-COPY . .
+###################
+# BUILD FOR PRODUCTION
+###################
 
-RUN npx prisma generate # Generate Prisma Client
-# Creates a "dist" folder with the production build
+FROM node:18 As build
+RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node pnpm-lock.yaml ./
+
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+RUN npx prisma generate 
+
 RUN pnpm build
 
-# Start the server using the production build
+ENV NODE_ENV production
+
+RUN pnpm install --prod
+
+USER node
+
+###################
+# PRODUCTION
+###################
+
+FROM node:18-alpine As production
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
 CMD [ "node", "dist/main.js" ]
