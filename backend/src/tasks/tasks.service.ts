@@ -9,10 +9,8 @@ export class TasksService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-
   @Cron(CronExpression.EVERY_2_HOURS)
   async deleteExpiredResetTokens() {
-    
     const expiredTokens = await this.prisma.resetPassword.findMany({
       where: {
         createdAt: {

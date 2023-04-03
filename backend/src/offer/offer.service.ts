@@ -24,8 +24,8 @@ export class OfferService {
           select: {
             imageUrl: true,
             type: true,
-            
-          }},
+          },
+        },
       },
     });
 
@@ -64,6 +64,10 @@ export class OfferService {
         HttpStatus.BAD_REQUEST,
       );
 
+    const supplier = await this.prisma.supplier.findFirst({
+      where: { account: { id: id } },
+    });
+
     const price = Number(dto.price);
     const amount = Number(dto.amount);
 
@@ -100,7 +104,7 @@ export class OfferService {
         amount,
         supplier: {
           connect: {
-            id: dto.supplierId,
+            id: supplier.id,
           },
         },
       },

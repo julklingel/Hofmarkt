@@ -135,7 +135,8 @@ model Offer {
   price      Float
   unit       String
   amount     Int
-  category   Category[]
+  category   Category?   @relation(fields: [categoryId], references: [id])
+  categoryId String?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   watchlist  Watchlist[]
@@ -205,7 +206,6 @@ model ResetPassword {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 enum enumRole {
   BUYER
