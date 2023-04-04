@@ -5,17 +5,12 @@ RUN apk update && \
 
 RUN npm install -g pnpm
 
-# Switch to the root user temporarily
-USER root
+USER node
 
 WORKDIR /usr/src/app
 
-# Set the permissions and switch back to the node user
-RUN chmod 777 /usr/src/app && chown node:node /usr/src/app
-USER node
-
 COPY --chown=node:node package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --force
+RUN pnpm install --frozen-lockfile
 
 COPY --chown=node:node . .
 RUN chmod +x ./entrypoint.sh
