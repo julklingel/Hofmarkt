@@ -1,4 +1,4 @@
-import { IsOptional, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 // To do: price and amount type should be number
 export class offerDto {
@@ -9,14 +9,6 @@ export class offerDto {
   @IsNotEmpty()
   @IsString()
   category: string;
-
-  @IsString({ each: true })
-  @IsOptional()
-  images: string[];
-
-  @IsNotEmpty()
-  @IsString()
-  supplierId: string;
 
   @IsNotEmpty()
   @IsString()

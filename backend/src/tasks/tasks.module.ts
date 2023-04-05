@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
-import { PrismaModule } from 'src/db-module/prisma.module';
+import { PrismaModule } from '../db-module/prisma.module';
 import { TasksService } from './tasks.service';
 
 @Module({

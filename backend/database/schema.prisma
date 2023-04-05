@@ -32,19 +32,19 @@ model User {
   account        Account?
   firstName      String
   lastName       String
-  profileImage   Image?          @relation("UserProfileImage")
+  profileImage   Image?          @relation("UserProfileImage", fields: [profileImageId], references: [id])
   profileImageId String?         @unique
   supplier       Supplier?       @relation(fields: [supplierId], references: [id])
   supplierId     String?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   watchlist      Watchlist[]
-  cart           Cart[]
+  cart           Cart?
   order          Order[]
   AccountAddress AccountAddress?
   Review         Review[]
   Image          Image?          @relation(fields: [imageId], references: [id])
-  imageId        String?
+  imageId        String?         @unique
 
   @@map("users")
 }
@@ -79,19 +79,20 @@ model Image {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   type                  enumImageType
-  user                  User?         @relation("UserProfileImage", fields: [userId], references: [id])
-  userId                String?       @unique
+  profileImage          User?         @relation("UserProfileImage")
+  profileImageId        String?       @unique
   offer                 Offer?        @relation(fields: [offerId], references: [id])
   offerId               String?
   Category              Category?     @relation("CategoryImages")
   categoryId            String?       @unique
-  User                  User[]
   supplierCompanyLogo   Supplier?     @relation("SupplierCompanyLogo")
   supplierCompanyLogoId String?       @unique
   supplierImage         Supplier?     @relation("SupplierImages", fields: [supplierId], references: [id])
   supplierImagesId      String?       @unique
   Supplier              Supplier?
   supplierId            String?
+  User                  User?
+  userId                String?
 
   @@map("images")
 }
@@ -135,7 +136,8 @@ model Offer {
   price      Float
   unit       String
   amount     Int
-  category   Category[]
+  category   Category?   @relation(fields: [categoryId], references: [id])
+  categoryId String?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   watchlist  Watchlist[]
@@ -160,8 +162,8 @@ model Watchlist {
 
 model Cart {
   id        String   @id @unique @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String   @unique
   offer     Offer    @relation(fields: [offerId], references: [id])
   offerId   String
   quantity  Int
@@ -217,7 +219,6 @@ model EmailVerification {
 
   @@map("emailVerification")
 }
-
 
 enum enumRole {
   BUYER

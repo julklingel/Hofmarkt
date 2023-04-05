@@ -1,6 +1,19 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { GetUser } from '../auth/decorator';
 import { offerDto } from './dto';
 import { OfferService } from './offer.service';
+import { JwtAuthGuard } from '../auth/guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { imageUploadFileFilter } from '../imageUpload';
 
 @Controller('offer')
 export class OfferController {
@@ -21,9 +34,22 @@ export class OfferController {
     return this.offerService.getOffersBySupplier(id);
   }
 
-  @Post()
-  createOffer(@Body() dto: offerDto) {
-    return this.offerService.createOffer(dto);
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('image', 4, {
+      fileFilter: imageUploadFileFilter,
+      limits: {
+        fileSize: 2 * 1024 * 1024, // 2 MB in bytes
+      },
+    }),
+  )
+  @Post('create')
+  async createOffer(
+    @GetUser() user: any,
+    @Body() dto: offerDto,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.offerService.createOffer(dto, user, files);
   }
-
 }

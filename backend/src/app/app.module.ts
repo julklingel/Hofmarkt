@@ -6,7 +6,6 @@ import { AppService } from './app.service';
 
 import { ScheduleModule } from '@nestjs/schedule';
 
-
 // Modules to import
 import { AuthModule } from '../auth/auth.module';
 import { UserModule } from '../user/user.module';
@@ -30,10 +29,8 @@ import { TasksModule } from '../tasks/tasks.module';
     ConfigModule.forRoot(),
     TasksModule,
   ],
-  
+
   controllers: [AppController],
   providers: [AppService],
 })
-
-
 export class AppModule {}

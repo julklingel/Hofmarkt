@@ -30,12 +30,6 @@ export class SupplierController {
     return this.supplierService.getFeaturedSuppliers();
   }
 
-  //can be deleted
-  @Get('me')
-  getMySupplier(@GetUser() user: any) {
-    return user;
-  }
-
   @UseGuards(JwtAuthGuard)
   @Post('create')
   @UseInterceptors(

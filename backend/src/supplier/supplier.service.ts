@@ -57,7 +57,11 @@ export class SupplierService {
       },
       select: {
         companyName: true,
-        companyLogo: true,
+        companyLogo: {
+          select: {
+            imageUrl: true,
+          },
+        },
         slug: true,
         companyBio: true,
         supplierImage: {
@@ -80,24 +84,19 @@ export class SupplierService {
             title: true,
             unit: true,
             price: true,
+            images: true,
             category: {
               select: {
                 name: true,
               },
             },
-            images: {
-              select: {
-                imageUrl: true,
-                type: true,
-              },},
           },
         },
       },
     });
-  
+
     return supplier;
   }
-  
 
   async createSupplier(
     user: any,
@@ -141,7 +140,21 @@ export class SupplierService {
 
         if (index === 0) {
           companyLogo = image.secure_url;
+
+          if (!companyLogo) {
+            throw new HttpException(
+              'Something went wrong when uploading the company logo',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
         } else {
+          if (!image.secure_url) {
+            throw new HttpException(
+              'Something went wrong when uploading the supplier images',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
           imageUrls.push(image.secure_url);
         }
       }
@@ -171,7 +184,7 @@ export class SupplierService {
       },
     };
 
-    if (companyLogo !== '') {
+    if (companyLogo) {
       newSupplierData.companyLogo = {
         create: {
           imageUrl: companyLogo,
@@ -180,7 +193,7 @@ export class SupplierService {
       };
     }
 
-    if (imageUrls.length > 0) {
+    if (imageUrls) {
       const supplierImage = imageUrls.map((imageUrl) => {
         return {
           imageUrl: imageUrl,
