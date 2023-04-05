@@ -32,4 +32,49 @@ export class TasksService {
       });
     }
   }
+
+  @Cron(CronExpression.EVERY_WEEK)
+  async deleteExpiredConfirmationTokens() {
+    const expiredTokens = await this.prisma.emailVerification.findMany({
+      where: {
+        createdAt: {
+          lte: moment().subtract(7, 'days').toISOString(),
+        },
+      },
+    });
+
+    if (expiredTokens.length) {
+      const tokenIds = expiredTokens.map((token) => token.id);
+      await this.prisma.emailVerification.deleteMany({
+        where: {
+          id: {
+            in: tokenIds,
+          },
+        },
+      });
+    }
+  }
+
+  @Cron(CronExpression.EVERY_WEEK)
+  async deleteNotVerifiedAccounts() {
+    const notVerifiedAccounts = await this.prisma.account.findMany({
+      where: {
+        verified: false,
+        createdAt: {
+          lte: moment().subtract(7, 'days').toISOString(),
+        },
+      },
+    });
+
+    if (notVerifiedAccounts.length) {
+      const accountIds = notVerifiedAccounts.map((account) => account.id);
+      await this.prisma.account.deleteMany({
+        where: {
+          id: {
+            in: accountIds,
+          },
+        },
+      });
+    }
+  }
 }
