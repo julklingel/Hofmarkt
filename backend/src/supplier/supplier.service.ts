@@ -148,14 +148,14 @@ export class SupplierService {
             );
           }
         } else {
-          imageUrls.push(image.secure_url);
-
           if (!image.secure_url) {
             throw new HttpException(
               'Something went wrong when uploading the supplier images',
               HttpStatus.BAD_REQUEST,
             );
           }
+
+          imageUrls.push(image.secure_url);
         }
       }
     }

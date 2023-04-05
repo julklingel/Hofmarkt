@@ -17,6 +17,5 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   await app.listen(port, '0.0.0.0');
 }
-console.log('Environment Variables:', JSON.stringify(process.env, null, 2));
 
 bootstrap();
