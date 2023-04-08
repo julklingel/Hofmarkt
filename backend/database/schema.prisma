@@ -50,25 +50,26 @@ model User {
 }
 
 model Supplier {
-  id             String          @id @unique @default(uuid())
-  account        Account?
-  companyName    String
-  companyLogo    Image?          @relation("SupplierCompanyLogo", fields: [companyLogoId], references: [id])
-  companyLogoId  String?         @unique
-  companyPhone   String          @default("")
-  companyBio     String
-  slug           String          @unique
-  featured       Boolean         @default(false)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  user           User[]
-  offer          Offer[]
-  AccountAddress AccountAddress?
-  Review         Review[]
-  supplierImage  Image[]         @relation("SupplierImages")
-  Image          Image?          @relation(fields: [imageId], references: [id])
-  imageId        String?         @unique
-  Category       Category[]
+  id               String          @id @unique @default(uuid())
+  account          Account?
+  companyName      String
+  companyLogo      Image?          @relation("SupplierCompanyLogo", fields: [companyLogoId], references: [id])
+  companyLogoId    String?         @unique
+  companyPhone     String          @default("")
+  companyBio       String
+  slug             String          @unique
+  featured         Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  user             User[]
+  offer            Offer[]
+  AccountAddress   AccountAddress? @relation(fields: [accountAddressId], references: [id])
+  Review           Review[]
+  supplierImage    Image[]         @relation("SupplierImages")
+  Image            Image?          @relation(fields: [imageId], references: [id])
+  imageId          String?         @unique
+  Category         Category[]
+  accountAddressId String?
 
   @@map("suppliers")
 }
@@ -98,18 +99,17 @@ model Image {
 }
 
 model AccountAddress {
-  id            String    @id @unique @default(uuid())
-  user          User?     @relation(fields: [userId], references: [id])
-  userId        String?   @unique
-  supplier      Supplier? @relation(fields: [supplierId], references: [id])
-  supplierId    String?   @unique
+  id            String     @id @unique @default(uuid())
+  account       User?      @relation(fields: [accountId], references: [id])
+  accountId     String?    @unique
   country       String
   city          String
   streetAddress String
   zip           String
   state         String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  Supplier      Supplier[]
 
   @@map("account_addresses")
 }
