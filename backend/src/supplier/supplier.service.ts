@@ -210,7 +210,7 @@ export class SupplierService {
       await this.prisma.supplier.create({
         data: newSupplierData,
         include: {
-          Image: true,
+          supplierImage: true,
           companyLogo: true,
         },
       });
