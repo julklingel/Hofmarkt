@@ -27,15 +27,7 @@ export async function seedSupplier() {
             },
           },
           companyPhone: '123456789',
-          AccountAddress: {
-            create: {
-              streetAddress: '1234 Main St',
-              city: 'Munich',
-              state: 'Bavaria',
-              country: 'Germany',
-              zip: '12345',
-            },
-          },
+
           supplierImage: {
             create: {
               imageUrl: 'obstler.jpeg',
@@ -104,6 +96,15 @@ export async function seedSupplier() {
           },
         },
       },
+      address: {
+        create: {
+          streetAddress: 'Klaus Strasse',
+          city: 'Munich',
+          zip: '12345',
+          state: 'Bavaria',
+          country: 'Germany',
+        },
+      },
     },
   });
 
@@ -126,15 +127,7 @@ export async function seedSupplier() {
             },
           },
           companyPhone: '123456789',
-          AccountAddress: {
-            create: {
-              streetAddress: '1234 Main St',
-              city: 'Starnberg',
-              state: 'Bavaria',
-              country: 'Germany',
-              zip: '82319',
-            },
-          },
+
           supplierImage: {
             create: {
               imageUrl: 'Imkerei.jpeg',
@@ -186,6 +179,15 @@ export async function seedSupplier() {
           },
         },
       },
+      address: {
+        create: {
+          streetAddress: 'Klaus Strasse',
+          city: 'Munich',
+          zip: '12345',
+          state: 'Bavaria',
+          country: 'Germany',
+        },
+      },
     },
   });
 
@@ -208,15 +210,6 @@ export async function seedSupplier() {
             },
           },
           companyPhone: '123456789',
-          AccountAddress: {
-            create: {
-              streetAddress: '1234 Main St',
-              city: 'Starnberg',
-              state: 'Bavaria',
-              country: 'Germany',
-              zip: '82319',
-            },
-          },
           supplierImage: {
             create: {
               imageUrl: 'Farmhouse.jpeg',
@@ -268,6 +261,15 @@ export async function seedSupplier() {
           },
         },
       },
+      address: {
+        create: {
+          streetAddress: 'Klaus Strasse',
+          city: 'Munich',
+          zip: '12345',
+          state: 'Bavaria',
+          country: 'Germany',
+        },
+      },
     },
   });
 
@@ -290,15 +292,7 @@ export async function seedSupplier() {
             },
           },
           companyPhone: '123456789',
-          AccountAddress: {
-            create: {
-              streetAddress: '1234 Main St',
-              city: 'Starnberg',
-              state: 'Bavaria',
-              country: 'Germany',
-              zip: '82319',
-            },
-          },
+
           supplierImage: {
             create: {
               imageUrl: 'hunter-4436354_1920.jpg',
@@ -349,6 +343,15 @@ export async function seedSupplier() {
           },
         },
       },
+      address: {
+        create: {
+          streetAddress: 'Klaus Strasse',
+          city: 'Munich',
+          zip: '12345',
+          state: 'Bavaria',
+          country: 'Germany',
+        },
+      },
     },
   });
 
@@ -371,15 +374,7 @@ export async function seedSupplier() {
             },
           },
           companyPhone: '123456789',
-          AccountAddress: {
-            create: {
-              streetAddress: '1234 Main St',
-              city: 'Starnberg',
-              state: 'Bavaria',
-              country: 'Germany',
-              zip: '82319',
-            },
-          },
+
           supplierImage: {
             create: {
               imageUrl: 'Bäckerei_Bayer_1.webp',
@@ -430,6 +425,15 @@ export async function seedSupplier() {
           },
         },
       },
+      address: {
+        create: {
+          streetAddress: 'Klaus Strasse',
+          city: 'Munich',
+          zip: '12345',
+          state: 'Bavaria',
+          country: 'Germany',
+        },
+      },
     },
   });
 
@@ -452,22 +456,12 @@ export async function seedSupplier() {
             },
           },
           companyPhone: '123456789',
-          AccountAddress: {
-            create: {
-              streetAddress: '1234 Main St',
-              city: 'Starnberg',
-              state: 'Bavaria',
-              country: 'Germany',
-              zip: '82319',
-            },
-          },
           supplierImage: {
             create: {
               imageUrl: 'fisher.jpg',
               type: enumImageType.FACILITY,
             },
           },
-
           companyBio: 'Fish from the Ammersee and the Starnberger See',
           slug: 'markus-fisher',
           offer: {
@@ -510,6 +504,15 @@ export async function seedSupplier() {
               },
             ],
           },
+        },
+      },
+      address: {
+        create: {
+          streetAddress: 'Klaus Strasse',
+          city: 'Munich',
+          zip: '12345',
+          state: 'Bavaria',
+          country: 'Germany',
         },
       },
     },
