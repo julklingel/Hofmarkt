@@ -69,15 +69,6 @@ export class SupplierService {
             imageUrl: true,
           },
         },
-        AccountAddress: {
-          select: {
-            streetAddress: true,
-            city: true,
-            state: true,
-            country: true,
-            zip: true,
-          },
-        },
         offer: {
           select: {
             id: true,
@@ -166,6 +157,11 @@ export class SupplierService {
       state: address.state,
       country: address.country,
       zip: address.zip,
+      account: {
+        connect: {
+          id: id,
+        },
+      },
     };
 
     const newSupplierData: any = {
@@ -174,9 +170,6 @@ export class SupplierService {
       companyBio: dto.companyBio,
       slug: slug,
       featured: featured,
-      AccountAddress: {
-        create: newAddressData,
-      },
       account: {
         connect: {
           id: id,
@@ -209,9 +202,15 @@ export class SupplierService {
       await this.prisma.supplier.create({
         data: newSupplierData,
         include: {
-          AccountAddress: true,
           Image: true,
           companyLogo: true,
+        },
+      });
+
+      await this.prisma.accountAddress.create({
+        data: newAddressData,
+        include: {
+          account: true,
         },
       });
 

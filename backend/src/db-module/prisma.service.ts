@@ -15,6 +15,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   cleanDb() {
     return this.$transaction([
+      this.emailVerification.deleteMany(),
+      this.resetPassword.deleteMany(),
       this.watchlist.deleteMany(),
       this.cart.deleteMany(),
       this.order.deleteMany(),
