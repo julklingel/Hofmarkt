@@ -55,15 +55,17 @@ export class SupplierService {
       where: {
         slug: slug,
       },
-      select: {
-        companyName: true,
+      include: {
+        account: {
+          select: {
+            address: true,
+          },
+        },
         companyLogo: {
           select: {
             imageUrl: true,
           },
         },
-        slug: true,
-        companyBio: true,
         supplierImage: {
           select: {
             imageUrl: true,
@@ -86,7 +88,13 @@ export class SupplierService {
       },
     });
 
-    return supplier;
+    return {
+      ...supplier,
+      companyName: supplier.companyName,
+      companyBio: supplier.companyBio,
+      companyPhone: supplier.companyPhone,
+      slug: supplier.slug,
+    };
   }
 
   async createSupplier(
