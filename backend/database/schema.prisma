@@ -27,23 +27,20 @@ model Account {
 }
 
 model User {
-  id             String      @id @unique @default(uuid())
-  account        Account?    @relation(fields: [accountId], references: [id])
-  accountId      String?     @unique
-  firstName      String
-  lastName       String
-  profileImage   Image?      @relation("UserProfileImage", fields: [profileImageId], references: [id])
-  profileImageId String?     @unique
-  supplier       Supplier?   @relation(fields: [supplierId], references: [id])
-  supplierId     String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  watchlist      Watchlist[]
-  cart           Cart?
-  order          Order[]
-  Review         Review[]
-  Image          Image?      @relation(fields: [imageId], references: [id])
-  imageId        String?     @unique
+  id           String      @id @unique @default(uuid())
+  account      Account?    @relation(fields: [accountId], references: [id])
+  accountId    String?     @unique
+  firstName    String
+  lastName     String
+  profileImage Image?
+  supplier     Supplier?   @relation(fields: [supplierId], references: [id])
+  supplierId   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  watchlist    Watchlist[]
+  cart         Cart?
+  order        Order[]
+  Review       Review[]
 
   @@map("users")
 }
@@ -53,8 +50,7 @@ model Supplier {
   account       Account?   @relation(fields: [accountId], references: [id])
   accountId     String?    @unique
   companyName   String
-  companyLogo   Image?     @relation("SupplierCompanyLogo", fields: [companyLogoId], references: [id])
-  companyLogoId String?    @unique
+  companyLogo   Image?     @relation("SupplierCompanyLogo")
   companyPhone  String     @default("")
   companyBio    String
   slug          String     @unique
@@ -65,8 +61,6 @@ model Supplier {
   offer         Offer[]
   Review        Review[]
   supplierImage Image[]    @relation("SupplierImages")
-  Image         Image?     @relation(fields: [imageId], references: [id])
-  imageId       String?    @unique
   Category      Category[]
 
   @@map("suppliers")
@@ -78,20 +72,16 @@ model Image {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   type                  enumImageType
-  profileImage          User?         @relation("UserProfileImage")
+  profileImage          User?         @relation(fields: [profileImageId], references: [id])
   profileImageId        String?       @unique
   offer                 Offer?        @relation(fields: [offerId], references: [id])
-  offerId               String?
-  Category              Category?     @relation("CategoryImages")
+  offerId               String?       @unique
+  Category              Category?     @relation(fields: [categoryId], references: [id])
   categoryId            String?       @unique
-  supplierCompanyLogo   Supplier?     @relation("SupplierCompanyLogo")
+  supplierCompanyLogo   Supplier?     @relation("SupplierCompanyLogo", fields: [supplierCompanyLogoId], references: [id])
   supplierCompanyLogoId String?       @unique
-  supplierImage         Supplier?     @relation("SupplierImages", fields: [supplierId], references: [id])
+  supplierImage         Supplier?     @relation("SupplierImages", fields: [supplierImagesId], references: [id])
   supplierImagesId      String?       @unique
-  Supplier              Supplier?
-  supplierId            String?
-  User                  User?
-  userId                String?
 
   @@map("images")
 }
@@ -112,35 +102,37 @@ model AccountAddress {
 }
 
 model Review {
-  id         String   @id @unique @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  supplier   Supplier @relation(fields: [supplierId], references: [id])
-  supplierId String
+  id         String    @id @unique @default(uuid())
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?   @unique
+  supplier   Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId String?   @unique
   rating     Int
   comment    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@map("reviews")
 }
 
 model Offer {
-  id         String      @id @unique @default(uuid())
-  title      String
-  supplier   Supplier    @relation(fields: [supplierId], references: [id])
-  supplierId String
-  price      Float
-  unit       String
-  amount     Int
-  category   Category?   @relation(fields: [categoryId], references: [id])
-  categoryId String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  watchlist  Watchlist[]
-  cart       Cart[]
-  order      Order[]
-  images     Image[]
+  id          String     @id @unique @default(uuid())
+  title       String
+  supplier    Supplier   @relation(fields: [supplierId], references: [id])
+  supplierId  String
+  price       Float
+  unit        String
+  amount      Int
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  watchlist   Watchlist? @relation(fields: [watchlistId], references: [id])
+  watchlistId String?    @unique
+  cart        Cart?      @relation(fields: [cartId], references: [id])
+  cartId      String?
+  order       Order[]
+  images      Image[]
 
   @@map("offers")
 }
@@ -149,8 +141,7 @@ model Watchlist {
   id        String   @id @unique @default(uuid())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  offer     Offer    @relation(fields: [offerId], references: [id])
-  offerId   String
+  offer     Offer[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -159,10 +150,9 @@ model Watchlist {
 
 model Cart {
   id        String   @id @unique @default(uuid())
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    String   @unique
-  offer     Offer    @relation(fields: [offerId], references: [id])
-  offerId   String
+  offer     Offer[]
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -189,8 +179,7 @@ model Category {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   offer      Offer[]
-  image      Image?    @relation("CategoryImages", fields: [imageId], references: [id])
-  imageId    String?   @unique
+  image      Image?
   Supplier   Supplier? @relation(fields: [supplierId], references: [id])
   supplierId String?
 
