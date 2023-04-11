@@ -64,7 +64,13 @@ export class OfferController {
     }),
   )
   @Patch('update/:id')
-  updateOffer(@Param('id') id: string, @Body() dto: offerDto) {
-    return this.offerService.updateOffer(id, dto);
+  async patchOffer(
+    @Param('id') id: string,
+    @Body() dto: offerDto,
+    @GetUser() user: any,
+    @UploadedFiles() 
+    files: Express.Multer.File[],
+  ) {
+    return this.offerService.patchOffer(id, dto, user, files);
   }
 }
