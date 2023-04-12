@@ -3,6 +3,7 @@ import { enumImageType } from '@prisma/client';
 import { PrismaService } from '../db-module/prisma.service';
 import { offerDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { log } from 'console';
 
 @Injectable()
 export class OfferService {
@@ -73,21 +74,21 @@ export class OfferService {
 
     const imageUrls = [];
 
+    
+
     if (files.length > 0) {
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        const image = await this.cloudinaryService.uploadImage(file);
-
-        imageUrls.push(image.secure_url);
-
-        if (!imageUrls) {
-          throw new HttpException(
-            'An error occurred while uploading the images',
-            HttpStatus.BAD_REQUEST,
-          );
+      try {
+        for (let index = 0; index < files.length; index++) {
+          const file = files[index];
+          const image = await this.cloudinaryService.uploadImage(file);
+          imageUrls.push(image.secure_url);
         }
+      } catch (e) {
+        throw new HttpException( e.message, HttpStatus.BAD_REQUEST);
       }
     }
+
+  
 
     const offerImage = imageUrls.map((imageUrl) => {
       return {
