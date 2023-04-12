@@ -29,13 +29,19 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async signToken(account: { email: string; id: string; role: string }) {
+  async signToken(account: {
+    email: string;
+    id: string;
+    role: string;
+    verified: boolean;
+  }) {
     const secret = this.config.get('JWT_secret');
 
     const payload = {
       email: account.email,
       sub: account.id,
       role: account.role,
+      verified: account.verified,
     };
 
     const token = this.jwt.sign(payload, {
@@ -60,6 +66,22 @@ export class AuthService {
     return await argon2.verify(hash, password, {
       ...hashingConfig,
       salt: salt,
+    });
+  }
+
+  async getAccount(email: string) {
+    return await this.prisma.account.findUnique({
+      where: {
+        email: email.toLowerCase(),
+      },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        salt: true,
+        role: true,
+        verified: true,
+      },
     });
   }
 
@@ -97,18 +119,7 @@ export class AuthService {
   }
 
   async login(dto: loginDto) {
-    const account = await this.prisma.account.findUnique({
-      where: {
-        email: dto.email.toLowerCase(),
-      },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-        salt: true,
-        role: true,
-      },
-    });
+    const account = await this.getAccount(dto.email);
     if (!account) {
       throw new ForbiddenException('User not found');
     }
@@ -271,7 +282,9 @@ export class AuthService {
         where: { email },
       });
 
-      return { message: 'Account confirmed successfully' };
+      const token = this.signToken(await this.getAccount(emailDto));
+
+      return token;
     } catch (error) {
       console.log(error);
       throw new Error('Something went wrong');
