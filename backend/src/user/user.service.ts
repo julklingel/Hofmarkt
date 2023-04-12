@@ -63,6 +63,11 @@ export class UserService {
       state: address.state,
       country: address.country,
       zip: address.zip,
+      account: {
+        connect: {
+          id: id,
+        },
+      },
     };
 
     const newImageData = imageUrl
@@ -75,9 +80,6 @@ export class UserService {
     const newUserData: any = {
       firstName: dto.firstName,
       lastName: dto.lastName,
-      AccountAddress: {
-        create: newAddressData,
-      },
       account: {
         connect: {
           id: id,
@@ -95,10 +97,17 @@ export class UserService {
       await this.prisma.user.create({
         data: newUserData,
         include: {
-          AccountAddress: true,
           profileImage: true,
         },
       });
+
+      await this.prisma.accountAddress.create({
+        data: newAddressData,
+        include: {
+          account: true,
+        },
+      });
+
       return 'user created with name ' + dto.firstName;
     } catch (err) {
       if (err.code === 'P2002' && err.meta.target.includes('supplierId')) {
