@@ -103,12 +103,7 @@ export class SupplierService {
     address: addressDto,
     files: Express.Multer.File[] = [],
   ) {
-    const { id, role } = user;
-    if (role !== 'SUPPLIER')
-      throw new HttpException(
-        'You are not authorized to create a supplier account',
-        HttpStatus.BAD_REQUEST,
-      );
+    const { id } = user;
 
     const featured = Boolean(dto.featured);
     const slug = this.generateSlug(dto.companyName);

@@ -6,7 +6,6 @@ import {
   resetMailDto,
   resetTokenDto,
   resetPasswordDto,
-  confirmationCodeDto,
 } from './dto/auth.dto';
 import * as argon2 from 'argon2';
 import { PrismaService } from '../db-module/prisma.service';

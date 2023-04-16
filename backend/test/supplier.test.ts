@@ -32,8 +32,9 @@ export const supplierTests = (app: INestApplication, prisma: PrismaService) => {
             ...addressdto,
           })
           .expectJson({
-            message: 'You are not authorized to create a supplier account',
-            statusCode: 400,
+            error: 'Forbidden',
+            message: 'Forbidden resource',
+            statusCode: 403,
           });
       });
 

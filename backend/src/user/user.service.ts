@@ -21,12 +21,7 @@ export class UserService {
   }
 
   async createUser(user, dto: userDto, address: addressDto, file: any = 0) {
-    const { id, role } = user;
-    if (role !== 'BUYER')
-      throw new HttpException(
-        'You are not authorized to create a user account',
-        HttpStatus.BAD_REQUEST,
-      );
+    const { id } = user;
 
     const existingUser = await this.prisma.account.findFirst({
       where: {

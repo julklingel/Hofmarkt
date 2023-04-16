@@ -57,12 +57,7 @@ export class OfferService {
   }
 
   async createOffer(dto: offerDto, user: any, files: Express.Multer.File[]) {
-    const { id, role } = user;
-    if (role !== 'SUPPLIER')
-      throw new HttpException(
-        'You are not authorized to create an offer',
-        HttpStatus.BAD_REQUEST,
-      );
+    const { id } = user;
 
     const supplier = await this.prisma.supplier.findFirst({
       where: { account: { id: id } },
