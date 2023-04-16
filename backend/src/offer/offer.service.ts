@@ -120,6 +120,13 @@ export class OfferService {
   ): Promise<any> {
     const { id: userId } = user;
 
+    if (user.role !== 'SUPPLIER') {
+      throw new HttpException(
+        'You are not authorized to update this offer',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    
     const supplier = await this.prisma.supplier.findFirst({
       where: { account: { id: userId } },
     });
