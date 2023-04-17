@@ -60,7 +60,7 @@ export class OfferService {
   async createOffer(
     dto: offerDto,
     user: userInterface,
-    files: Express.Multer.File[],
+    files: Express.Multer.File[] = [],
   ) {
     const { id } = user;
 
@@ -110,7 +110,7 @@ export class OfferService {
   async patchOffer(
     id: string,
     dto: offerDto,
-    user: any,
+    user: userInterface,
     files: Express.Multer.File[],
   ): Promise<any> {
     const { id: userId } = user;

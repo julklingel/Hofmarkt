@@ -56,7 +56,8 @@ export class OfferController {
     return this.offerService.createOffer(dto, user, files);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
   @UseInterceptors(
     FilesInterceptor('image', 4, {
       fileFilter: imageUploadFileFilter,

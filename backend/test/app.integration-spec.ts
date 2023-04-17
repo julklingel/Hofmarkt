@@ -6,6 +6,7 @@ import { AppModule } from '../src/app/app.module';
 import { authTests } from './auth.test';
 import { supplierTests } from './supplier.test';
 import { userTests } from './user.test';
+import { offerTests } from './offer.test';
 
 describe('App integration test', () => {
   let app: INestApplication;
@@ -34,4 +35,5 @@ describe('App integration test', () => {
   authTests(app, prisma);
   supplierTests(app, prisma);
   userTests(app, prisma);
+  offerTests(app, prisma);
 });
