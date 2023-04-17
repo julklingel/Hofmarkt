@@ -111,7 +111,7 @@ export class OfferService {
     id: string,
     dto: offerDto,
     user: userInterface,
-    files: Express.Multer.File[],
+    files: Express.Multer.File[] = [],
   ): Promise<any> {
     const { id: userId } = user;
 

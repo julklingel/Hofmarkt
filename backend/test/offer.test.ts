@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import * as pactum from 'pactum';
-import { PrismaService } from 'src/db-module/prisma.service';
+import { PrismaService } from '../src/db-module/prisma.service';
 import { offerDto } from '../src/offer/dto';
 
 export const offerTests = (app: INestApplication, prisma: PrismaService) => {
@@ -12,6 +12,9 @@ export const offerTests = (app: INestApplication, prisma: PrismaService) => {
       unit: 'kg',
       amount: '10',
     };
+
+    let existingOffer;
+
     describe('create an offer', () => {
       it('should throw if account is not a supplier', () => {
         return pactum
@@ -29,8 +32,8 @@ export const offerTests = (app: INestApplication, prisma: PrismaService) => {
             statusCode: 403,
           });
       });
-      it('should create a new offer', () => {
-        return pactum
+      it('should create a new offer', async () => {
+        const response = await pactum
           .spec()
           .post('/offer/create')
           .withHeaders({
@@ -40,6 +43,22 @@ export const offerTests = (app: INestApplication, prisma: PrismaService) => {
             ...offerdto,
           })
           .expectStatus(201);
+
+        existingOffer = response.body;
+      });
+      it('should update the offer', async () => {
+        const updatedTitle = 'updated jackfruit';
+        const response = pactum
+          .spec()
+          .patch(`/offer/update/${existingOffer.id}`)
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            ...offerdto,
+            title: updatedTitle,
+          })
+          .expectStatus(200);
       });
     });
   });
