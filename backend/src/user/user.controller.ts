@@ -15,6 +15,7 @@ import { userDto } from './dto';
 import { addressDto } from '../address';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
+import { userInterface } from '../interface';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -45,7 +46,7 @@ export class UserController {
     }),
   )
   async createUser(
-    @GetUser() user: any,
+    @GetUser() user: userInterface,
     @Body() dto: userDto,
     @Body() address: addressDto,
     @UploadedFile()

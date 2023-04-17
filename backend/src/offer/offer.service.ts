@@ -3,7 +3,7 @@ import { enumImageType } from '@prisma/client';
 import { PrismaService } from '../db-module/prisma.service';
 import { offerDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { log } from 'console';
+import { userInterface } from 'src/interface';
 
 @Injectable()
 export class OfferService {
@@ -57,7 +57,11 @@ export class OfferService {
     });
   }
 
-  async createOffer(dto: offerDto, user: any, files: Express.Multer.File[]) {
+  async createOffer(
+    dto: offerDto,
+    user: userInterface,
+    files: Express.Multer.File[],
+  ) {
     const { id } = user;
 
     const supplier = await this.prisma.supplier.findFirst({
@@ -69,8 +73,6 @@ export class OfferService {
 
     const imageUrls = [];
 
-    
-
     if (files.length > 0) {
       try {
         for (let index = 0; index < files.length; index++) {
@@ -79,11 +81,9 @@ export class OfferService {
           imageUrls.push(image.secure_url);
         }
       } catch (e) {
-        throw new HttpException( e.message, HttpStatus.BAD_REQUEST);
+        throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       }
     }
-
-  
 
     const offerImage = imageUrls.map((imageUrl) => {
       return {
@@ -121,7 +121,7 @@ export class OfferService {
         HttpStatus.FORBIDDEN,
       );
     }
-    
+
     const supplier = await this.prisma.supplier.findFirst({
       where: { account: { id: userId } },
     });

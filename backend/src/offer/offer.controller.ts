@@ -15,6 +15,7 @@ import { OfferService } from './offer.service';
 import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
+import { userInterface } from '../interface';
 
 @Controller('offer')
 export class OfferController {
@@ -47,7 +48,7 @@ export class OfferController {
   )
   @Post('create')
   async createOffer(
-    @GetUser() user: any,
+    @GetUser() user: userInterface,
     @Body() dto: offerDto,
     @UploadedFiles()
     files: Express.Multer.File[],
@@ -69,7 +70,7 @@ export class OfferController {
     @Param('id') id: string,
     @Body() dto: offerDto,
     @GetUser() user: any,
-    @UploadedFiles() 
+    @UploadedFiles()
     files: Express.Multer.File[],
   ) {
     return this.offerService.patchOffer(id, dto, user, files);
