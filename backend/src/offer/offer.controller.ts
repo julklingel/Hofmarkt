@@ -9,10 +9,10 @@ import {
   UseInterceptors,
   Patch,
 } from '@nestjs/common';
-import { GetUser } from '../auth/decorator';
+import { GetUser, Roles } from '../auth/decorator';
 import { offerDto } from './dto';
 import { OfferService } from './offer.service';
-import { JwtAuthGuard } from '../auth/guard';
+import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
 
@@ -35,7 +35,8 @@ export class OfferController {
     return this.offerService.getOffersBySupplier(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
   @UseInterceptors(
     FilesInterceptor('image', 4, {
       fileFilter: imageUploadFileFilter,

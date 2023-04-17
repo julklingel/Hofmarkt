@@ -9,8 +9,8 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { JwtAuthGuard } from '../auth/guard';
-import { GetUser } from '../auth/decorator';
+import { JwtAuthGuard, RolesGuard } from '../auth/guard';
+import { GetUser, Roles } from '../auth/decorator';
 import { userDto } from './dto';
 import { addressDto } from '../address';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -33,6 +33,8 @@ export class UserController {
     return 'me2';
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('BUYER')
   @Post('create')
   @UseInterceptors(
     FileInterceptor('image', {

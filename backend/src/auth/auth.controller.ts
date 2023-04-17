@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  HttpCode,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Post, Get, Body, HttpCode, Param } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import {
@@ -15,7 +7,6 @@ import {
   resetMailDto,
   resetTokenDto,
   resetPasswordDto,
-  confirmationCodeDto,
 } from './dto/auth.dto';
 
 @Controller('auth')

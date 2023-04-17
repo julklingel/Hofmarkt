@@ -32,8 +32,9 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
               ...addressdto,
             })
             .expectJson({
-              message: 'You are not authorized to create a user account',
-              statusCode: 400,
+              error: 'Forbidden',
+              message: 'Forbidden resource',
+              statusCode: 403,
             });
         });
         it('should create a user', () => {

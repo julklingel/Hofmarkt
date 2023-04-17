@@ -11,8 +11,8 @@ import {
 import { supplierDto } from './dto';
 import { SupplierService } from './supplier.service';
 import { addressDto } from '../address';
-import { JwtAuthGuard } from '../auth/guard';
-import { GetUser } from '../auth/decorator';
+import { JwtAuthGuard, RolesGuard } from '../auth/guard';
+import { GetUser, Roles } from '../auth/decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
 
@@ -30,7 +30,8 @@ export class SupplierController {
     return this.supplierService.getFeaturedSuppliers();
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
   @Post('create')
   @UseInterceptors(
     FilesInterceptor('image', 6, {
