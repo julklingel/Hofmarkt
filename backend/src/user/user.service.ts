@@ -13,12 +13,9 @@ export class UserService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  getOwnUser(user) {
-    user = {
-      id: user.id,
-      email: user.email,
-    };
-    return user;
+  getOwnUser(user: userInterface) {
+    const { id, email } = user;
+    return { id, email };
   }
 
   async createUser(
