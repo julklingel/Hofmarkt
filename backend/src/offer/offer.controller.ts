@@ -7,6 +7,7 @@ import {
   UploadedFiles,
   UseGuards,
   UseInterceptors,
+  Patch,
 } from '@nestjs/common';
 import { GetUser, Roles } from '../auth/decorator';
 import { offerDto } from './dto';
@@ -52,5 +53,25 @@ export class OfferController {
     files: Express.Multer.File[],
   ) {
     return this.offerService.createOffer(dto, user, files);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FilesInterceptor('image', 4, {
+      fileFilter: imageUploadFileFilter,
+      limits: {
+        fileSize: 2 * 1024 * 1024, // 2 MB in bytes
+      },
+    }),
+  )
+  @Patch('update/:id')
+  async patchOffer(
+    @Param('id') id: string,
+    @Body() dto: offerDto,
+    @GetUser() user: any,
+    @UploadedFiles() 
+    files: Express.Multer.File[],
+  ) {
+    return this.offerService.patchOffer(id, dto, user, files);
   }
 }
