@@ -15,6 +15,7 @@ import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { GetUser, Roles } from '../auth/decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
+import { userInterface } from '../interface';
 
 @Controller('supplier')
 export class SupplierController {
@@ -42,7 +43,7 @@ export class SupplierController {
     }),
   )
   async createSupplier(
-    @GetUser() user: any,
+    @GetUser() user: userInterface,
     @Body() dto: supplierDto,
     @Body() address: addressDto,
     @UploadedFiles()

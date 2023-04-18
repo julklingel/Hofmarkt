@@ -2,9 +2,10 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto } from './dto';
-import { addressDto } from 'src/address';
+import { addressDto } from '../address';
 import { enumImageType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { userInterface } from '../interface';
 
 @Injectable()
 export class SupplierService {
@@ -98,7 +99,7 @@ export class SupplierService {
   }
 
   async createSupplier(
-    user: any,
+    user: userInterface,
     dto: supplierDto,
     address: addressDto,
     files: Express.Multer.File[] = [],

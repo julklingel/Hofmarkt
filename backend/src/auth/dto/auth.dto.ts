@@ -38,7 +38,6 @@ export class resetMailDto {
   email: string;
 }
 
-
 export class resetTokenDto {
   @ApiProperty({ example: 'john@example.com' })
   @IsEmail()
@@ -49,7 +48,6 @@ export class resetTokenDto {
   @IsNotEmpty()
   token: string;
 }
-
 
 export class resetPasswordDto {
   @ApiProperty({ example: 'john@example.com' })
@@ -67,7 +65,6 @@ export class resetPasswordDto {
   password: string;
 }
 
-
 export class confirmationCodeDto {
   @ApiProperty({ example: 'john@example.com' })
   @IsEmail()
@@ -77,5 +74,4 @@ export class confirmationCodeDto {
   @ApiProperty({ example: '123456' })
   @IsNotEmpty()
   token: string;
-  
 }

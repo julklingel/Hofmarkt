@@ -4,6 +4,7 @@ import { userDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
 import { enumImageType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { userInterface } from '../interface';
 
 @Injectable()
 export class UserService {
@@ -12,15 +13,17 @@ export class UserService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  getOwnUser(user) {
-    user = {
-      id: user.id,
-      email: user.email,
-    };
-    return user;
+  getOwnUser(user: userInterface) {
+    const { id, email } = user;
+    return { id, email };
   }
 
-  async createUser(user, dto: userDto, address: addressDto, file: any = 0) {
+  async createUser(
+    user: userInterface,
+    dto: userDto,
+    address: addressDto,
+    file: any = 0,
+  ) {
     const { id } = user;
 
     const existingUser = await this.prisma.account.findFirst({
