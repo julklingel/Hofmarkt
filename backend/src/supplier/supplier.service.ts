@@ -1,8 +1,8 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
-import { supplierDto } from './dto';
-import { addressDto } from '../address';
+import { supplierDto, updateSupplierDto } from './dto';
+import { addressDto, updateAddressDto } from '../address';
 import { enumImageType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
@@ -236,6 +236,104 @@ export class SupplierService {
       } else {
         throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       }
+    }
+  }
+
+  async patchSupplier(
+    id: string,
+    user: userInterface,
+    dto: updateSupplierDto,
+    address: updateAddressDto,
+    files: Express.Multer.File[] = [],
+  ) {
+    const { id: userId } = user;
+
+    const supplier = await this.prisma.supplier.findUnique({
+      where: { id },
+      include: { account: { select: { id: true } } },
+    });
+
+    if (!supplier) {
+      throw new HttpException('Supplier not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (supplier.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    if (address) {
+      await this.prisma.account.update({
+        where: { id: userId },
+        data: { address: { update: address } },
+      });
+    }
+
+    let companyLogo = '';
+    const imageUrls = [];
+
+    if (files.length > 0) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        const image = await this.cloudinaryService.uploadImage(file);
+
+        if (index === 0) {
+          companyLogo = image.secure_url;
+
+          if (!companyLogo) {
+            throw new HttpException(
+              'Something went wrong when uploading the company logo',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+        } else {
+          if (!image.secure_url) {
+            throw new HttpException(
+              'Something went wrong when uploading the supplier images',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
+          imageUrls.push(image.secure_url);
+        }
+      }
+    }
+
+    const updatedSupplierData: any = { ...dto };
+
+    if (companyLogo) {
+      updatedSupplierData.companyLogo = {
+        update: {
+          imageUrl: companyLogo,
+          type: enumImageType.PROFILE,
+        },
+      };
+    }
+
+    if (imageUrls.length > 0) {
+      const supplierImage = imageUrls.map((imageUrl) => {
+        return {
+          imageUrl: imageUrl,
+          type: enumImageType.FACILITY,
+        };
+      });
+      updatedSupplierData.supplierImage = {
+        create: supplierImage,
+      };
+    }
+
+    try {
+      const updatedSupplier = await this.prisma.supplier.update({
+        where: { id },
+        data: updatedSupplierData,
+        include: {
+          supplierImage: true,
+          companyLogo: true,
+        },
+      });
+
+      return updatedSupplier;
+    } catch (err) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
     }
   }
 
