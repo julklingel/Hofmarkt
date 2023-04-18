@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Param,
+  Delete,
   Body,
   UseGuards,
   UseInterceptors,
@@ -69,14 +70,21 @@ export class SupplierController {
     }),
   )
   @Patch('update/:id')
-  async patchOffer(
+  async patchSupplier(
     @Param('id') id: string,
     @Body() dto: updateSupplierDto,
     @Body() address: updateAddressDto,
-    @GetUser() user: any,
+    @GetUser() user: userInterface,
     @UploadedFiles()
     files: Express.Multer.File[],
   ) {
     return this.supplierService.patchSupplier(id, user, dto, address, files);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
+  @Delete('delete/:id')
+  async patchOffer(@Param('id') id: string, @GetUser() user: userInterface) {
+    return this.supplierService.deleteSupplier(id, user);
   }
 }

@@ -337,6 +337,57 @@ export class SupplierService {
     }
   }
 
+  async deleteSupplier(supplierId: string, user: userInterface) {
+    const { id: userId } = user;
+
+    const supplier = await this.prisma.supplier.findUnique({
+      where: { id: supplierId },
+      include: { account: { select: { id: true } } },
+    });
+
+    if (!supplier) {
+      throw new Error('Supplier not found');
+    }
+
+    if (supplier.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    try {
+      await this.prisma.$transaction([
+        this.prisma.review.deleteMany({ where: { supplierId } }),
+        this.prisma.order.deleteMany({ where: { offer: { supplierId } } }),
+        this.prisma.category.updateMany({
+          where: { supplierId },
+          data: { supplierId: null },
+        }),
+        this.prisma.user.updateMany({
+          where: { supplierId },
+          data: { supplierId: null, accountId: null },
+        }),
+        this.prisma.image.deleteMany({
+          where: {
+            OR: [
+              { supplierCompanyLogoId: supplierId },
+              { supplierImagesId: supplierId },
+            ],
+          },
+        }),
+        this.prisma.accountAddress.deleteMany({
+          where: { accountId: supplier.accountId },
+        }),
+        this.prisma.supplier.delete({ where: { id: supplierId } }),
+        this.prisma.account.delete({ where: { id: supplier.accountId } }),
+      ]);
+    } catch (err) {
+      throw new HttpException(
+        'something went wrong while deleting the account',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return 'Supplier deleted';
+  }
+
   private generateSlug(name: string): string {
     const baseSlug = slugify(name, {
       lower: true,
