@@ -4,6 +4,7 @@ import {
   IsString,
   IsPhoneNumber,
   IsOptional,
+  MinLength,
 } from 'class-validator';
 import { TransformBooleanString } from '../../auth/decorator';
 
@@ -28,23 +29,28 @@ export class supplierDto {
 export class updateSupplierDto {
   @IsOptional()
   @IsString()
-  companyName: string;
+  @MinLength(1)
+  companyName?: string;
 
   @IsOptional()
   @IsString()
-  slug: string;
+  @MinLength(1)
+  slug?: string;
 
   @IsOptional()
   @IsPhoneNumber()
   @IsString()
-  companyPhone: string;
+  @MinLength(1)
+  companyPhone?: string;
 
   @IsOptional()
   @IsString()
-  companyBio: string;
+  @MinLength(1)
+  companyBio?: string;
 
   @IsOptional()
   @TransformBooleanString()
   @IsBoolean()
-  featured: any;
+  @MinLength(1)
+  featured?: any;
 }
