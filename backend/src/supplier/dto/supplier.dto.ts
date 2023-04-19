@@ -31,6 +31,10 @@ export class updateSupplierDto {
   companyName: string;
 
   @IsOptional()
+  @IsString()
+  slug: string;
+
+  @IsOptional()
   @IsPhoneNumber()
   @IsString()
   companyPhone: string;

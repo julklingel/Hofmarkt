@@ -42,7 +42,7 @@ export class SupplierService {
     });
   }
 
-  async getSupplier(slug): Promise<any> {
+  async getSupplier(slug: string): Promise<any> {
     const supplier = await this.prisma.supplier.findUnique({
       where: {
         slug: slug,
@@ -116,35 +116,9 @@ export class SupplierService {
       );
     }
 
-    let companyLogo = '';
-    const imageUrls = [];
-
-    if (files.length > 0) {
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        const image = await this.cloudinaryService.uploadImage(file);
-
-        if (index === 0) {
-          companyLogo = image.secure_url;
-
-          if (!companyLogo) {
-            throw new HttpException(
-              'Something went wrong when uploading the company logo',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-        } else {
-          if (!image.secure_url) {
-            throw new HttpException(
-              'Something went wrong when uploading the supplier images',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-
-          imageUrls.push(image.secure_url);
-        }
-      }
-    }
+    const { companyLogo, imageUrls } = await this.uploadImagesToCloudinary(
+      files,
+    );
 
     const newAddressData = {
       streetAddress: address.streetAddress,
@@ -252,6 +226,11 @@ export class SupplierService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
 
+    if (dto.companyName) {
+      const slug = this.generateSlug(dto.companyName);
+      dto.slug = slug;
+    }
+
     if (address) {
       await this.prisma.account.update({
         where: { id: userId },
@@ -259,45 +238,32 @@ export class SupplierService {
       });
     }
 
-    let companyLogo = '';
-    const imageUrls = [];
-
-    if (files.length > 0) {
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        const image = await this.cloudinaryService.uploadImage(file);
-
-        if (index === 0) {
-          companyLogo = image.secure_url;
-
-          if (!companyLogo) {
-            throw new HttpException(
-              'Something went wrong when uploading the company logo',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-        } else {
-          if (!image.secure_url) {
-            throw new HttpException(
-              'Something went wrong when uploading the supplier images',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-
-          imageUrls.push(image.secure_url);
-        }
-      }
-    }
+    const { companyLogo, imageUrls } = await this.uploadImagesToCloudinary(
+      files,
+    );
 
     const updatedSupplierData: any = { ...dto };
 
     if (companyLogo) {
-      updatedSupplierData.companyLogo = {
-        update: {
-          imageUrl: companyLogo,
-          type: enumImageType.PROFILE,
-        },
-      };
+      const existingCompanyLogo = await this.prisma.image.findFirst({
+        where: { supplierCompanyLogoId: id },
+      });
+
+      if (existingCompanyLogo) {
+        updatedSupplierData.companyLogo = {
+          update: {
+            imageUrl: companyLogo,
+            type: enumImageType.PROFILE,
+          },
+        };
+      } else {
+        updatedSupplierData.companyLogo = {
+          create: {
+            imageUrl: companyLogo,
+            type: enumImageType.PROFILE,
+          },
+        };
+      }
     }
 
     if (imageUrls.length > 0) {
@@ -312,6 +278,7 @@ export class SupplierService {
       };
     }
 
+    console.log(updatedSupplierData);
     try {
       const updatedSupplier = await this.prisma.supplier.update({
         where: { id },
@@ -324,6 +291,7 @@ export class SupplierService {
 
       return updatedSupplier;
     } catch (err) {
+      console.log(err);
       throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
     }
   }
@@ -387,5 +355,41 @@ export class SupplierService {
       trim: true,
     });
     return baseSlug;
+  }
+
+  private async uploadImagesToCloudinary(
+    files: Express.Multer.File[] = [],
+  ): Promise<{ companyLogo: string; imageUrls: string[] }> {
+    let companyLogo = '';
+    const imageUrls = [];
+
+    if (files.length > 0) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        const image = await this.cloudinaryService.uploadImage(file);
+
+        if (index === 0) {
+          companyLogo = image.secure_url;
+
+          if (!companyLogo) {
+            throw new HttpException(
+              'Something went wrong when uploading the company logo',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+        } else {
+          if (!image.secure_url) {
+            throw new HttpException(
+              'Something went wrong when uploading the supplier images',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
+          imageUrls.push(image.secure_url);
+        }
+      }
+    }
+
+    return { companyLogo, imageUrls };
   }
 }
