@@ -3,7 +3,7 @@ import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto, updateSupplierDto } from './dto';
 import { addressDto, updateAddressDto } from '../address';
-import { enumImageType } from '@prisma/client';
+import { enumImageType, enumOwnerType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
 
@@ -53,23 +53,12 @@ export class SupplierService {
             address: true,
           },
         },
-        companyLogo: {
-          select: {
-            imageUrl: true,
-          },
-        },
-        supplierImage: {
-          select: {
-            imageUrl: true,
-          },
-        },
         offer: {
           select: {
             id: true,
             title: true,
             unit: true,
             price: true,
-            images: true,
             category: {
               select: {
                 name: true,
@@ -80,12 +69,29 @@ export class SupplierService {
       },
     });
 
+    const images = await this.prisma.image.findMany({
+      where: {
+        ownerId: supplier.id,
+        ownerType: enumOwnerType.SUPPLIER,
+      },
+    });
+
+    const companyLogo = images.find(
+      (image) => image.type === enumImageType.PROFILE,
+    );
+
+    const supplierImages = images.filter(
+      (image) => image.type === enumImageType.FACILITY,
+    );
+
     return {
       ...supplier,
       companyName: supplier.companyName,
       companyBio: supplier.companyBio,
       companyPhone: supplier.companyPhone,
       slug: supplier.slug,
+      companyLogo: companyLogo?.imageUrl,
+      supplierImages: supplierImages?.map((image) => image.imageUrl),
     };
   }
 
@@ -145,34 +151,9 @@ export class SupplierService {
       },
     };
 
-    if (companyLogo) {
-      newSupplierData.companyLogo = {
-        create: {
-          imageUrl: companyLogo,
-          type: enumImageType.PROFILE,
-        },
-      };
-    }
-
-    if (imageUrls) {
-      const supplierImage = imageUrls.map((imageUrl) => {
-        return {
-          imageUrl: imageUrl,
-          type: enumImageType.FACILITY,
-        };
-      });
-      newSupplierData.supplierImage = {
-        create: supplierImage,
-      };
-    }
-
     try {
-      await this.prisma.supplier.create({
+      const createdSupplier = await this.prisma.supplier.create({
         data: newSupplierData,
-        include: {
-          supplierImage: true,
-          companyLogo: true,
-        },
       });
 
       await this.prisma.accountAddress.create({
@@ -181,6 +162,32 @@ export class SupplierService {
           account: true,
         },
       });
+
+      if (companyLogo) {
+        await this.prisma.image.create({
+          data: {
+            imageUrl: companyLogo,
+            type: enumImageType.PROFILE,
+            ownerId: createdSupplier.id,
+            ownerType: enumOwnerType.SUPPLIER,
+          },
+        });
+      }
+
+      if (imageUrls) {
+        const supplierImages = imageUrls.map((imageUrl) => {
+          return {
+            imageUrl: imageUrl,
+            type: enumImageType.FACILITY,
+            ownerId: createdSupplier.id,
+            ownerType: enumOwnerType.SUPPLIER,
+          };
+        });
+
+        await this.prisma.image.createMany({
+          data: supplierImages,
+        });
+      }
 
       return 'Supplier created with name ' + slug;
     } catch (err) {
@@ -251,49 +258,54 @@ export class SupplierService {
 
     const updatedSupplierData: any = { ...dto };
 
-    if (companyLogo) {
-      const existingCompanyLogo = await this.prisma.image.findFirst({
-        where: { supplierCompanyLogoId: id },
-      });
-
-      if (existingCompanyLogo) {
-        updatedSupplierData.companyLogo = {
-          update: {
-            imageUrl: companyLogo,
-            type: enumImageType.PROFILE,
-          },
-        };
-      } else {
-        updatedSupplierData.companyLogo = {
-          create: {
-            imageUrl: companyLogo,
-            type: enumImageType.PROFILE,
-          },
-        };
-      }
-    }
-
-    if (imageUrls.length > 0) {
-      const supplierImage = imageUrls.map((imageUrl) => {
-        return {
-          imageUrl: imageUrl,
-          type: enumImageType.FACILITY,
-        };
-      });
-      updatedSupplierData.supplierImage = {
-        create: supplierImage,
-      };
-    }
-
     try {
       const updatedSupplier = await this.prisma.supplier.update({
         where: { id },
         data: updatedSupplierData,
-        include: {
-          supplierImage: true,
-          companyLogo: true,
-        },
       });
+
+      if (companyLogo) {
+        const existingCompanyLogo = await this.prisma.image.findFirst({
+          where: {
+            ownerId: supplier.id,
+            ownerType: enumOwnerType.SUPPLIER,
+            type: enumImageType.PROFILE,
+          },
+        });
+
+        if (existingCompanyLogo) {
+          await this.prisma.image.update({
+            where: { id: existingCompanyLogo.id },
+            data: {
+              imageUrl: companyLogo,
+              type: enumImageType.PROFILE,
+            },
+          });
+        } else {
+          await this.prisma.image.create({
+            data: {
+              imageUrl: companyLogo,
+              type: enumImageType.PROFILE,
+              ownerId: supplier.id,
+              ownerType: enumOwnerType.SUPPLIER,
+            },
+          });
+        }
+      }
+      if (imageUrls.length > 0) {
+        const supplierImages = imageUrls.map((imageUrl) => {
+          return {
+            imageUrl: imageUrl,
+            type: enumImageType.FACILITY,
+            ownerId: supplier.id,
+            ownerType: enumOwnerType.SUPPLIER,
+          };
+        });
+
+        await this.prisma.image.createMany({
+          data: supplierImages,
+        });
+      }
 
       return updatedSupplier;
     } catch (err) {
@@ -339,12 +351,7 @@ export class SupplierService {
           data: { supplierId: null, accountId: null },
         }),
         this.prisma.image.deleteMany({
-          where: {
-            OR: [
-              { supplierCompanyLogoId: supplierId },
-              { supplierImagesId: supplierId },
-            ],
-          },
+          where: { ownerId: supplierId, ownerType: enumOwnerType.SUPPLIER },
         }),
         this.prisma.accountAddress.deleteMany({
           where: { accountId: supplier.accountId },
