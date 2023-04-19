@@ -9,13 +9,7 @@ import { userInterface } from '../interface';
 
 const SUPPLIER_SELECT = {
   companyName: true,
-  companyLogo: true,
   slug: true,
-  supplierImage: {
-    select: {
-      imageUrl: true,
-    },
-  },
 };
 
 @Injectable()
@@ -28,6 +22,7 @@ export class SupplierService {
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
       select: SUPPLIER_SELECT,
+      //need to include images
     });
 
     return suppliers;
