@@ -7,6 +7,17 @@ import { enumImageType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
 
+const SUPPLIER_SELECT = {
+  companyName: true,
+  companyLogo: true,
+  slug: true,
+  supplierImage: {
+    select: {
+      imageUrl: true,
+    },
+  },
+};
+
 @Injectable()
 export class SupplierService {
   constructor(
@@ -16,39 +27,19 @@ export class SupplierService {
 
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
-      select: {
-        companyName: true,
-        companyLogo: true,
-        slug: true,
-        supplierImage: {
-          select: {
-            imageUrl: true,
-          },
-        },
-      },
+      select: SUPPLIER_SELECT,
     });
 
     return suppliers;
   }
 
   async getFeaturedSuppliers(): Promise<any> {
-    const suppliers = await this.prisma.supplier.findMany({
+    return await this.prisma.supplier.findMany({
       where: {
         featured: true,
       },
-      select: {
-        companyName: true,
-        companyLogo: true,
-        slug: true,
-        supplierImage: {
-          select: {
-            imageUrl: true,
-          },
-        },
-      },
+      select: SUPPLIER_SELECT,
     });
-
-    return suppliers;
   }
 
   async getSupplier(slug): Promise<any> {
