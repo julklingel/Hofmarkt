@@ -1,11 +1,22 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
-import { supplierDto } from './dto';
-import { addressDto } from '../address';
+import { supplierDto, updateSupplierDto } from './dto';
+import { addressDto, updateAddressDto } from '../address';
 import { enumImageType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
+
+const SUPPLIER_SELECT = {
+  companyName: true,
+  companyLogo: true,
+  slug: true,
+  supplierImage: {
+    select: {
+      imageUrl: true,
+    },
+  },
+};
 
 @Injectable()
 export class SupplierService {
@@ -16,42 +27,22 @@ export class SupplierService {
 
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
-      select: {
-        companyName: true,
-        companyLogo: true,
-        slug: true,
-        supplierImage: {
-          select: {
-            imageUrl: true,
-          },
-        },
-      },
+      select: SUPPLIER_SELECT,
     });
 
     return suppliers;
   }
 
   async getFeaturedSuppliers(): Promise<any> {
-    const suppliers = await this.prisma.supplier.findMany({
+    return await this.prisma.supplier.findMany({
       where: {
         featured: true,
       },
-      select: {
-        companyName: true,
-        companyLogo: true,
-        slug: true,
-        supplierImage: {
-          select: {
-            imageUrl: true,
-          },
-        },
-      },
+      select: SUPPLIER_SELECT,
     });
-
-    return suppliers;
   }
 
-  async getSupplier(slug): Promise<any> {
+  async getSupplier(slug: string): Promise<any> {
     const supplier = await this.prisma.supplier.findUnique({
       where: {
         slug: slug,
@@ -125,35 +116,8 @@ export class SupplierService {
       );
     }
 
-    let companyLogo = '';
-    const imageUrls = [];
-
-    if (files.length > 0) {
-      for (let index = 0; index < files.length; index++) {
-        const file = files[index];
-        const image = await this.cloudinaryService.uploadImage(file);
-
-        if (index === 0) {
-          companyLogo = image.secure_url;
-
-          if (!companyLogo) {
-            throw new HttpException(
-              'Something went wrong when uploading the company logo',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-        } else {
-          if (!image.secure_url) {
-            throw new HttpException(
-              'Something went wrong when uploading the supplier images',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-
-          imageUrls.push(image.secure_url);
-        }
-      }
-    }
+    const { companyLogo, companyLogoPublicId, imageUrls, imagePublicIds } =
+      await this.uploadImagesToCloudinary(files);
 
     const newAddressData = {
       streetAddress: address.streetAddress,
@@ -236,7 +200,165 @@ export class SupplierService {
       } else {
         throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       }
+    } finally {
+      if (companyLogoPublicId) {
+        await this.cloudinaryService.deleteImage(companyLogoPublicId);
+      }
+      if (imagePublicIds.length > 0) {
+        for (const publicId of imagePublicIds) {
+          await this.cloudinaryService.deleteImage(publicId);
+        }
+      }
     }
+  }
+
+  async patchSupplier(
+    id: string,
+    user: userInterface,
+    dto: updateSupplierDto,
+    address: updateAddressDto,
+    files: Express.Multer.File[] = [],
+  ) {
+    const { id: userId } = user;
+
+    const supplier = await this.prisma.supplier.findUnique({
+      where: { id },
+      include: { account: { select: { id: true } } },
+    });
+
+    if (!supplier) {
+      throw new HttpException('Supplier not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (supplier.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    if (dto.companyName) {
+      const slug = this.generateSlug(dto.companyName);
+      dto.slug = slug;
+    }
+
+    if (address) {
+      await this.prisma.account.update({
+        where: { id: userId },
+        data: { address: { update: address } },
+      });
+    }
+
+    const { companyLogo, companyLogoPublicId, imageUrls, imagePublicIds } =
+      await this.uploadImagesToCloudinary(files);
+
+    const updatedSupplierData: any = { ...dto };
+
+    if (companyLogo) {
+      const existingCompanyLogo = await this.prisma.image.findFirst({
+        where: { supplierCompanyLogoId: id },
+      });
+
+      if (existingCompanyLogo) {
+        updatedSupplierData.companyLogo = {
+          update: {
+            imageUrl: companyLogo,
+            type: enumImageType.PROFILE,
+          },
+        };
+      } else {
+        updatedSupplierData.companyLogo = {
+          create: {
+            imageUrl: companyLogo,
+            type: enumImageType.PROFILE,
+          },
+        };
+      }
+    }
+
+    if (imageUrls.length > 0) {
+      const supplierImage = imageUrls.map((imageUrl) => {
+        return {
+          imageUrl: imageUrl,
+          type: enumImageType.FACILITY,
+        };
+      });
+      updatedSupplierData.supplierImage = {
+        create: supplierImage,
+      };
+    }
+
+    try {
+      const updatedSupplier = await this.prisma.supplier.update({
+        where: { id },
+        data: updatedSupplierData,
+        include: {
+          supplierImage: true,
+          companyLogo: true,
+        },
+      });
+
+      return updatedSupplier;
+    } catch (err) {
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
+    } finally {
+      if (companyLogoPublicId) {
+        await this.cloudinaryService.deleteImage(companyLogoPublicId);
+      }
+      if (imagePublicIds.length > 0) {
+        for (const publicId of imagePublicIds) {
+          await this.cloudinaryService.deleteImage(publicId);
+        }
+      }
+    }
+  }
+
+  async deleteSupplier(supplierId: string, user: userInterface) {
+    const { id: userId } = user;
+
+    const supplier = await this.prisma.supplier.findUnique({
+      where: { id: supplierId },
+      include: { account: { select: { id: true } } },
+    });
+
+    if (!supplier) {
+      throw new Error('Supplier not found');
+    }
+
+    if (supplier.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    try {
+      await this.prisma.$transaction([
+        this.prisma.review.deleteMany({ where: { supplierId } }),
+        this.prisma.order.deleteMany({ where: { offer: { supplierId } } }),
+        this.prisma.category.updateMany({
+          where: { supplierId },
+          data: { supplierId: null },
+        }),
+        this.prisma.user.updateMany({
+          where: { supplierId },
+          data: { supplierId: null, accountId: null },
+        }),
+        this.prisma.image.deleteMany({
+          where: {
+            OR: [
+              { supplierCompanyLogoId: supplierId },
+              { supplierImagesId: supplierId },
+            ],
+          },
+        }),
+        this.prisma.accountAddress.deleteMany({
+          where: { accountId: supplier.accountId },
+        }),
+        this.prisma.supplier.delete({ where: { id: supplierId } }),
+        this.prisma.account.delete({ where: { id: supplier.accountId } }),
+      ]);
+    } catch (err) {
+      throw new HttpException(
+        'something went wrong while deleting the account',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return 'Supplier deleted';
   }
 
   private generateSlug(name: string): string {
@@ -247,5 +369,50 @@ export class SupplierService {
       trim: true,
     });
     return baseSlug;
+  }
+
+  private async uploadImagesToCloudinary(
+    files: Express.Multer.File[] = [],
+  ): Promise<{
+    companyLogo: string;
+    companyLogoPublicId: string;
+    imageUrls: string[];
+    imagePublicIds: string[];
+  }> {
+    let companyLogo = '';
+    let companyLogoPublicId = '';
+    const imageUrls = [];
+    const imagePublicIds = [];
+
+    if (files.length > 0) {
+      for (let index = 0; index < files.length; index++) {
+        const file = files[index];
+        const image = await this.cloudinaryService.uploadImage(file);
+
+        if (index === 0) {
+          companyLogo = image.secure_url;
+          companyLogoPublicId = image.public_id;
+
+          if (!companyLogo) {
+            throw new HttpException(
+              'Something went wrong when uploading the company logo',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+        } else {
+          if (!image.secure_url) {
+            throw new HttpException(
+              'Something went wrong when uploading the supplier images',
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
+          imageUrls.push(image.secure_url);
+          imagePublicIds.push(image.public_id);
+        }
+      }
+    }
+
+    return { companyLogo, companyLogoPublicId, imageUrls, imagePublicIds };
   }
 }

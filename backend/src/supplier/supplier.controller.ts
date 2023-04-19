@@ -3,14 +3,16 @@ import {
   Get,
   Post,
   Param,
+  Delete,
   Body,
   UseGuards,
   UseInterceptors,
   UploadedFiles,
+  Patch,
 } from '@nestjs/common';
-import { supplierDto } from './dto';
+import { supplierDto, updateSupplierDto } from './dto';
 import { SupplierService } from './supplier.service';
-import { addressDto } from '../address';
+import { addressDto, updateAddressDto } from '../address';
 import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { GetUser, Roles } from '../auth/decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -55,5 +57,34 @@ export class SupplierController {
   @Get(':slug')
   getSupplier(@Param('slug') slug: string) {
     return this.supplierService.getSupplier(slug);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
+  @UseInterceptors(
+    FilesInterceptor('image', 4, {
+      fileFilter: imageUploadFileFilter,
+      limits: {
+        fileSize: 2 * 1024 * 1024, // 2 MB in bytes
+      },
+    }),
+  )
+  @Patch('update/:id')
+  async patchSupplier(
+    @Param('id') id: string,
+    @Body() dto: updateSupplierDto,
+    @Body() address: updateAddressDto,
+    @GetUser() user: userInterface,
+    @UploadedFiles()
+    files: Express.Multer.File[],
+  ) {
+    return this.supplierService.patchSupplier(id, user, dto, address, files);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
+  @Delete('delete/:id')
+  async patchOffer(@Param('id') id: string, @GetUser() user: userInterface) {
+    return this.supplierService.deleteSupplier(id, user);
   }
 }
