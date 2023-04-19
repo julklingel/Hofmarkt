@@ -87,20 +87,16 @@ export class UserService {
       },
     };
 
-    if (newImageData) {
-      newUserData.profileImage = {
-        create: newImageData,
-      };
-    }
-
     try {
       const createdUser = await this.prisma.user.create({
         data: newUserData,
       });
 
-      await this.prisma.image.create({
-        data: { ownerId: createdUser.id, ...newImageData },
-      });
+      if (newImageData) {
+        await this.prisma.image.create({
+          data: { ownerId: createdUser.id, ...newImageData },
+        });
+      }
 
       await this.prisma.accountAddress.create({
         data: newAddressData,
