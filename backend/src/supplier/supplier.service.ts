@@ -278,7 +278,6 @@ export class SupplierService {
       };
     }
 
-    console.log(updatedSupplierData);
     try {
       const updatedSupplier = await this.prisma.supplier.update({
         where: { id },
@@ -291,7 +290,6 @@ export class SupplierService {
 
       return updatedSupplier;
     } catch (err) {
-      console.log(err);
       throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
     }
   }
