@@ -116,9 +116,8 @@ export class SupplierService {
       );
     }
 
-    const { companyLogo, imageUrls } = await this.uploadImagesToCloudinary(
-      files,
-    );
+    const { companyLogo, companyLogoPublicId, imageUrls, imagePublicIds } =
+      await this.uploadImagesToCloudinary(files);
 
     const newAddressData = {
       streetAddress: address.streetAddress,
@@ -201,6 +200,15 @@ export class SupplierService {
       } else {
         throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       }
+    } finally {
+      if (companyLogoPublicId) {
+        await this.cloudinaryService.deleteImage(companyLogoPublicId);
+      }
+      if (imagePublicIds.length > 0) {
+        for (const publicId of imagePublicIds) {
+          await this.cloudinaryService.deleteImage(publicId);
+        }
+      }
     }
   }
 
@@ -238,9 +246,8 @@ export class SupplierService {
       });
     }
 
-    const { companyLogo, imageUrls } = await this.uploadImagesToCloudinary(
-      files,
-    );
+    const { companyLogo, companyLogoPublicId, imageUrls, imagePublicIds } =
+      await this.uploadImagesToCloudinary(files);
 
     const updatedSupplierData: any = { ...dto };
 
@@ -291,6 +298,15 @@ export class SupplierService {
       return updatedSupplier;
     } catch (err) {
       throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
+    } finally {
+      if (companyLogoPublicId) {
+        await this.cloudinaryService.deleteImage(companyLogoPublicId);
+      }
+      if (imagePublicIds.length > 0) {
+        for (const publicId of imagePublicIds) {
+          await this.cloudinaryService.deleteImage(publicId);
+        }
+      }
     }
   }
 
@@ -357,9 +373,16 @@ export class SupplierService {
 
   private async uploadImagesToCloudinary(
     files: Express.Multer.File[] = [],
-  ): Promise<{ companyLogo: string; imageUrls: string[] }> {
+  ): Promise<{
+    companyLogo: string;
+    companyLogoPublicId: string;
+    imageUrls: string[];
+    imagePublicIds: string[];
+  }> {
     let companyLogo = '';
+    let companyLogoPublicId = '';
     const imageUrls = [];
+    const imagePublicIds = [];
 
     if (files.length > 0) {
       for (let index = 0; index < files.length; index++) {
@@ -368,6 +391,7 @@ export class SupplierService {
 
         if (index === 0) {
           companyLogo = image.secure_url;
+          companyLogoPublicId = image.public_id;
 
           if (!companyLogo) {
             throw new HttpException(
@@ -384,10 +408,11 @@ export class SupplierService {
           }
 
           imageUrls.push(image.secure_url);
+          imagePublicIds.push(image.public_id);
         }
       }
     }
 
-    return { companyLogo, imageUrls };
+    return { companyLogo, companyLogoPublicId, imageUrls, imagePublicIds };
   }
 }
