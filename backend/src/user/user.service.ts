@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { addressDto } from '../address';
 import { userDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
-import { enumImageType } from '@prisma/client';
+import { enumImageType, enumOwnerType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
 
@@ -15,6 +15,7 @@ export class UserService {
 
   getOwnUser(user: userInterface) {
     const { id, email } = user;
+    //add to get images
     return { id, email };
   }
 
@@ -72,6 +73,7 @@ export class UserService {
       ? {
           imageUrl,
           type: enumImageType.PROFILE,
+          ownerType: enumOwnerType.USER,
         }
       : null;
 
@@ -92,11 +94,12 @@ export class UserService {
     }
 
     try {
-      await this.prisma.user.create({
+      const createdUser = await this.prisma.user.create({
         data: newUserData,
-        include: {
-          profileImage: true,
-        },
+      });
+
+      await this.prisma.image.create({
+        data: { ownerId: createdUser.id, ...newImageData },
       });
 
       await this.prisma.accountAddress.create({
