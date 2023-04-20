@@ -224,7 +224,7 @@ export class SupplierService {
     const { id: userId } = user;
 
     const supplier = await this.prisma.supplier.findUnique({
-      where: { id },
+      where: { id: id },
       include: { account: { select: { id: true } } },
     });
 
