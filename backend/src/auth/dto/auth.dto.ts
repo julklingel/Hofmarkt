@@ -63,6 +63,7 @@ export class resetPasswordDto {
   @ApiProperty({ example: 'pass123' })
   @IsString()
   @IsNotEmpty()
+  @MinLength(12)
   password: string;
 }
 
