@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const port = process.env.PORT || 8080;
@@ -15,6 +16,16 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
+        styleSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
+        imgSrc: ["'self'"],
+      },
+    },
+  }));
   await app.listen(port, '0.0.0.0');
 }
 
