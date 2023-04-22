@@ -18,13 +18,16 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.use(helmet({
     contentSecurityPolicy: {
+      
       directives: {
+        
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
+        scriptSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
         styleSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
         imgSrc: ["'self'"],
       },
     },
+    xssFilter: true,
   }));
   await app.listen(port, '0.0.0.0');
 }
