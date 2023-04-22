@@ -22,7 +22,7 @@ To install and run the project on your local machine, please follow these steps:
 
 4. Create a .env file in the root directory of the project and add your credentials in the following format:
 
-    ```
+```
 # Backend
 POSTGRES_HOST="localhost"
 POSTGRES_PORT="5432"
@@ -53,7 +53,7 @@ SUPPLIER_TEST_PASSWORD="pass123"
 SUPPLIER_TEST_EMAIL_TWO="crack1@mack.de"
 USER_TEST_EMAIL_TWO="jackiechan@kung-fu.de"
 
-    ```
+```
   Make sure to replace ```<your-postgres-username>```, ```<your-postgres-password>``` and ```<your-jwt-secret>``` with your actual values.
 
 5. Create a docker-compose.yml file in the same directory with the following content:
