@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { TransformBooleanString } from '../decorator';
 
 export class signupDto {
@@ -11,6 +11,7 @@ export class signupDto {
   @ApiProperty({ example: 'pass123' })
   @IsString()
   @IsNotEmpty()
+  @MinLength(12)
   password: string;
 
   @ApiProperty({ example: 'true' })
@@ -62,6 +63,7 @@ export class resetPasswordDto {
   @ApiProperty({ example: 'pass123' })
   @IsString()
   @IsNotEmpty()
+  @MinLength(12)
   password: string;
 }
 
