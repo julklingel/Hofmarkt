@@ -229,4 +229,6 @@ PATCH /offer/update/id: This endpoint is responsible for updating an existing of
 ![image](https://user-images.githubusercontent.com/94459330/233842800-14e1c369-5190-4323-bef7-fbe7b70cae88.png)
 
 
+## Code Ownership
+Each branch is written by the branch owner only. 
 
