@@ -247,3 +247,188 @@ The flow of the backend architecture can be summarized as follows:
 ## Code Ownership
 Each branch is written by the branch owner only. 
 
+## ER Model
+
+```mermaid
+
+erDiagram
+  ACCOUNT {
+    id STRING PK
+    email STRING
+    password STRING
+    salt BYTES
+    role ENUM
+    verified BOOLEAN
+    createdAt DATETIME
+    updatedAt DATETIME
+		userId STRING FK
+		supplierId STRING FK
+		addressId STRING FK
+  }
+
+  USER {
+    id STRING PK
+    accountId STRING FK
+    firstName STRING
+    lastName STRING
+    supplierId STRING FK
+    createdAt DATETIME
+    updatedAt DATETIME
+		watchlistId STRING FK
+		cartId STRING FK
+		orderId STRING FK
+		reviewId STRING FK
+  }
+
+ SUPPLIER {
+    id STRING PK
+    accountId STRING FK
+    companyName STRING
+    companyPhone STRING
+    companyBio STRING
+    slug STRING
+    featured BOOLEAN
+    createdAt DATETIME
+    updatedAt DATETIME
+		userId STRING FK
+		offerId STRING FK
+		reviewId STRING FK
+		categoryId STRING FK
+  }
+
+ACCOUNT_ADDRESS {
+    id STRING PK
+    accountId STRING FK
+    country STRING
+    city STRING
+    streetAddress STRING
+    zip STRING
+    state STRING
+    createdAt DATETIME
+    updatedAt DATETIME
+  }
+
+  IMAGE {
+    id STRING PK
+    imageUrl STRING
+    createdAt DATETIME
+    updatedAt DATETIME
+    type ENUMIMAGETYPE
+    ownerId STRING FK
+		ownerType ENUMROLE
+  }
+
+  WATCHLIST {
+    id STRING PK
+    userId STRING FK
+		offerId STRING FK
+    createdAt DATETIME
+    updatedAt DATETIME
+  }
+
+   CART {
+    id STRING PK
+    userId STRING FK
+		offerId STRING FK
+    quantity INT
+    createdAt DATETIME
+    updatedAt DATETIME
+  }
+
+  ORDER {
+    id STRING PK
+    userId STRING FK
+    offerId STRING FK
+    quantity INT
+    createdAt DATETIME
+    updatedAt DATETIME
+  }
+
+REVIEW {
+    id STRING PK
+    userId STRING FK
+    supplierId STRING FK
+    rating INT
+    comment STRING
+    createdAt DATETIME
+    updatedAt DATETIME
+  }
+
+OFFER {
+    id STRING PK
+    title STRING
+    supplierId STRING FK
+    price FLOAT
+    unit STRING
+    amount INT
+    categoryId STRING FK
+    createdAt DATETIME
+    updatedAt DATETIME
+    watchlistId STRING FK
+    cartId STRING FK
+		orderId STRING FK
+  }
+
+  CATEGORY {
+    id STRING PK
+    name STRING
+    createdAt DATETIME
+    updatedAt DATETIME
+		offerId STRING FK
+    supplierId STRING FK
+  }
+
+	RESETPASSWORD {
+		id STRING PK
+		email STRING
+		token STRING
+		createdAt DATETIME
+    updatedAt DATETIME
+}
+
+EMAILVERIFICATION {
+		id STRING PK
+		email STRING
+		token STRING
+		createdAt DATETIME
+    updatedAt DATETIME
+}
+
+ENUMROLE{
+		BUYER
+		SUPPLIER
+		ADMIN
+		EMPLOYEE
+}
+
+ENUMIMAGETYPE{
+		PROFILE
+		FACILITY
+		OFFER
+		CATEGORY
+}
+
+
+    ACCOUNT ||--o| USER : has
+    ACCOUNT ||--o| SUPPLIER : has
+    ACCOUNT ||--o| ACCOUNT_ADDRESS : has
+    USER ||--o| WATCHLIST : has
+    USER ||--o| CART : has
+    USER ||--o{ ORDER : has
+	  USER ||--o{ REVIEW : writes
+    USER ||--o{ IMAGE : "has (UserProfileImage)"
+    SUPPLIER ||--o{ REVIEW : has
+    SUPPLIER ||--o{ OFFER : has
+    SUPPLIER ||--o{ USER : has
+    SUPPLIER ||--o| IMAGE : "has (SupplierCompanyLogo)"
+    SUPPLIER ||--o{ IMAGE : "has (SupplierImages)"
+    SUPPLIER ||--o{ CATEGORY : has
+    OFFER }o--|| WATCHLIST : has
+    OFFER }o--|| CART : has
+    OFFER ||--o{ ORDER : has
+    OFFER ||--o{ IMAGE : has
+    CATEGORY ||--o{ OFFER : has
+    CATEGORY ||--|| IMAGE : "has (CategoryImage)"
+
+```
+
