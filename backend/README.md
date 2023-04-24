@@ -226,7 +226,22 @@ PATCH /offer/update/id: This endpoint is responsible for updating an existing of
 
 
 ## Project's Architecture
-![image](https://user-images.githubusercontent.com/94459330/233842800-14e1c369-5190-4323-bef7-fbe7b70cae88.png)
+<img width="1494" alt="image" src="https://user-images.githubusercontent.com/94459330/233937106-c421435d-41ad-4f60-abd6-2ae845837d77.png">
+The flow of the backend architecture can be summarized as follows:
+
+1. Users send requests to the backend, which is hosted serverless using Google Cloud Run.
+2. A Content Delivery Network (CDN) intercepts these requests. The CDN caches content and serves it to users from the closest data center, reducing latency and improving performance.
+3. Requests are forwarded to a load balancer, which applies rate limiting to prevent abuse and ensure fair usage.
+4. The load balancer autoscales Docker container instances based on demand, ensuring the system can handle varying loads.
+5. Each container runs an instance of the backend image, which starts with a validation pipeline.
+6. The validation pipeline checks for required headers and sanitizes and validates the input values using Data Transfer Objects (DTOs) with validation decorators.
+7. If the DTO is as expected, the request proceeds to the controller and is allocated to a specific request method.
+8. Additional checks, such as authorization based on JSON Web Tokens (JWT) or image type/size validations, are performed.
+9. If all checks pass, the request is forwarded to the service function where the core business logic is executed.
+10. If necessary, Prisma, an Object-Relational Mapping (ORM) tool, is used to interact with the database.
+11. The service function includes error handling, considering possible issues that may arise from the database or other parts of the system.
+12. If the process is successful, the service function returns the resulting object or value to the controller.
+13. The controller sends the response back through the load balancer, which ultimately returns the result to the client/user.
 
 
 ## Code Ownership
