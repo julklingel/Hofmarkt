@@ -221,8 +221,6 @@ export class OfferService {
     if (!offer) {
       throw new HttpException('Offer not found', HttpStatus.NOT_FOUND);
     }
-  
-  
 
     if (offer.supplier.accountId !== userId) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
