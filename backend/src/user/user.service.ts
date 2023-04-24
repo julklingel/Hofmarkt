@@ -197,6 +197,36 @@ export class UserService {
     }
   }
 
+  async deleteUser(id: string, user: userInterface) {
+    const { id: userId } = user;
+  
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id },
+      include: { account: { select: { id: true } }, profileImage: true },
+    });
+  
+    if (!existingUser) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  
+    if (existingUser.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+  
+    try {
+      await this.prisma.$transaction([
+        this.prisma.cart.deleteMany({ where: { userId } }),
+        this.prisma.watchlist.deleteMany({ where: { userId } }),
+        this.prisma.accountAddress.deleteMany({ where: { accountId: userId } }),
+        this.prisma.image.delete({ where: { id: existingUser.profileImage.id } }),
+        this.prisma.user.delete({ where: { id } }),
+      ]);
+  
+      return 'User deleted successfully';
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
   
   
   
