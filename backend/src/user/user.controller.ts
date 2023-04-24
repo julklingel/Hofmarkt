@@ -7,6 +7,8 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard, RolesGuard } from '../auth/guard';
@@ -28,11 +30,6 @@ export class UserController {
     return this.userService.getOwnUser(user);
   }
 
-  // Patch User Information
-  @Patch('me')
-  getOneUser2() {
-    return 'me2';
-  }
 
   @UseGuards(RolesGuard)
   @Roles('BUYER')
@@ -54,4 +51,37 @@ export class UserController {
   ) {
     return this.userService.createUser(user, dto, address, file);
   }
+
+  @UseGuards(RolesGuard)
+  @Roles('BUYER')
+  @Patch('update/:id')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      fileFilter: imageUploadFileFilter,
+      limits: {
+        fileSize: 1 * 1024 * 1024, // 1 MB in bytes
+      },
+    }),
+  )
+  async updateUser(
+    @Param('id') id: string,
+    @GetUser() user: userInterface,
+    @Body() dto: userDto,
+    @Body() address: addressDto,
+    @UploadedFile()
+    file: Express.Multer.File = null,
+  ) {
+    return this.userService.updateUser(id, user, dto, address, file);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles('BUYER')
+  @Delete('delete/:id')
+  async deleteUser(
+    @Param('id') id: string,
+    @GetUser() user: userInterface,
+  ) {
+    return this.userService.deleteUser(id, user);
+  }
 }
+
