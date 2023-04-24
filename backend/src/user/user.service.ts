@@ -224,7 +224,6 @@ export class UserService {
         this.prisma.account.delete({ where: { id: existingUser.accountId } }),
       ]);
     } catch (err) {
-      console.error('Error while deleting the account:', err);
       throw new HttpException(
         'something went wrong while deleting the account',
         HttpStatus.BAD_REQUEST,
