@@ -214,18 +214,22 @@ export class UserService {
 
     try {
       await this.prisma.$transaction([
-        this.prisma.cart.deleteMany({ where: { userId } }),
-        this.prisma.watchlist.deleteMany({ where: { userId } }),
-        this.prisma.accountAddress.deleteMany({ where: { accountId: userId } }),
-        this.prisma.image.delete({
-          where: { id: existingUser.profileImage.id },
+        this.prisma.review.deleteMany({ where: { userId } }),
+        this.prisma.order.deleteMany({ where: { userId } }),
+        this.prisma.image.deleteMany({ where: { profileImageId: userId } }),
+        this.prisma.accountAddress.deleteMany({
+          where: { accountId: existingUser.accountId },
         }),
         this.prisma.user.delete({ where: { id } }),
+        this.prisma.account.delete({ where: { id: existingUser.accountId } }),
       ]);
-
-      return 'User deleted successfully';
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      console.error('Error while deleting the account:', err);
+      throw new HttpException(
+        'something went wrong while deleting the account',
+        HttpStatus.BAD_REQUEST,
+      );
     }
+    return 'User deleted';
   }
 }
