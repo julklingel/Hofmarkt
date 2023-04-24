@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { addressDto } from '../address';
-import { userDto } from './dto';
+import { addressDto, updateAddressDto } from '../address';
+import { userDto, updateUserDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
 import { enumImageType, enumOwnerType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -121,8 +121,8 @@ export class UserService {
   async updateUser(
     id: string,
     user: userInterface,
-    dto: userDto,
-    address: addressDto,
+    dto: updateUserDto,
+    address: updateAddressDto,
     file: any = null,
   ) {
     const { id: userId } = user;
