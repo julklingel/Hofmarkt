@@ -244,6 +244,23 @@ The flow of the backend architecture can be summarized as follows:
 13. The controller sends the response back through the load balancer, which ultimately returns the result to the client/user.
 
 
+## CI / CD
+<img width="1404" alt="image" src="https://user-images.githubusercontent.com/94459330/233956535-40101073-6c7f-417a-9a23-b3eb500ce61f.png">
+
+At the heart of this workflow lies the Continuous Integration and Continuous Delivery/Deployment (CI/CD) philosophy. This means that developers frequently merge their code changes into a shared repository, and the application undergoes automatic build, test, and deployment processes.
+
+The diagram showcases each stage of the workflow in detail, starting with the developer creating a new branch and pushing it to the Git repository. Once the code is pushed, it undergoes a rigorous code review by other developers to ensure that it meets the project's standards and guidelines.
+
+Code review is an essential part of the process as it helps to identify and fix potential bugs and errors before they reach the main branch. This stage is crucial to ensuring that the final product is of high quality and meets the project's requirements.
+
+After the code is reviewed and approved, it is merged into the main branch, triggering a GitHub Action pipeline. The pipeline is a series of automated processes that build, test, and deploy the application to the cloud.
+
+The pipeline first builds a Docker image based on the updated code, which is then uploaded to a cloud platform such as Google Cloud. Once uploaded, the image undergoes further checks to ensure that all ports are listening and the environment is set up correctly. If all checks pass, a new backend instance is created, and traffic management is used to direct traffic to old revisions, allowing for a safe switch to the new productive instance.
+
+The use of Docker images allows for greater flexibility and consistency in the development process. Docker provides a containerization environment where applications can be run in a portable and isolated manner, regardless of the underlying system or infrastructure.
+
+The CI/CD approach ensures that the application is continuously updated, tested, and deployed in a consistent and reliable manner, reducing the risk of bugs and downtime.
+
 ## Code Ownership
 Each branch is written by the branch owner only. 
 
