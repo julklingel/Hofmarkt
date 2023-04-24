@@ -64,5 +64,66 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
         });
       });
     });
+
+    describe('patch user', () => {
+      const updatedUserDto: userDto = {
+        firstName: 'John',
+        lastName: 'Doe',
+      };
+  
+      const updatedAddressDto: addressDto = {
+        streetAddress: '123 New Street',
+        city: 'New City',
+        state: 'New State',
+        country: 'New Country',
+        zip: '12345',
+      };
+  
+      it('should throw if account is not a user', () => {
+        return pactum
+          .spec()
+          .patch('/user/update')
+          .withHeaders({
+            Authorization: 'Bearer $S{supplierToken}',
+          })
+          .withBody({
+            ...updatedUserDto,
+            ...updatedAddressDto,
+          })
+          .expectJson({
+            error: 'Forbidden',
+            message: 'Forbidden resource',
+            statusCode: 403,
+          });
+      });
+  
+      it('should update a user', () => {
+        return pactum
+          .spec()
+          .patch('/user/update')
+          .withHeaders({ Authorization: 'Bearer $S{userToken}' })
+          .withBody({
+            ...updatedUserDto,
+            ...updatedAddressDto,
+          })
+          .expectStatus(200);
+      });
+  
+      it('should throw if user not found', () => {
+        return pactum
+          .spec()
+          .patch('/user/update')
+          .withHeaders({ Authorization: 'Bearer $S{nonExistentUserToken}' })
+          .withBody({
+            ...updatedUserDto,
+            ...updatedAddressDto,
+          })
+          .expectJson({
+            message: 'User not found',
+            statusCode: 404,
+          });
+      });
+    });
+    
   });
 };
