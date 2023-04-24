@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { GetUser, Roles } from '../auth/decorator';
 import { offerDto } from './dto';
@@ -75,5 +76,12 @@ export class OfferController {
     files: Express.Multer.File[],
   ) {
     return this.offerService.patchOffer(id, dto, user, files);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPPLIER')
+  @Delete('delete/:id')
+  async deleteOffer(@Param('id') id: string, @GetUser() user: userInterface) {
+    return this.offerService.deleteOffer(id, user);
   }
 }
