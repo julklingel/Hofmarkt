@@ -13,8 +13,8 @@ import {
 import { UserService } from './user.service';
 import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { GetUser, Roles } from '../auth/decorator';
-import { userDto } from './dto';
-import { addressDto } from '../address';
+import { userDto, updateUserDto } from './dto';
+import { addressDto, updateAddressDto } from '../address';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
 import { userInterface } from '../interface';
@@ -66,8 +66,8 @@ export class UserController {
   async updateUser(
     @Param('id') id: string,
     @GetUser() user: userInterface,
-    @Body() dto: userDto,
-    @Body() address: addressDto,
+    @Body() dto: updateUserDto,
+    @Body() address: updateAddressDto,
     @UploadedFile()
     file: Express.Multer.File = null,
   ) {
