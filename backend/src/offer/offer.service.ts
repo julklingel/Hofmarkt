@@ -178,4 +178,37 @@ export class OfferService {
       throw new HttpException('Something went wrong.', HttpStatus.BAD_REQUEST);
     }
   }
+
+  async deleteOffer(offerId: string, user: userInterface) {
+    const { id: userId } = user;
+
+    const offer = await this.prisma.offer.findUnique({
+      where: { id: offerId },
+      include: { supplier: { select: { accountId: true } } },
+    });
+
+    if (!offer) {
+      throw new HttpException('Offer not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (offer.supplier.accountId !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    try {
+      await this.prisma.$transaction([
+        this.prisma.watchlist.deleteMany({ where: { id: offerId } }),
+        this.prisma.order.deleteMany({ where: { offerId } }),
+        this.prisma.image.deleteMany({ where: { offerId } }),
+        this.prisma.offer.delete({ where: { id: offerId } }),
+      ]);
+    } catch (err) {
+      throw new HttpException(
+        'something went wrong while deleting the offer',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return 'Offer deleted';
+  }
 }
