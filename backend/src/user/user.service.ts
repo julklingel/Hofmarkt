@@ -13,9 +13,16 @@ export class UserService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  getOwnUser(user: userInterface) {
-    const { id, email } = user;
-    //add to get images
+  async getOwnUser(user: userInterface) {
+    const { id } = user;
+    const email = await this.prisma.account.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        email: true,
+      },
+    });
     return { id, email };
   }
 
