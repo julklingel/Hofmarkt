@@ -75,7 +75,6 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
         firstName: 'John',
         lastName: 'Doe',
       };
-
       const updatedAddressDto: addressDto = {
         streetAddress: '123 New Street',
         city: 'New City',
