@@ -228,6 +228,13 @@ export class OfferService {
 
     try {
       await this.prisma.$transaction([
+        this.prisma.image.deleteMany({
+          where: {
+            ownerId: offerId,
+            ownerType: enumRole.SUPPLIER,
+            type: enumImageType.OFFER,
+          },
+        }),
         this.prisma.watchlist.deleteMany({ where: { id: offerId } }),
         this.prisma.order.deleteMany({ where: { offerId } }),
         this.prisma.offer.delete({ where: { id: offerId } }),

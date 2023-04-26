@@ -337,6 +337,12 @@ export class SupplierService {
 
     try {
       await this.prisma.$transaction([
+        this.prisma.image.deleteMany({
+          where: {
+            ownerId: supplier.id,
+            ownerType: enumRole.SUPPLIER,
+          },
+        }),
         this.prisma.review.deleteMany({ where: { supplierId } }),
         this.prisma.order.deleteMany({ where: { offer: { supplierId } } }),
         this.prisma.category.updateMany({

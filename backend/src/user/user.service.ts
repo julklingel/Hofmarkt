@@ -217,6 +217,9 @@ export class UserService {
 
     try {
       await this.prisma.$transaction([
+        this.prisma.image.deleteMany({
+          where: { ownerId: id, ownerType: enumRole.BUYER },
+        }),
         this.prisma.review.deleteMany({ where: { userId } }),
         this.prisma.order.deleteMany({ where: { userId } }),
         this.prisma.accountAddress.deleteMany({
