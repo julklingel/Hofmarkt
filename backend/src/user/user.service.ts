@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { addressDto } from '../address';
-import { userDto } from './dto';
+import { addressDto, updateAddressDto } from '../address';
+import { userDto, updateUserDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
 import { enumImageType } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -117,5 +117,119 @@ export class UserService {
         throw new HttpException(err, HttpStatus.BAD_REQUEST);
       }
     }
+  }
+
+  async updateUser(
+    id: string,
+    user: userInterface,
+    dto: updateUserDto,
+    address: updateAddressDto,
+    file: any = null,
+  ) {
+    const { id: userId } = user;
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id },
+      include: { account: { select: { id: true } } },
+    });
+
+    if (!existingUser) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (existingUser.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    let imageUrl = null;
+
+    if (file) {
+      const response = await this.cloudinaryService.uploadImage(file);
+      imageUrl = response.secure_url ? response.secure_url : null;
+      if (imageUrl === null) {
+        throw new HttpException(
+          'Image could not be uploaded',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    const updatedAddressData = {
+      streetAddress: address.streetAddress,
+      city: address.city,
+      state: address.state,
+      country: address.country,
+      zip: address.zip,
+    };
+
+    const updatedUserData: any = {
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+    };
+
+    if (imageUrl) {
+      updatedUserData.profileImage = {
+        create: {
+          imageUrl,
+          type: enumImageType.PROFILE,
+        },
+      };
+    }
+
+    try {
+      await this.prisma.$transaction([
+        this.prisma.user.update({
+          where: { id },
+          data: updatedUserData,
+          include: {
+            profileImage: true,
+          },
+        }),
+        this.prisma.accountAddress.updateMany({
+          where: { accountId: userId },
+          data: updatedAddressData,
+        }),
+      ]);
+
+      return 'User updated successfully';
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async deleteUser(id: string, user: userInterface) {
+    const { id: userId } = user;
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id },
+      include: { account: { select: { id: true } }, profileImage: true },
+    });
+
+    if (!existingUser) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (existingUser.account.id !== userId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    try {
+      await this.prisma.$transaction([
+        this.prisma.review.deleteMany({ where: { userId } }),
+        this.prisma.order.deleteMany({ where: { userId } }),
+        this.prisma.image.deleteMany({ where: { profileImageId: userId } }),
+        this.prisma.accountAddress.deleteMany({
+          where: { accountId: existingUser.accountId },
+        }),
+        this.prisma.user.delete({ where: { id } }),
+        this.prisma.account.delete({ where: { id: existingUser.accountId } }),
+      ]);
+    } catch (err) {
+      throw new HttpException(
+        'something went wrong while deleting the account',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return 'User deleted';
   }
 }
