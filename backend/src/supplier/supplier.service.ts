@@ -5,7 +5,7 @@ import { supplierDto, updateSupplierDto } from './dto';
 import { addressDto, updateAddressDto } from '../address';
 import { enumImageType, enumRole } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 const SUPPLIER_SELECT = {
   companyName: true,

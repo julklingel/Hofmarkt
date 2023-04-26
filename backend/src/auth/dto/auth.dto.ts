@@ -83,3 +83,10 @@ export class confirmationCodeDto {
   @IsNotEmpty()
   token: string;
 }
+
+export interface userInterface {
+  email: string;
+  id: string;
+  role: string;
+  isVerified: boolean;
+}

@@ -17,7 +17,7 @@ import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { GetUser, Roles } from '../auth/decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 @Controller('supplier')
 export class SupplierController {

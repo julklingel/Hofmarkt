@@ -3,7 +3,7 @@ import { enumImageType, enumRole } from '@prisma/client';
 import { PrismaService } from '../db-module/prisma.service';
 import { offerDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { userInterface } from 'src/interface';
+import { userInterface } from '../auth/dto';
 
 @Injectable()
 export class OfferService {

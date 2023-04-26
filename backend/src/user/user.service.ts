@@ -4,7 +4,7 @@ import { userDto, updateUserDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
 import { enumImageType, enumRole } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 @Injectable()
 export class UserService {

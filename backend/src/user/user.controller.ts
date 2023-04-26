@@ -17,7 +17,7 @@ import { userDto, updateUserDto } from './dto';
 import { addressDto, updateAddressDto } from '../address';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
