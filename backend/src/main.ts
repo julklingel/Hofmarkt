@@ -16,19 +16,19 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.use(helmet({
-    contentSecurityPolicy: {
-      
-      directives: {
-        
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
-        styleSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
-        imgSrc: ["'self'"],
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
+          styleSrc: ["'self'", 'https://backend-6w5lejptaa-lm.a.run.app/'],
+          imgSrc: ["'self'"],
+        },
       },
-    },
-    xssFilter: true,
-  }));
+      xssFilter: true,
+    }),
+  );
   await app.listen(port, '0.0.0.0');
 }
 

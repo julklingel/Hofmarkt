@@ -147,45 +147,58 @@ export class SupplierService {
     };
 
     try {
-      const createdSupplier = await this.prisma.supplier.create({
-        data: newSupplierData,
-      });
+      const createdSupplier = await this.prisma.$transaction(async (prisma) => {
+        const supplier = await prisma.supplier.create({
+          data: newSupplierData,
+        });
 
-      await this.prisma.accountAddress.create({
-        data: newAddressData,
-        include: {
-          account: true,
-        },
-      });
-
-      if (companyLogo) {
-        await this.prisma.image.create({
-          data: {
-            imageUrl: companyLogo,
-            type: enumImageType.PROFILE,
-            ownerId: createdSupplier.id,
-            ownerType: enumOwnerType.SUPPLIER,
+        await prisma.accountAddress.create({
+          data: newAddressData,
+          include: {
+            account: true,
           },
         });
-      }
 
-      if (imageUrls) {
-        const supplierImages = imageUrls.map((imageUrl) => {
-          return {
-            imageUrl: imageUrl,
-            type: enumImageType.FACILITY,
-            ownerId: createdSupplier.id,
-            ownerType: enumOwnerType.SUPPLIER,
-          };
-        });
+        if (companyLogo) {
+          await this.prisma.image.create({
+            data: {
+              imageUrl: companyLogo,
+              type: enumImageType.PROFILE,
+              ownerId: supplier.id,
+              ownerType: enumOwnerType.SUPPLIER,
+            },
+          });
+        }
 
-        await this.prisma.image.createMany({
-          data: supplierImages,
-        });
-      }
+        if (imageUrls) {
+          const supplierImages = imageUrls.map((imageUrl) => {
+            return {
+              imageUrl: imageUrl,
+              type: enumImageType.FACILITY,
+              ownerId: supplier.id,
+              ownerType: enumOwnerType.SUPPLIER,
+            };
+          });
 
-      return 'Supplier created with name ' + slug;
+          await prisma.image.createMany({
+            data: supplierImages,
+          });
+        }
+
+        return supplier;
+      });
+
+      return 'Supplier created with name ' + createdSupplier.slug;
     } catch (err) {
+      console.log(err);
+      if (companyLogoPublicId) {
+        await this.cloudinaryService.deleteImage(companyLogoPublicId);
+      }
+      if (imagePublicIds.length > 0) {
+        for (const publicId of imagePublicIds) {
+          await this.cloudinaryService.deleteImage(publicId);
+        }
+      }
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new HttpException(
           'A supplier with that name already exists',
@@ -201,15 +214,6 @@ export class SupplierService {
         );
       } else {
         throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
-      }
-    } finally {
-      if (companyLogoPublicId) {
-        await this.cloudinaryService.deleteImage(companyLogoPublicId);
-      }
-      if (imagePublicIds.length > 0) {
-        for (const publicId of imagePublicIds) {
-          await this.cloudinaryService.deleteImage(publicId);
-        }
       }
     }
   }
@@ -304,8 +308,6 @@ export class SupplierService {
 
       return updatedSupplier;
     } catch (err) {
-      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
-    } finally {
       if (companyLogoPublicId) {
         await this.cloudinaryService.deleteImage(companyLogoPublicId);
       }
@@ -314,6 +316,7 @@ export class SupplierService {
           await this.cloudinaryService.deleteImage(publicId);
         }
       }
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -387,7 +390,6 @@ export class SupplierService {
       for (let index = 0; index < files.length; index++) {
         const file = files[index];
         const image = await this.cloudinaryService.uploadImage(file);
-
         if (index === 0) {
           companyLogo = image.secure_url;
           companyLogoPublicId = image.public_id;
