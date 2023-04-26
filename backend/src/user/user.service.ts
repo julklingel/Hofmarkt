@@ -97,7 +97,6 @@ export class UserService {
           data: { ownerId: createdUser.id, ...newImageData },
         });
       }
-
       await this.prisma.accountAddress.create({
         data: newAddressData,
         include: {
@@ -105,7 +104,7 @@ export class UserService {
         },
       });
 
-      return 'user created with name ' + dto.firstName;
+      return createdUser.id;
     } catch (err) {
       if (err.code === 'P2002' && err.meta.target.includes('supplierId')) {
         throw new HttpException(
@@ -180,9 +179,6 @@ export class UserService {
         this.prisma.user.update({
           where: { id },
           data: updatedUserData,
-          include: {
-            profileImage: true,
-          },
         }),
         this.prisma.accountAddress.updateMany({
           where: { accountId: userId },
@@ -201,7 +197,7 @@ export class UserService {
 
     const existingUser = await this.prisma.user.findUnique({
       where: { id },
-      include: { account: { select: { id: true } }, profileImage: true },
+      include: { account: { select: { id: true } } },
     });
 
     if (!existingUser) {
@@ -216,7 +212,6 @@ export class UserService {
       await this.prisma.$transaction([
         this.prisma.review.deleteMany({ where: { userId } }),
         this.prisma.order.deleteMany({ where: { userId } }),
-        this.prisma.image.deleteMany({ where: { profileImageId: userId } }),
         this.prisma.accountAddress.deleteMany({
           where: { accountId: existingUser.accountId },
         }),

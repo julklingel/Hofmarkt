@@ -30,7 +30,6 @@ export class UserController {
     return this.userService.getOwnUser(user);
   }
 
-
   @UseGuards(RolesGuard)
   @Roles('BUYER')
   @Post('create')
@@ -77,11 +76,7 @@ export class UserController {
   @UseGuards(RolesGuard)
   @Roles('BUYER')
   @Delete('delete/:id')
-  async deleteUser(
-    @Param('id') id: string,
-    @GetUser() user: userInterface,
-  ) {
+  async deleteUser(@Param('id') id: string, @GetUser() user: userInterface) {
     return this.userService.deleteUser(id, user);
   }
 }
-

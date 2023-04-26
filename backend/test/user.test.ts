@@ -6,19 +6,22 @@ import { addressDto } from '../src/address';
 
 export const userTests = (app: INestApplication, prisma: PrismaService) => {
   describe('User', () => {
-    describe('create user', () => {
-      const userdto: userDto = {
-        firstName: 'Peter',
-        lastName: 'Fischer',
-      };
+    let createdUserId: string;
 
-      const addressdto: addressDto = {
-        streetAddress: 'Am Sonnenbach 1',
-        city: 'weinheim',
-        state: 'Baden-Württemberg',
-        country: 'Auenland',
-        zip: '7474',
-      };
+    const userdto: userDto = {
+      firstName: 'Peter',
+      lastName: 'Fischer',
+    };
+
+    const addressdto: addressDto = {
+      streetAddress: 'Am Sonnenbach 1',
+      city: 'weinheim',
+      state: 'Baden-Württemberg',
+      country: 'Auenland',
+      zip: '7474',
+    };
+
+    describe('create user', () => {
       describe('create user', () => {
         it('should throw if account is not a user', () => {
           return pactum
@@ -37,8 +40,8 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
               statusCode: 403,
             });
         });
-        it('should create a user', () => {
-          return pactum
+        it('should create a user', async () => {
+          const response = await pactum
             .spec()
             .post('/user/create')
             .withHeaders({ Authorization: 'Bearer $S{userToken}' })
@@ -47,6 +50,8 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
               ...addressdto,
             })
             .expectStatus(201);
+
+          createdUserId = response.json;
         });
         it('should throw if user already exists on Account', () => {
           return pactum
@@ -70,7 +75,7 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
         firstName: 'John',
         lastName: 'Doe',
       };
-  
+
       const updatedAddressDto: addressDto = {
         streetAddress: '123 New Street',
         city: 'New City',
@@ -78,11 +83,11 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
         country: 'New Country',
         zip: '12345',
       };
-  
+
       it('should throw if account is not a user', () => {
         return pactum
           .spec()
-          .patch('/user/update')
+          .patch(`/user/update/${createdUserId}`)
           .withHeaders({
             Authorization: 'Bearer $S{supplierToken}',
           })
@@ -96,11 +101,11 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
             statusCode: 403,
           });
       });
-  
+
       it('should update a user', () => {
         return pactum
           .spec()
-          .patch('/user/update')
+          .patch(`/user/update/${createdUserId}`)
           .withHeaders({ Authorization: 'Bearer $S{userToken}' })
           .withBody({
             ...updatedUserDto,
@@ -108,22 +113,21 @@ export const userTests = (app: INestApplication, prisma: PrismaService) => {
           })
           .expectStatus(200);
       });
-  
-      it('should throw if user not found', () => {
+
+      it('should throw for invalid token', () => {
         return pactum
           .spec()
-          .patch('/user/update')
+          .patch(`/user/update/${createdUserId}`)
           .withHeaders({ Authorization: 'Bearer $S{nonExistentUserToken}' })
           .withBody({
             ...updatedUserDto,
             ...updatedAddressDto,
           })
           .expectJson({
-            message: 'User not found',
-            statusCode: 404,
+            message: 'Unauthorized',
+            statusCode: 401,
           });
       });
     });
-    
   });
 };

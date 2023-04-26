@@ -345,9 +345,6 @@ export class SupplierService {
           where: { supplierId },
           data: { supplierId: null, accountId: null },
         }),
-        this.prisma.image.deleteMany({
-          where: { ownerId: supplierId, ownerType: enumOwnerType.SUPPLIER },
-        }),
         this.prisma.accountAddress.deleteMany({
           where: { accountId: supplier.accountId },
         }),

@@ -230,7 +230,6 @@ export class OfferService {
       await this.prisma.$transaction([
         this.prisma.watchlist.deleteMany({ where: { id: offerId } }),
         this.prisma.order.deleteMany({ where: { offerId } }),
-        this.prisma.image.deleteMany({ where: { offerId } }),
         this.prisma.offer.delete({ where: { id: offerId } }),
       ]);
     } catch (err) {
