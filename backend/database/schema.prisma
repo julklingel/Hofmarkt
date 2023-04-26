@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  log      = ["query"]
 }
 
 datasource db {
@@ -70,7 +71,7 @@ model Image {
   updatedAt DateTime      @updatedAt
   type      enumImageType
   ownerId   String
-  ownerType enumOwnerType
+  ownerType enumRole
 
   @@map("images")
 }
@@ -203,13 +204,6 @@ enum enumRole {
 enum enumImageType {
   PROFILE
   FACILITY
-  OFFER
-  CATEGORY
-}
-
-enum enumOwnerType {
-  USER
-  SUPPLIER
   OFFER
   CATEGORY
 }

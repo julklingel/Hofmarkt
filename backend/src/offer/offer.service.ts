@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { enumImageType, enumOwnerType } from '@prisma/client';
+import { enumImageType, enumRole } from '@prisma/client';
 import { PrismaService } from '../db-module/prisma.service';
 import { offerDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -29,7 +29,7 @@ export class OfferService {
         const images = await this.prisma.image.findMany({
           where: {
             ownerId: offer.id,
-            ownerType: enumOwnerType.OFFER,
+            ownerType: enumRole.SUPPLIER,
             type: enumImageType.OFFER,
           },
           select: {
@@ -68,7 +68,7 @@ export class OfferService {
         const images = await this.prisma.image.findMany({
           where: {
             ownerId: offer.id,
-            ownerType: enumOwnerType.OFFER,
+            ownerType: enumRole.SUPPLIER,
             type: enumImageType.OFFER,
           },
         });
@@ -123,7 +123,7 @@ export class OfferService {
               imageUrl: imageUrl,
               type: enumImageType.OFFER,
               ownerId: offer.id,
-              ownerType: enumOwnerType.OFFER,
+              ownerType: enumRole.SUPPLIER,
             },
           });
         }
@@ -191,7 +191,7 @@ export class OfferService {
           imageUrl: imageUrl,
           type: enumImageType.OFFER,
           ownerId: offer.id,
-          ownerType: enumOwnerType.OFFER,
+          ownerType: enumRole.SUPPLIER,
         };
       });
 

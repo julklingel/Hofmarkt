@@ -1,9 +1,4 @@
-import {
-  enumImageType,
-  enumOwnerType,
-  enumRole,
-  PrismaClient,
-} from '@prisma/client';
+import { enumImageType, enumRole, PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 
@@ -85,7 +80,7 @@ export async function seedSupplier() {
         imageUrl: data.imageUrl,
         type: enumImageType.OFFER,
         ownerId: createdOffer.id,
-        ownerType: enumOwnerType.OFFER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
   }
@@ -96,7 +91,7 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       type: enumImageType.PROFILE,
       ownerId: klausObstler.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -105,7 +100,7 @@ export async function seedSupplier() {
       imageUrl: 'obstler.jpeg',
       type: enumImageType.FACILITY,
       ownerId: klausObstler.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -178,7 +173,7 @@ export async function seedSupplier() {
         imageUrl: data.imageUrl,
         type: enumImageType.OFFER,
         ownerId: createdOffer.id,
-        ownerType: enumOwnerType.OFFER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
   }
@@ -189,7 +184,7 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       type: enumImageType.PROFILE,
       ownerId: alexImker.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -198,7 +193,7 @@ export async function seedSupplier() {
       imageUrl: 'Imkerei.jpeg',
       type: enumImageType.FACILITY,
       ownerId: alexImker.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -271,7 +266,7 @@ export async function seedSupplier() {
         imageUrl: data.imageUrl,
         type: enumImageType.OFFER,
         ownerId: createdOffer.id,
-        ownerType: enumOwnerType.OFFER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
   }
@@ -282,7 +277,7 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       type: enumImageType.PROFILE,
       ownerId: manfredHof.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -291,7 +286,7 @@ export async function seedSupplier() {
       imageUrl: 'Farmhouse.jpeg',
       type: enumImageType.FACILITY,
       ownerId: manfredHof.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -363,7 +358,7 @@ export async function seedSupplier() {
         imageUrl: data.imageUrl,
         type: enumImageType.OFFER,
         ownerId: createdOffer.id,
-        ownerType: enumOwnerType.OFFER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
   }
@@ -374,7 +369,7 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       type: enumImageType.PROFILE,
       ownerId: dominikHunter.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -383,7 +378,7 @@ export async function seedSupplier() {
       imageUrl: 'Jägerhütte.jpeg',
       type: enumImageType.FACILITY,
       ownerId: dominikHunter.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -455,7 +450,7 @@ export async function seedSupplier() {
         imageUrl: data.imageUrl,
         type: enumImageType.OFFER,
         ownerId: createdOffer.id,
-        ownerType: enumOwnerType.OFFER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
   }
@@ -466,7 +461,7 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       type: enumImageType.PROFILE,
       ownerId: mariaBaker.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -475,7 +470,7 @@ export async function seedSupplier() {
       imageUrl: 'Bäckerei.jpeg',
       type: enumImageType.FACILITY,
       ownerId: mariaBaker.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -547,7 +542,7 @@ export async function seedSupplier() {
         imageUrl: data.imageUrl,
         type: enumImageType.OFFER,
         ownerId: createdOffer.id,
-        ownerType: enumOwnerType.OFFER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
   }
@@ -558,7 +553,7 @@ export async function seedSupplier() {
         'https://www.ko.com/sites/default/files/2018-10/nestle_logo.png',
       type: enumImageType.PROFILE,
       ownerId: mariaBaker.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 
@@ -567,7 +562,7 @@ export async function seedSupplier() {
       imageUrl: 'Fischerei.jpeg',
       type: enumImageType.FACILITY,
       ownerId: mariaBaker.supplier.id,
-      ownerType: enumOwnerType.SUPPLIER,
+      ownerType: enumRole.SUPPLIER,
     },
   });
 }

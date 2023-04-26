@@ -3,7 +3,7 @@ import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto, updateSupplierDto } from './dto';
 import { addressDto, updateAddressDto } from '../address';
-import { enumImageType, enumOwnerType } from '@prisma/client';
+import { enumImageType, enumRole } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
 
@@ -67,7 +67,7 @@ export class SupplierService {
     const images = await this.prisma.image.findMany({
       where: {
         ownerId: supplier.id,
-        ownerType: enumOwnerType.SUPPLIER,
+        ownerType: enumRole.SUPPLIER,
       },
     });
 
@@ -165,7 +165,7 @@ export class SupplierService {
               imageUrl: companyLogo,
               type: enumImageType.PROFILE,
               ownerId: supplier.id,
-              ownerType: enumOwnerType.SUPPLIER,
+              ownerType: enumRole.SUPPLIER,
             },
           });
         }
@@ -176,7 +176,7 @@ export class SupplierService {
               imageUrl: imageUrl,
               type: enumImageType.FACILITY,
               ownerId: supplier.id,
-              ownerType: enumOwnerType.SUPPLIER,
+              ownerType: enumRole.SUPPLIER,
             };
           });
 
@@ -190,7 +190,6 @@ export class SupplierService {
 
       return 'Supplier created with name ' + createdSupplier.slug;
     } catch (err) {
-      console.log(err);
       if (companyLogoPublicId) {
         await this.cloudinaryService.deleteImage(companyLogoPublicId);
       }
@@ -267,7 +266,7 @@ export class SupplierService {
         const existingCompanyLogo = await this.prisma.image.findFirst({
           where: {
             ownerId: supplier.id,
-            ownerType: enumOwnerType.SUPPLIER,
+            ownerType: enumRole.SUPPLIER,
             type: enumImageType.PROFILE,
           },
         });
@@ -286,7 +285,7 @@ export class SupplierService {
               imageUrl: companyLogo,
               type: enumImageType.PROFILE,
               ownerId: supplier.id,
-              ownerType: enumOwnerType.SUPPLIER,
+              ownerType: enumRole.SUPPLIER,
             },
           });
         }
@@ -297,7 +296,7 @@ export class SupplierService {
             imageUrl: imageUrl,
             type: enumImageType.FACILITY,
             ownerId: supplier.id,
-            ownerType: enumOwnerType.SUPPLIER,
+            ownerType: enumRole.SUPPLIER,
           };
         });
 

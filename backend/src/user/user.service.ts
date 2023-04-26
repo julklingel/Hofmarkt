@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { addressDto, updateAddressDto } from '../address';
 import { userDto, updateUserDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
-import { enumImageType, enumOwnerType } from '@prisma/client';
+import { enumImageType, enumRole } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { userInterface } from '../interface';
 
@@ -73,7 +73,7 @@ export class UserService {
       ? {
           imageUrl,
           type: enumImageType.PROFILE,
-          ownerType: enumOwnerType.USER,
+          ownerType: enumRole.BUYER,
         }
       : null;
 
