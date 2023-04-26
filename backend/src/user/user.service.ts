@@ -177,6 +177,7 @@ export class UserService {
         create: {
           imageUrl,
           type: enumImageType.PROFILE,
+          ownerType: enumRole.BUYER,
         },
       };
     }
