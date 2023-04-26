@@ -95,20 +95,25 @@ export class UserService {
     };
 
     try {
-      const createdUser = await this.prisma.user.create({
-        data: newUserData,
-      });
-
-      if (newImageData) {
-        await this.prisma.image.create({
-          data: { ownerId: createdUser.id, ...newImageData },
+      const createdUser = await this.prisma.$transaction(async (prisma) => {
+        const user = await prisma.user.create({
+          data: newUserData,
         });
-      }
-      await this.prisma.accountAddress.create({
-        data: newAddressData,
-        include: {
-          account: true,
-        },
+
+        if (newImageData) {
+          await prisma.image.create({
+            data: { ownerId: user.id, ...newImageData },
+          });
+        }
+
+        await prisma.accountAddress.create({
+          data: newAddressData,
+          include: {
+            account: true,
+          },
+        });
+
+        return user;
       });
 
       return createdUser.id;
