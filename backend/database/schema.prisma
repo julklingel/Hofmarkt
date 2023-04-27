@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  log      = ["query"]
 }
 
 datasource db {
@@ -27,61 +28,50 @@ model Account {
 }
 
 model User {
-  id           String      @id @unique @default(uuid())
-  account      Account?    @relation(fields: [accountId], references: [id])
-  accountId    String?     @unique
-  firstName    String
-  lastName     String
-  profileImage Image?
-  supplier     Supplier?   @relation(fields: [supplierId], references: [id])
-  supplierId   String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  watchlist    Watchlist[]
-  cart         Cart?
-  order        Order[]
-  Review       Review[]
+  id         String     @id @unique @default(uuid())
+  account    Account?   @relation(fields: [accountId], references: [id])
+  accountId  String?    @unique
+  firstName  String
+  lastName   String
+  supplier   Supplier?  @relation(fields: [supplierId], references: [id])
+  supplierId String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  watchlist  Watchlist?
+  cart       Cart?
+  order      Order[]
+  Review     Review[]
 
   @@map("users")
 }
 
 model Supplier {
-  id            String     @id @unique @default(uuid())
-  account       Account?   @relation(fields: [accountId], references: [id])
-  accountId     String?    @unique
-  companyName   String
-  companyLogo   Image?     @relation("SupplierCompanyLogo")
-  companyPhone  String     @default("")
-  companyBio    String
-  slug          String     @unique
-  featured      Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  user          User[]
-  offer         Offer[]
-  Review        Review[]
-  supplierImage Image[]    @relation("SupplierImages")
-  Category      Category[]
+  id           String     @id @unique @default(uuid())
+  account      Account?   @relation(fields: [accountId], references: [id])
+  accountId    String?    @unique
+  companyName  String
+  companyPhone String     @default("")
+  companyBio   String
+  slug         String     @unique
+  featured     Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  user         User[]
+  offer        Offer[]
+  Review       Review[]
+  Category     Category[]
 
   @@map("suppliers")
 }
 
 model Image {
-  id                    String        @id @unique @default(uuid())
-  imageUrl              String        @default("")
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
-  type                  enumImageType
-  profileImage          User?         @relation(fields: [profileImageId], references: [id])
-  profileImageId        String?       @unique
-  offer                 Offer?        @relation(fields: [offerId], references: [id])
-  offerId               String?       @unique
-  Category              Category?     @relation(fields: [categoryId], references: [id])
-  categoryId            String?       @unique
-  supplierCompanyLogo   Supplier?     @relation("SupplierCompanyLogo", fields: [supplierCompanyLogoId], references: [id])
-  supplierCompanyLogoId String?       @unique
-  supplierImage         Supplier?     @relation("SupplierImages", fields: [supplierImagesId], references: [id])
-  supplierImagesId      String?       @unique
+  id        String        @id @unique @default(uuid())
+  imageUrl  String        @default("")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  type      enumImageType
+  ownerId   String
+  ownerType enumRole
 
   @@map("images")
 }
@@ -132,15 +122,14 @@ model Offer {
   cart        Cart?      @relation(fields: [cartId], references: [id])
   cartId      String?
   order       Order[]
-  images      Image[]
 
   @@map("offers")
 }
 
 model Watchlist {
   id        String   @id @unique @default(uuid())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @unique
   offer     Offer[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -179,7 +168,6 @@ model Category {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   offer      Offer[]
-  image      Image?
   Supplier   Supplier? @relation(fields: [supplierId], references: [id])
   supplierId String?
 

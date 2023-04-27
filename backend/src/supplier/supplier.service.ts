@@ -3,19 +3,13 @@ import slugify from 'slugify';
 import { PrismaService } from '../db-module/prisma.service';
 import { supplierDto, updateSupplierDto } from './dto';
 import { addressDto, updateAddressDto } from '../address';
-import { enumImageType } from '@prisma/client';
+import { enumImageType, enumRole } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 const SUPPLIER_SELECT = {
   companyName: true,
-  companyLogo: true,
   slug: true,
-  supplierImage: {
-    select: {
-      imageUrl: true,
-    },
-  },
 };
 
 @Injectable()
@@ -28,6 +22,7 @@ export class SupplierService {
   async getSuppliers(): Promise<any> {
     const suppliers = await this.prisma.supplier.findMany({
       select: SUPPLIER_SELECT,
+      //need to include images
     });
 
     return suppliers;
@@ -53,23 +48,12 @@ export class SupplierService {
             address: true,
           },
         },
-        companyLogo: {
-          select: {
-            imageUrl: true,
-          },
-        },
-        supplierImage: {
-          select: {
-            imageUrl: true,
-          },
-        },
         offer: {
           select: {
             id: true,
             title: true,
             unit: true,
             price: true,
-            images: true,
             category: {
               select: {
                 name: true,
@@ -80,12 +64,29 @@ export class SupplierService {
       },
     });
 
+    const images = await this.prisma.image.findMany({
+      where: {
+        ownerId: supplier.id,
+        ownerType: enumRole.SUPPLIER,
+      },
+    });
+
+    const companyLogo = images.find(
+      (image) => image.type === enumImageType.PROFILE,
+    );
+
+    const supplierImages = images.filter(
+      (image) => image.type === enumImageType.FACILITY,
+    );
+
     return {
       ...supplier,
       companyName: supplier.companyName,
       companyBio: supplier.companyBio,
       companyPhone: supplier.companyPhone,
       slug: supplier.slug,
+      companyLogo: companyLogo?.imageUrl,
+      supplierImages: supplierImages?.map((image) => image.imageUrl),
     };
   }
 
@@ -145,45 +146,58 @@ export class SupplierService {
       },
     };
 
-    if (companyLogo) {
-      newSupplierData.companyLogo = {
-        create: {
-          imageUrl: companyLogo,
-          type: enumImageType.PROFILE,
-        },
-      };
-    }
-
-    if (imageUrls) {
-      const supplierImage = imageUrls.map((imageUrl) => {
-        return {
-          imageUrl: imageUrl,
-          type: enumImageType.FACILITY,
-        };
-      });
-      newSupplierData.supplierImage = {
-        create: supplierImage,
-      };
-    }
-
     try {
-      await this.prisma.supplier.create({
-        data: newSupplierData,
-        include: {
-          supplierImage: true,
-          companyLogo: true,
-        },
+      const createdSupplier = await this.prisma.$transaction(async (prisma) => {
+        const supplier = await prisma.supplier.create({
+          data: newSupplierData,
+        });
+
+        await prisma.accountAddress.create({
+          data: newAddressData,
+          include: {
+            account: true,
+          },
+        });
+
+        if (companyLogo) {
+          await this.prisma.image.create({
+            data: {
+              imageUrl: companyLogo,
+              type: enumImageType.PROFILE,
+              ownerId: supplier.id,
+              ownerType: enumRole.SUPPLIER,
+            },
+          });
+        }
+
+        if (imageUrls) {
+          const supplierImages = imageUrls.map((imageUrl) => {
+            return {
+              imageUrl: imageUrl,
+              type: enumImageType.FACILITY,
+              ownerId: supplier.id,
+              ownerType: enumRole.SUPPLIER,
+            };
+          });
+
+          await prisma.image.createMany({
+            data: supplierImages,
+          });
+        }
+
+        return supplier;
       });
 
-      await this.prisma.accountAddress.create({
-        data: newAddressData,
-        include: {
-          account: true,
-        },
-      });
-
-      return 'Supplier created with name ' + slug;
+      return 'Supplier created with name ' + createdSupplier.slug;
     } catch (err) {
+      if (companyLogoPublicId) {
+        await this.cloudinaryService.deleteImage(companyLogoPublicId);
+      }
+      if (imagePublicIds.length > 0) {
+        for (const publicId of imagePublicIds) {
+          await this.cloudinaryService.deleteImage(publicId);
+        }
+      }
       if (err.code === 'P2002' && err.meta.target.includes('slug')) {
         throw new HttpException(
           'A supplier with that name already exists',
@@ -200,15 +214,6 @@ export class SupplierService {
       } else {
         throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       }
-    } finally {
-      if (companyLogoPublicId) {
-        await this.cloudinaryService.deleteImage(companyLogoPublicId);
-      }
-      if (imagePublicIds.length > 0) {
-        for (const publicId of imagePublicIds) {
-          await this.cloudinaryService.deleteImage(publicId);
-        }
-      }
     }
   }
 
@@ -222,7 +227,7 @@ export class SupplierService {
     const { id: userId } = user;
 
     const supplier = await this.prisma.supplier.findUnique({
-      where: { id },
+      where: { id: id },
       include: { account: { select: { id: true } } },
     });
 
@@ -251,54 +256,57 @@ export class SupplierService {
 
     const updatedSupplierData: any = { ...dto };
 
-    if (companyLogo) {
-      const existingCompanyLogo = await this.prisma.image.findFirst({
-        where: { supplierCompanyLogoId: id },
-      });
-
-      if (existingCompanyLogo) {
-        updatedSupplierData.companyLogo = {
-          update: {
-            imageUrl: companyLogo,
-            type: enumImageType.PROFILE,
-          },
-        };
-      } else {
-        updatedSupplierData.companyLogo = {
-          create: {
-            imageUrl: companyLogo,
-            type: enumImageType.PROFILE,
-          },
-        };
-      }
-    }
-
-    if (imageUrls.length > 0) {
-      const supplierImage = imageUrls.map((imageUrl) => {
-        return {
-          imageUrl: imageUrl,
-          type: enumImageType.FACILITY,
-        };
-      });
-      updatedSupplierData.supplierImage = {
-        create: supplierImage,
-      };
-    }
-
     try {
       const updatedSupplier = await this.prisma.supplier.update({
         where: { id },
         data: updatedSupplierData,
-        include: {
-          supplierImage: true,
-          companyLogo: true,
-        },
       });
+
+      if (companyLogo) {
+        const existingCompanyLogo = await this.prisma.image.findFirst({
+          where: {
+            ownerId: supplier.id,
+            ownerType: enumRole.SUPPLIER,
+            type: enumImageType.PROFILE,
+          },
+        });
+
+        if (existingCompanyLogo) {
+          await this.prisma.image.update({
+            where: { id: existingCompanyLogo.id },
+            data: {
+              imageUrl: companyLogo,
+              type: enumImageType.PROFILE,
+            },
+          });
+        } else {
+          await this.prisma.image.create({
+            data: {
+              imageUrl: companyLogo,
+              type: enumImageType.PROFILE,
+              ownerId: supplier.id,
+              ownerType: enumRole.SUPPLIER,
+            },
+          });
+        }
+      }
+      if (imageUrls.length > 0) {
+        const supplierImages = imageUrls.map((imageUrl) => {
+          return {
+            imageUrl: imageUrl,
+            type: enumImageType.FACILITY,
+            ownerId: supplier.id,
+            ownerType: enumRole.SUPPLIER,
+          };
+        });
+
+        await this.prisma.image.createMany({
+          data: supplierImages,
+        });
+      }
 
       return updatedSupplier;
     } catch (err) {
-      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
-    } finally {
       if (companyLogoPublicId) {
         await this.cloudinaryService.deleteImage(companyLogoPublicId);
       }
@@ -307,6 +315,7 @@ export class SupplierService {
           await this.cloudinaryService.deleteImage(publicId);
         }
       }
+      throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -328,6 +337,12 @@ export class SupplierService {
 
     try {
       await this.prisma.$transaction([
+        this.prisma.image.deleteMany({
+          where: {
+            ownerId: supplier.id,
+            ownerType: enumRole.SUPPLIER,
+          },
+        }),
         this.prisma.review.deleteMany({ where: { supplierId } }),
         this.prisma.order.deleteMany({ where: { offer: { supplierId } } }),
         this.prisma.category.updateMany({
@@ -337,14 +352,6 @@ export class SupplierService {
         this.prisma.user.updateMany({
           where: { supplierId },
           data: { supplierId: null, accountId: null },
-        }),
-        this.prisma.image.deleteMany({
-          where: {
-            OR: [
-              { supplierCompanyLogoId: supplierId },
-              { supplierImagesId: supplierId },
-            ],
-          },
         }),
         this.prisma.accountAddress.deleteMany({
           where: { accountId: supplier.accountId },
@@ -388,7 +395,6 @@ export class SupplierService {
       for (let index = 0; index < files.length; index++) {
         const file = files[index];
         const image = await this.cloudinaryService.uploadImage(file);
-
         if (index === 0) {
           companyLogo = image.secure_url;
           companyLogoPublicId = image.public_id;

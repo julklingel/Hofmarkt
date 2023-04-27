@@ -4,21 +4,21 @@ To install and run the project on your local machine, please follow these steps:
 
 1. Clone the repository to your local machine by running the following command in your terminal:
 
-    ```
-    git clone https://github.com/julklingel/hofmarkt.git
-    ```
+   ```
+   git clone https://github.com/julklingel/hofmarkt.git
+   ```
 
 2. If not already existing, install pnpm on your machine by running the following command in your terminal:
 
-    ```
-    brew install pnpm
-    ```
+   ```
+   brew install pnpm
+   ```
 
 3. Install the project dependencies by running the following command in your terminal:
 
-    ```
-    pnpm install
-    ```
+   ```
+   pnpm install
+   ```
 
 4. Create a .env file in the root directory of the project and add your credentials in the following format:
 
@@ -54,50 +54,51 @@ SUPPLIER_TEST_EMAIL_TWO="crack1@mack.de"
 USER_TEST_EMAIL_TWO="jackiechan@kung-fu.de"
 
 ```
-  Make sure to replace ```<your-postgres-username>```, ```<your-postgres-password>``` and ```<your-jwt-secret>``` with your actual values.
+
+Make sure to replace `<your-postgres-username>`, `<your-postgres-password>` and `<your-jwt-secret>` with your actual values.
 
 5. Create a docker-compose.yml file in the same directory with the following content:
 
-  ```
-  services:
-    postgres:
-      image: postgres
-      restart: always
-      env_file:
+```
+services:
+  postgres:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+volumes:
+  postgres:
+```
+
+if this is not working, try to add the following docker-compose.yml file:
+
+```
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    ports:
+      - '5432:5432'
+    restart: always
+    env_file:
         - .env
-      environment:
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      volumes:
-        - postgres:/var/lib/postgresql/data
-      ports:
-        - '5432:5432'
-  volumes:
-    postgres:
-  ```
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: backend
 
-  if this is not working, try to add the following docker-compose.yml file:
+volumes:
+  postgres:
+```
 
-  ```
-  version: '3.8'
-  services:
-    postgres:
-      image: postgres:13
-      ports:
-        - '5432:5432'
-      restart: always
-      env_file:
-          - .env
-      environment:
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        POSTGRES_DB: backend
-    
-  volumes:
-    postgres:
-  ```
-  
-  and for the testing environment add
+and for the testing environment add
 
 ```
 test-db:
@@ -111,7 +112,7 @@ test-db:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: backend
-  
+
 volumes:
   postgres:
 
@@ -121,28 +122,23 @@ volumes:
 
 7. In your terminal, navigate to backend in the project directory and run the following command to start the PostgreSQL container:
 
-    ```
-    docker-compose up
-    ```
+   ```
+   docker-compose up
+   ```
 
 8. Once you are ready to migrate the database tables to your local database, run the following command in your terminal:
-  
-    ```
-    npx prisma migrate dev
-    ```
+
+   ```
+   npx prisma migrate dev
+   ```
 
 9. To reset the database to its initial state and see if everything is working, run the following command in your terminal:
 
-    ```
-    pnpm reset:db
-    ```
+   ```
+   pnpm reset:db
+   ```
 
-  That's it! You now have a local development environment for Hofmarkt up and running. If you have any questions or encounter any issues, please feel free to reach out to us. Happy coding!
-
-
-
-
-
+That's it! You now have a local development environment for Hofmarkt up and running. If you have any questions or encounter any issues, please feel free to reach out to us. Happy coding!
 
 ## Running the app
 
@@ -182,7 +178,6 @@ POST /auth/reset-password: This endpoint is responsible for resetting a user's p
 
 GET /auth/confirm/:email/:code: This endpoint is responsible for confirming a user's email address. It takes email and code as URL parameters. On successful email confirmation, it returns a new access_token.
 
-
 ### SupplierController
 
 The SupplierController API delivers a collection of RESTful API endpoints devised for supplier management and associated image handling. The overview of available endpoints is as follows:
@@ -197,7 +192,6 @@ GET /supplier/offer/id: This endpoint gathers a list of offers made by a specifi
 
 PATCH /supplier/update/id: This endpoint updates an existing supplier by its ID. It accepts a supplierDto object as input, with properties such as name, location, and contact information, and up to 4 images, each capped at 2 MB. Upon successful supplier update, it returns a message "Supplier updated successfully" and the updated supplier object.
 
-
 ### UserController
 
 The UserController API delivers a collection of RESTful API endpoints devised for user management and profile image handling. The overview of available endpoints is as follows:
@@ -207,7 +201,6 @@ GET /user/me: This endpoint retrieves the logged-in user's own information.
 PATCH /user/me: Placeholder for a future implementation of updating the logged-in user's information.
 
 POST /user/create: This endpoint is responsible for creating a new user, complete with their address and optional profile image. It accepts a userDto object and an addressDto object as input, featuring properties such as firstName, lastName, streetAddress, city, state, country, and zip. It also accepts an optional image file, with a maximum size of 1 MB. Upon successful user creation, it returns a message "User created with name [firstName]."
-
 
 ### OfferController
 
@@ -223,9 +216,8 @@ POST /offer/create: This endpoint is responsible for creating a new offer. It is
 
 PATCH /offer/update/id: This endpoint is responsible for updating an existing offer by its ID. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes an offerDto object as input with properties like title, price, unit, and amount, along with up to 4 images, each with a maximum size of 2 MB. On successful offer update, it returns the updated offer object.
 
-
-
 ## Project's Architecture
+
 <img width="1494" alt="image" src="https://user-images.githubusercontent.com/94459330/233937106-c421435d-41ad-4f60-abd6-2ae845837d77.png">
 The flow of the backend architecture can be summarized as follows:
 
@@ -243,8 +235,8 @@ The flow of the backend architecture can be summarized as follows:
 12. If the process is successful, the service function returns the resulting object or value to the controller.
 13. The controller sends the response back through the load balancer, which ultimately returns the result to the client/user.
 
-
 ## CI / CD
+
 <img width="1404" alt="image" src="https://user-images.githubusercontent.com/94459330/233956535-40101073-6c7f-417a-9a23-b3eb500ce61f.png">
 
 At the heart of this workflow lies the Continuous Integration and Continuous Delivery/Deployment (CI/CD) philosophy. This means that developers frequently merge their code changes into a shared repository, and the application undergoes automatic build, test, and deployment processes.
@@ -262,7 +254,8 @@ The use of Docker images allows for greater flexibility and consistency in the d
 The CI/CD approach ensures that the application is continuously updated, tested, and deployed in a consistent and reliable manner, reducing the risk of bugs and downtime.
 
 ## Code Ownership
-Each branch is written by the branch owner only. 
+
+Each branch is written by the branch owner only.
 
 ## ER Model
 
@@ -449,10 +442,13 @@ ENUMIMAGETYPE{
 
 ```
 
+## My Brag: It was a lot of work for me to create the polymorphic relationship between the images and tables that have images. I think it was very interesting to learn that this kind of relationship was possible. This step helped to normalize my database.
+
 ## Cyber Security
 
 Link to the documentation:
 https://www.notion.so/Cyber-Security-8a50470ce4d64cf199ddfc92bff420c5?pvs=4
 
 ## Deployed
+
 https://hofmarkt24.de/

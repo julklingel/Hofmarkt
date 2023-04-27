@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { enumImageType } from '@prisma/client';
+import { enumImageType, enumRole } from '@prisma/client';
 import { PrismaService } from '../db-module/prisma.service';
 import { offerDto } from './dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { userInterface } from 'src/interface';
+import { userInterface } from '../auth/dto';
 
 @Injectable()
 export class OfferService {
@@ -12,8 +12,8 @@ export class OfferService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  getOffers(): any {
-    const offers = this.prisma.offer.findMany({
+  async getOffers(): Promise<any> {
+    const offers = await this.prisma.offer.findMany({
       include: {
         supplier: {
           select: {
@@ -21,19 +21,34 @@ export class OfferService {
             companyName: true,
           },
         },
-        images: {
+      },
+    });
+
+    const offersWithImages = await Promise.all(
+      offers.map(async (offer) => {
+        const images = await this.prisma.image.findMany({
+          where: {
+            ownerId: offer.id,
+            ownerType: enumRole.SUPPLIER,
+            type: enumImageType.OFFER,
+          },
           select: {
             imageUrl: true,
             type: true,
           },
-        },
-      },
-    });
+        });
 
-    return offers;
+        return {
+          ...offer,
+          images,
+        };
+      }),
+    );
+
+    return offersWithImages;
   }
 
-  getOffer(id): any {
+  getOffer(id: string): any {
     return this.prisma.offer.findUnique({
       where: {
         id: id,
@@ -41,20 +56,31 @@ export class OfferService {
     });
   }
 
-  getOffersBySupplier(id): any {
-    return this.prisma.offer.findMany({
+  async getOffersBySupplier(id: string): Promise<any> {
+    const offers = await this.prisma.offer.findMany({
       where: {
         supplierId: id,
       },
-      include: {
-        images: {
-          select: {
-            imageUrl: true,
-            type: true,
-          },
-        },
-      },
     });
+
+    const offersWithImages = await Promise.all(
+      offers.map(async (offer) => {
+        const images = await this.prisma.image.findMany({
+          where: {
+            ownerId: offer.id,
+            ownerType: enumRole.SUPPLIER,
+            type: enumImageType.OFFER,
+          },
+        });
+
+        return {
+          ...offer,
+          images,
+        };
+      }),
+    );
+
+    return offersWithImages;
   }
 
   async createOffer(
@@ -71,30 +97,9 @@ export class OfferService {
     const price = Number(dto.price);
     const amount = Number(dto.amount);
 
-    const imageUrls = [];
-
-    if (files.length > 0) {
-      try {
-        for (let index = 0; index < files.length; index++) {
-          const file = files[index];
-          const image = await this.cloudinaryService.uploadImage(file);
-          imageUrls.push(image.secure_url);
-        }
-      } catch (e) {
-        throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
-      }
-    }
-
-    const offerImage = imageUrls.map((imageUrl) => {
-      return {
-        imageUrl: imageUrl,
-        type: enumImageType.OFFER,
-      };
-    });
-    return this.prisma.offer.create({
+    const offer = await this.prisma.offer.create({
       data: {
         title: dto.title,
-        images: { create: offerImage },
         price,
         unit: dto.unit,
         amount,
@@ -105,6 +110,29 @@ export class OfferService {
         },
       },
     });
+
+    if (files.length > 0) {
+      try {
+        for (let index = 0; index < files.length; index++) {
+          const file = files[index];
+          const image = await this.cloudinaryService.uploadImage(file);
+          const imageUrl = image.secure_url;
+
+          await this.prisma.image.create({
+            data: {
+              imageUrl: imageUrl,
+              type: enumImageType.OFFER,
+              ownerId: offer.id,
+              ownerType: enumRole.SUPPLIER,
+            },
+          });
+        }
+      } catch (e) {
+        throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+      }
+    }
+
+    return offer;
   }
 
   async patchOffer(
@@ -162,13 +190,16 @@ export class OfferService {
         return {
           imageUrl: imageUrl,
           type: enumImageType.OFFER,
+          ownerId: offer.id,
+          ownerType: enumRole.SUPPLIER,
         };
       });
 
-      updateData.images = {
-        create: offerImage,
-      };
+      for (const imageData of offerImage) {
+        await this.prisma.image.create({ data: imageData });
+      }
     }
+
     try {
       return this.prisma.offer.update({
         where: { id: id },
@@ -197,9 +228,15 @@ export class OfferService {
 
     try {
       await this.prisma.$transaction([
+        this.prisma.image.deleteMany({
+          where: {
+            ownerId: offerId,
+            ownerType: enumRole.SUPPLIER,
+            type: enumImageType.OFFER,
+          },
+        }),
         this.prisma.watchlist.deleteMany({ where: { id: offerId } }),
         this.prisma.order.deleteMany({ where: { offerId } }),
-        this.prisma.image.deleteMany({ where: { offerId } }),
         this.prisma.offer.delete({ where: { id: offerId } }),
       ]);
     } catch (err) {

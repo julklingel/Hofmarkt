@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { addressDto, updateAddressDto } from '../address';
 import { userDto, updateUserDto } from './dto';
 import { PrismaService } from '../db-module/prisma.service';
-import { enumImageType } from '@prisma/client';
+import { enumImageType, enumRole } from '@prisma/client';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 @Injectable()
 export class UserService {
@@ -13,8 +13,16 @@ export class UserService {
     private cloudinaryService: CloudinaryService,
   ) {}
 
-  getOwnUser(user: userInterface) {
-    const { id, email } = user;
+  async getOwnUser(user: userInterface) {
+    const { id } = user;
+    const email = await this.prisma.account.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        email: true,
+      },
+    });
     return { id, email };
   }
 
@@ -72,6 +80,7 @@ export class UserService {
       ? {
           imageUrl,
           type: enumImageType.PROFILE,
+          ownerType: enumRole.BUYER,
         }
       : null;
 
@@ -85,28 +94,29 @@ export class UserService {
       },
     };
 
-    if (newImageData) {
-      newUserData.profileImage = {
-        create: newImageData,
-      };
-    }
-
     try {
-      await this.prisma.user.create({
-        data: newUserData,
-        include: {
-          profileImage: true,
-        },
+      const createdUser = await this.prisma.$transaction(async (prisma) => {
+        const user = await prisma.user.create({
+          data: newUserData,
+        });
+
+        if (newImageData) {
+          await prisma.image.create({
+            data: { ownerId: user.id, ...newImageData },
+          });
+        }
+
+        await prisma.accountAddress.create({
+          data: newAddressData,
+          include: {
+            account: true,
+          },
+        });
+
+        return user;
       });
 
-      await this.prisma.accountAddress.create({
-        data: newAddressData,
-        include: {
-          account: true,
-        },
-      });
-
-      return 'user created with name ' + dto.firstName;
+      return createdUser.id;
     } catch (err) {
       if (err.code === 'P2002' && err.meta.target.includes('supplierId')) {
         throw new HttpException(
@@ -172,6 +182,7 @@ export class UserService {
         create: {
           imageUrl,
           type: enumImageType.PROFILE,
+          ownerType: enumRole.BUYER,
         },
       };
     }
@@ -181,9 +192,6 @@ export class UserService {
         this.prisma.user.update({
           where: { id },
           data: updatedUserData,
-          include: {
-            profileImage: true,
-          },
         }),
         this.prisma.accountAddress.updateMany({
           where: { accountId: userId },
@@ -202,7 +210,7 @@ export class UserService {
 
     const existingUser = await this.prisma.user.findUnique({
       where: { id },
-      include: { account: { select: { id: true } }, profileImage: true },
+      include: { account: { select: { id: true } } },
     });
 
     if (!existingUser) {
@@ -215,9 +223,11 @@ export class UserService {
 
     try {
       await this.prisma.$transaction([
+        this.prisma.image.deleteMany({
+          where: { ownerId: id, ownerType: enumRole.BUYER },
+        }),
         this.prisma.review.deleteMany({ where: { userId } }),
         this.prisma.order.deleteMany({ where: { userId } }),
-        this.prisma.image.deleteMany({ where: { profileImageId: userId } }),
         this.prisma.accountAddress.deleteMany({
           where: { accountId: existingUser.accountId },
         }),

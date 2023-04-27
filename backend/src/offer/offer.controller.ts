@@ -16,7 +16,7 @@ import { OfferService } from './offer.service';
 import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 @Controller('offer')
 export class OfferController {

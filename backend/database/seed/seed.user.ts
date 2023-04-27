@@ -77,7 +77,7 @@ export async function seedUsers() {
   });
 
   const hofmarkt24 = await prisma.account.upsert({
-    where: { email: '' },
+    where: { email: 'hofmarkt24@gmail.com' },
     update: {},
     create: {
       email: 'hofmarkt24@gmail.com',
@@ -92,6 +92,4 @@ export async function seedUsers() {
       },
     },
   });
-
-
 }

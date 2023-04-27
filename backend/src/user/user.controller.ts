@@ -17,7 +17,7 @@ import { userDto, updateUserDto } from './dto';
 import { addressDto, updateAddressDto } from '../address';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageUploadFileFilter } from '../imageUpload';
-import { userInterface } from '../interface';
+import { userInterface } from '../auth/dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -29,7 +29,6 @@ export class UserController {
   getOwnUser(@GetUser() user) {
     return this.userService.getOwnUser(user);
   }
-
 
   @UseGuards(RolesGuard)
   @Roles('BUYER')
@@ -77,11 +76,7 @@ export class UserController {
   @UseGuards(RolesGuard)
   @Roles('BUYER')
   @Delete('delete/:id')
-  async deleteUser(
-    @Param('id') id: string,
-    @GetUser() user: userInterface,
-  ) {
+  async deleteUser(@Param('id') id: string, @GetUser() user: userInterface) {
     return this.userService.deleteUser(id, user);
   }
 }
-

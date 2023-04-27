@@ -28,16 +28,10 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  async signToken(account: {
-    email: string;
-    id: string;
-    role: string;
-    verified: boolean;
-  }) {
+  async signToken(account: { id: string; role: string; verified: boolean }) {
     const secret = this.config.get('JWT_secret');
 
     const payload = {
-      email: account.email,
       sub: account.id,
       role: account.role,
       verified: account.verified,
