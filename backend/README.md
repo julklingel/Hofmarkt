@@ -182,25 +182,29 @@ GET /auth/confirm/:email/:code: This endpoint is responsible for confirming a us
 
 The SupplierController API delivers a collection of RESTful API endpoints devised for supplier management and associated image handling. The overview of available endpoints is as follows:
 
-POST /supplier/create: This endpoint handles the creation of a new supplier. It accepts a supplierDto object as input, featuring properties such as name, location, and contact information, and up to 4 images, each capped at 2 MB. Upon successful supplier creation, it returns a message "Supplier created successfully" and the created supplier object.
+GET /supplier: This endpoint is responsible for retrieving a list of all suppliers.
 
-GET /supplier: This endpoint retrieves a list of all suppliers, complete with their offer and image details.
+GET /supplier/featured: This endpoint is responsible for retrieving a list of featured suppliers.
 
-GET /supplier/id: This endpoint obtains a specific supplier by its ID.
+POST /supplier/create: This endpoint is responsible for creating a new supplier. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes a supplierDto object as input with properties like name, email, description, and phone number, along with an address object with properties like street, city, and country. It also accepts up to 6 image files, each with a maximum size of 1 MB. On successful supplier creation, it returns the created supplier object.
 
-GET /supplier/offer/id: This endpoint gathers a list of offers made by a specific supplier, identified by their ID.
+GET /supplier/:slug: This endpoint is responsible for retrieving a specific supplier by their slug.
 
-PATCH /supplier/update/id: This endpoint updates an existing supplier by its ID. It accepts a supplierDto object as input, with properties such as name, location, and contact information, and up to 4 images, each capped at 2 MB. Upon successful supplier update, it returns a message "Supplier updated successfully" and the updated supplier object.
+PATCH /supplier/update/:id: This endpoint is responsible for updating an existing supplier by their ID. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes an updateSupplierDto object as input with properties like name, email, description, and phone number, along with an updateAddressDto object with properties like street, city, and country. It also accepts up to 4 image files, each with a maximum size of 2 MB. On successful supplier update, it returns the updated supplier object.
+
+DELETE /supplier/delete/:id: This endpoint is responsible for deleting an existing supplier by their ID. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. On successful supplier deletion, it returns a success message.
 
 ### UserController
 
 The UserController API delivers a collection of RESTful API endpoints devised for user management and profile image handling. The overview of available endpoints is as follows:
 
-GET /user/me: This endpoint retrieves the logged-in user's own information.
+GET /user/me: This endpoint is responsible for retrieving the information of the authenticated user. It is protected by JWT authentication and restricted to users with any role. It returns the user object.
 
-PATCH /user/me: Placeholder for a future implementation of updating the logged-in user's information.
+POST /user/create: This endpoint is responsible for creating a new user. It is protected by JWT authentication and restricted to users with a 'BUYER' role. It takes a userDto object as input with properties like name, email, password, and phone number, along with an address object with properties like street, city, and country. It also accepts an image file with a maximum size of 1 MB. On successful user creation, it returns the created user object.
 
-POST /user/create: This endpoint is responsible for creating a new user, complete with their address and optional profile image. It accepts a userDto object and an addressDto object as input, featuring properties such as firstName, lastName, streetAddress, city, state, country, and zip. It also accepts an optional image file, with a maximum size of 1 MB. Upon successful user creation, it returns a message "User created with name [firstName]."
+PATCH /user/update/id: This endpoint is responsible for updating an existing user by their ID. It is protected by JWT authentication and restricted to users with a 'BUYER' role. It takes an updateUserDto object as input with properties like name, email, password, and phone number, along with an updateAddressDto object with properties like street, city, and country. It also accepts an image file with a maximum size of 1 MB. On successful user update, it returns the updated user object.
+
+DELETE /user/delete/id: This endpoint is responsible for deleting an existing user by their ID. It is protected by JWT authentication and restricted to users with a 'BUYER' role. On successful user deletion, it returns a success message.
 
 ### OfferController
 
@@ -208,13 +212,15 @@ The OfferController API provides a set of RESTful API endpoints for managing off
 
 GET /offer: This endpoint is responsible for retrieving a list of all offers with their supplier and image details.
 
-GET /offer/id: This endpoint is responsible for retrieving a specific offer by its ID.
+GET /offer/:id: This endpoint is responsible for retrieving a specific offer by its ID.
 
-GET /offer/supplier/id: This endpoint is responsible for retrieving a list of offers made by a specific supplier, identified by their ID.
+GET /offer/supplier/:id: This endpoint is responsible for retrieving a list of offers made by a specific supplier, identified by their ID.
 
-POST /offer/create: This endpoint is responsible for creating a new offer. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes an offerDto object as input with properties like title, price, unit, and amount, along with up to 4 images, each with a maximum size of 2 MB. On successful offer creation, it returns the created offer object.
+POST /offer/create: This endpoint is responsible for creating a new offer. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes an offerDto object as input with properties like title, price, unit, and amount, along with up to 4 image files, each with a maximum size of 2 MB. On successful offer creation, it returns the created offer object.
 
-PATCH /offer/update/id: This endpoint is responsible for updating an existing offer by its ID. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes an offerDto object as input with properties like title, price, unit, and amount, along with up to 4 images, each with a maximum size of 2 MB. On successful offer update, it returns the updated offer object.
+PATCH /offer/update/:id: This endpoint is responsible for updating an existing offer by its ID. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. It takes an offerDto object as input with properties like title, price, unit, and amount, along with up to 4 image files, each with a maximum size of 2 MB. On successful offer update, it returns the updated offer object.
+
+DELETE /offer/delete/:id: This endpoint is responsible for deleting an existing offer by its ID. It is protected by JWT authentication and restricted to users with a 'SUPPLIER' role. On successful offer deletion, it returns a success message.
 
 ## Project's Architecture
 
