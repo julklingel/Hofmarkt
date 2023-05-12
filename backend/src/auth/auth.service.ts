@@ -14,9 +14,9 @@ import { randomBytes } from 'crypto';
 import { MailService } from './../mail/mail.service';
 
 const hashingConfig = {
-  parallelism: 1,
-  memoryCost: 64000,
-  timeCost: 3,
+  parallelism: 1, // number of threads/cores
+  memoryCost: 64000,  // increase memory usage
+  timeCost: 3, // increase computation time cpu cost
 };
 
 @Injectable()

@@ -5,6 +5,7 @@ import { signupDto } from '../src/auth/dto';
 
 export const authTests = (app: INestApplication, prisma: PrismaService) => {
   describe('Auth', () => {
+    
     const supplierdto: signupDto = {
       email: process.env.SUPPLIER_TEST_EMAIL,
       password: process.env.SUPPLIER_TEST_PASSWORD,
