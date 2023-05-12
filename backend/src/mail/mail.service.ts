@@ -24,7 +24,7 @@ export class MailService {
   }
   async sendConfirmMail(email: string, confirmationCode: string) {
     try {
-      const confirmationLink = `http://localhost:4444/auth/confirm/${email}/${confirmationCode}`;
+      const confirmationLink = `https://hofmarkt24.de/auth/confirm/${email}/${confirmationCode}`;
       await this.mailerService.sendMail({
         to: email,
         from: '"Support Team" <hofmarkt24@gmail.com>',
