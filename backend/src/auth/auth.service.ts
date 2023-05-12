@@ -48,11 +48,12 @@ export class AuthService {
   }
 
   async hashPassword(password: string) {
-    const salt = randomBytes(16);
-    return await argon2.hash(password, {
+    const salt = randomBytes(128);
+    const hashedPassword = await argon2.hash(password, {
       ...hashingConfig,
       salt,
     });
+    return { hashedPassword, salt };
   }
 
   async verifyPasswordWithHash(password: string, hash: string, salt: Buffer) {
@@ -80,8 +81,7 @@ export class AuthService {
 
   async signup(dto: signupDto) {
     try {
-      const salt = randomBytes(128);
-      const hashedPassword = await this.hashPassword(dto.password);
+      const { hashedPassword, salt } = await this.hashPassword(dto.password);
       await this.prisma.account.create({
         data: {
           email: dto.email.toLowerCase(),
@@ -226,9 +226,7 @@ export class AuthService {
       if (resetPassword.token !== dto.token) {
         throw new ForbiddenException('Wrong reset code');
       }
-      const salt = randomBytes(128);
-      const hashedPassword = await this.hashPassword(dto.password);
-
+      const { hashedPassword, salt } = await this.hashPassword(dto.password);
       await this.prisma.account.update({
         where: { email },
         data: { password: hashedPassword, salt: salt },
